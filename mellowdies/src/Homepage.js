@@ -17,7 +17,7 @@ const pageStyle = {
 
 const headingStyle = {
     color: '#000000',  // Black text color
-    fontSize: '3rem',
+    fontSize: '3.5rem',
     textShadow: '3px 3px 5px pink, -3px -3px 5px pink, 3px -3px 5px pink, -3px 3px 5px pink',  // Larger pink outline effect
     marginBottom: '10px',  // Space below the heading
     marginTop: '0',  // Space above the heading
@@ -58,15 +58,16 @@ const uploadStyle = {
 
   const buttonStyle = {
     padding: '10px 20px',
-    borderRadius: '20px',  // Rounded corners for the buttons
+    borderRadius: '30px',  // Rounded corners for the buttons
     border: '2px solid #ffffff',  // Sharp white border
     backgroundColor: 'rgba(255, 255, 255, 0.5)',  // Slightly transparent white background
     color: '#000',  // Black text color
     fontFamily: "'Concert One', cursive",  // Apply Concert One font
     cursor: 'pointer',
     marginTop: '15px',  // Space between the buttons
-    width: '250px',  // Button width
+    width: '300px',  // Button width
     textAlign: 'center',
+    fontSize: '1.2rem',
     boxShadow: '3px 3px 5px white, -3px -3px 5px white, 3px -3px 5px white, -3px 3px 5px white',  // Larger pink outline effect
   };
   
