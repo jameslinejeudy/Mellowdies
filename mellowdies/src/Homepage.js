@@ -18,7 +18,7 @@ const pageStyle = {
 const headingStyle = {
     color: '#000000',  // Black text color
     fontSize: '3.5rem',
-    textShadow: '3px 3px 5px pink, -3px -3px 5px pink, 3px -3px 5px pink, -3px 3px 5px pink',  // Larger pink outline effect
+    textShadow: '6px 6px 10px pink, -6px -6px 10px pink, 6px -6px 10px pink, -6px 6px 10px pink',  // Larger pink outline effect
     marginBottom: '10px',  // Space below the heading
     marginTop: '0',  // Space above the heading
   };
