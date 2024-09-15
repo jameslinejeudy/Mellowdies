@@ -1,5 +1,7 @@
 import React from 'react';
 import gifBackground from './images/skybackground.png';  // Adjust the path if needed
+import  { useEffect } from 'react';
+import useDrivePicker from 'react-google-drive-picker'
 
 const pageStyle = {
   backgroundImage: `url(${gifBackground})`,  // Set the image as the background
@@ -78,8 +80,25 @@ function HomePage() {
         console.log(event.target.files[0]); // Handle file upload
       };
     
+      // Google Drive Integration
+      const [openPicker, authResponse] = useDrivePicker();
       const handleGoogleDrive = () => {
         // Logic for Google Drive integration
+        openPicker({
+          clientId: "473620447998-mljs5baieqfr2bfk9berae2suhb7fqag.apps.googleusercontent.com",
+          developerKey: "AIzaSyApSN-CVcrcURGIUIAS3wtNgIlOszHwk2k",
+          viewId: "DOCS",
+          showUploadView: true,
+          showUploadFolders: true,
+          supportDrives: true,
+          multiselect: true,
+          callbackFunction: (data) => {
+            if (data.action === 'cancel') {
+              console.log('User clicked cancel/close button')
+            }
+            console.log(data)
+          },
+        })
         console.log('Google Drive clicked');
       };
     
