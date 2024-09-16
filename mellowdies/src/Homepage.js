@@ -3,6 +3,7 @@ import gifBackground from './images/skybackground.png';  // Adjust the path if n
 import  { useEffect } from 'react';
 import useDrivePicker from 'react-google-drive-picker'
 
+
 const pageStyle = {
   backgroundImage: `url(${gifBackground})`,  // Set the image as the background
   backgroundSize: 'cover',  // Ensures the image covers the entire page
