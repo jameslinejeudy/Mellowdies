@@ -2,6 +2,26 @@ import React, { useEffect, useRef } from 'react';
 import WaveSurfer from 'wavesurfer.js';
 import { useLocation } from 'react-router-dom';
 
+const trackbackground = {
+    width: '75%',
+    height: '75%',
+    backgroundColor: 'pink',
+    position: 'fixed',
+    top: '50%',
+    right: '0',
+    transform: 'translateY(-50%)',
+    display: 'flex',
+    justifyContent: 'left',
+    alignItems: 'left',
+};
+
+const headingStyle = {
+    color: '#000000',  // Black text color
+    fontSize: '3.5rem',
+    marginBottom: '10px',  // Space below the heading
+    marginTop: '0',  // Space above the heading
+  };
+
 function Landingpage() {
     const waveformRef = useRef(null);
     const location = useLocation();
@@ -13,8 +33,10 @@ function Landingpage() {
             const wavesurfer = WaveSurfer.create({
                 container: waveformRef.current,
                 waveColor: 'blue',
-                progressColor: 'purple',
-                height: 100,
+                progressColor: '#00FFFF',
+                height: 100, 
+                autoCenter: true,  // Ensures the progress bar stays centered
+           
             });
 
             console.log('Loading audio file:', audioFiles[0].url);
@@ -31,8 +53,11 @@ function Landingpage() {
 
     return (
         <div>
-            <h1>Your Selected Audio Tracks</h1>
-            <div ref={waveformRef}></div> {/* Waveform will be displayed here */}
+            <h1>Mellowdies</h1>
+            <div style={trackbackground}>
+                <div ref={waveformRef} style={{ width: '100%'}}></div> {/* Waveform will be displayed here */}
+            </div>
+
             {audioFiles && audioFiles.length > 0 ? (
                 <audio controls>
                     <source src={audioFiles[0].url} type={audioFiles[0].mimeType} />
