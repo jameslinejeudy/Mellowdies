@@ -1,18 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react';
 import WaveSurfer from 'wavesurfer.js';
 import { useLocation } from 'react-router-dom';
+import cloud from './images/cloud.png';  // Adjust the path if needed
+
 
 const pagebackground= {
     backgroundSize: 'cover',
-    backgroundColor: 'pink',  // Ensures the image covers the entire page
+    backgroundImage: `url(${cloud})`,  // Set the image as the background
     backgroundPosition: 'center',  // Centers the background
-    textAlign: 'center',
     padding: '10px',  // Adjust the padding
     height: '100vh',  // Full viewport height
     margin: 0,
     display: 'flex',
     flexDirection: 'column',  // Arrange children in a column
-    alignItems: 'center',
     fontFamily: 'Concert One',  // Use Concert One font
 }
 
@@ -40,10 +40,10 @@ const trackbackground = {
 
 const headingStyle = {
     color: '#000000',  // Black text color
-    fontSize: '3.5rem',
+    fontSize: '2rem',
     marginBottom: '10px',  // Space below the heading
     marginTop: '0',  // Space above the heading
-    textAlign: 'center',
+    textAlign: 'left',
 
 };
 
