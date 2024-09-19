@@ -1,7 +1,11 @@
 import React from 'react';
 import gifBackground from './images/skybackground.png';  // Adjust the path if needed
 import  { useEffect } from 'react';
-import useDrivePicker from 'react-google-drive-picker'
+import useDrivePicker from 'react-google-drive-picker';
+import { useNavigate } from 'react-router-dom';  // Ensure useNavigate is imported correctly
+import Landingpage from './Landingpage.js';
+
+
 
 
 const pageStyle = {
@@ -42,23 +46,6 @@ const containerStyle = {
   paddingTop: '50px',  // Add some padding from the top
 };
 
-const uploadStyle = {
-    marginTop: '20px',  // Space above the upload box
-    padding: '10px',
-    borderRadius: '30px',
-    border: '2px solid #ffffff',  // Sharp white border
-    fontSize: '1.5rem',
-    cursor: 'pointer',
-    backgroundColor: 'rgba(255, 255, 255, 0.5)',  // Slightly transparent white background
-    boxShadow: '3px 3px 5px white, -3px -3px 5px white, 3px -3px 5px white, -3px 3px 5px white',  // Larger pink outline effect
-    color: '#000',  // Ensures the text inside is still visible
-    fontFamily: 'Concert One',  // Use Concert One font
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-
-  };
-
   const buttonStyle = {
     padding: '10px 20px',
     borderRadius: '30px',  // Rounded corners for the buttons
@@ -77,9 +64,15 @@ const uploadStyle = {
   
 
 function HomePage() {
+    const navigate = useNavigate();  // Initialize useNavigate
+
     const handleFileUpload = (event) => {
         console.log(event.target.files[0]); // Handle file upload
-      };
+        if (file) {
+            navigate('/Landingpage');
+          }
+        };
+    
     
       // Google Drive Integration
       const [openPicker, authResponse] = useDrivePicker();
@@ -108,11 +101,13 @@ function HomePage() {
       <div style={containerStyle}>  {/* Container to hold text at the top */}
         <h1 style={headingStyle}>Mellowdies</h1>
         <p style={paragraphStyle}>Upload a file!</p>
-        <input type="file" style={buttonStyle} />
-         {/* Additional upload buttons */}
-         <button style={buttonStyle} onClick={handleGoogleDrive}>
-          Upload from Google Drive
-        </button>
+
+         <input type="file" style={buttonStyle} /> {/* Upload from computer */}
+
+         <button style={buttonStyle} onClick={handleGoogleDrive}> {/* Additional upload buttons */}
+             Upload from Google Drive
+         </button>
+
       </div>
     </div>
   );
