@@ -40,6 +40,11 @@ function Landingpage() {
                 progressColor: '#00FFFF',  // The color of the progress bar
                 height: 100,
                 autoCenter: true,  // Ensures the progress bar stays centered
+                interact: true,  // Enable user interaction (clicking, dragging)
+                backend: 'MediaElement',  // Use the MediaElement backend to support interaction
+                cursorWidth: 2,  // Visual indication of the cursor
+                cursorColor: '#FF0000',
+                backgroundColor: 'rgba(255, 255, 255, 255)',  // Slightly transparent white background
             });
 
             if (wavesurferRef.current) {
