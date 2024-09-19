@@ -67,11 +67,12 @@ function HomePage() {
     const navigate = useNavigate();  // Initialize useNavigate
 
     const handleFileUpload = (event) => {
-        console.log(event.target.files[0]); // Handle file upload
+        const file = event.target.files[0]; // Get the selected file from the event
+        console.log(file); 
         if (file) {
-            navigate('/Landingpage');
-          }
-        };
+        navigate('/Landingpage');
+        }
+    };
     
     
       // Google Drive Integration
@@ -87,10 +88,19 @@ function HomePage() {
           supportDrives: true,
           multiselect: true,
           callbackFunction: (data) => {
-            if (data.action === 'cancel') {
-              console.log('User clicked cancel/close button')
+            console.log('Google Drive callback data:', data);
+
+            if (data.action === 'picked') { // Ensure you're checking for 'picked' action, which means files were selected
+                console.log('Files selected from Google Drive:', data.docs);
+
+                if (data.docs && data.docs.length > 0) {
+                    navigate('/Landingpage');  // Navigate to Landingpage after files are selected
+                } else {
+                    console.log('No files selected');
+                }
+            } else {
+                console.log('User canceled or closed the picker');
             }
-            console.log(data)
           },
         })
         console.log('Google Drive clicked');
@@ -102,7 +112,7 @@ function HomePage() {
         <h1 style={headingStyle}>Mellowdies</h1>
         <p style={paragraphStyle}>Upload a file!</p>
 
-         <input type="file" style={buttonStyle} /> {/* Upload from computer */}
+        <input type="file" style={buttonStyle} onChange={handleFileUpload} /> {/* Make sure the function is used here */}
 
          <button style={buttonStyle} onClick={handleGoogleDrive}> {/* Additional upload buttons */}
              Upload from Google Drive
