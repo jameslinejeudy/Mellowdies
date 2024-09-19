@@ -103,15 +103,6 @@ function HomePage() {
         console.log('Google Drive clicked');
       };
     
-      const handleDropbox = () => {
-        // Logic for Dropbox integration
-        console.log('Dropbox clicked');
-      };
-    
-      const handleOneDrive = () => {
-        // Logic for OneDrive integration
-        console.log('OneDrive clicked');
-      };
   return (
     <div style={pageStyle}>
       <div style={containerStyle}>  {/* Container to hold text at the top */}
@@ -121,12 +112,6 @@ function HomePage() {
          {/* Additional upload buttons */}
          <button style={buttonStyle} onClick={handleGoogleDrive}>
           Upload from Google Drive
-        </button>
-        <button style={buttonStyle} onClick={handleDropbox}>
-          Upload from Dropbox
-        </button>
-        <button style={buttonStyle} onClick={handleOneDrive}>
-          Upload from OneDrive
         </button>
       </div>
     </div>
