@@ -131,14 +131,18 @@ function Landingpage() {
     const handleForward = () => {
         if (wavesurferRef.current && isReady) {
             const currentTime = wavesurferRef.current.getCurrentTime();
-            wavesurferRef.current.setCurrentTime(currentTime + 5); // Skip forward 5 seconds
+            const duration = wavesurferRef.current.getDuration();
+            const newTime = Math.min(currentTime + 5, duration);  // Skip forward 5 seconds, but not beyond the duration
+            wavesurferRef.current.seekTo(newTime / duration);  // `seekTo` expects a value between 0 and 1
         }
     };
-
+    
     const handleBackward = () => {
         if (wavesurferRef.current && isReady) {
             const currentTime = wavesurferRef.current.getCurrentTime();
-            wavesurferRef.current.setCurrentTime(currentTime - 5); // Skip back 5 seconds
+            const newTime = Math.max(currentTime - 5, 0);  // Skip back 5 seconds, but not before the start
+            const duration = wavesurferRef.current.getDuration();
+            wavesurferRef.current.seekTo(newTime / duration);  // `seekTo` expects a value between 0 and 1
         }
     };
 
