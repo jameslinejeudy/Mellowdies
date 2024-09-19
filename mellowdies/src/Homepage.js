@@ -67,13 +67,19 @@ function HomePage() {
     const navigate = useNavigate();  // Initialize useNavigate
 
     const handleFileUpload = (event) => {
-        const file = event.target.files[0]; // Get the selected file from the event
-        console.log(file); 
-        if (file) {
-        navigate('/Landingpage');
+        const files = event.target.files;
+        const audioFiles = Array.from(files).map(file => ({
+            name: file.name,
+            url: URL.createObjectURL(file), // Creates a temporary URL for the file
+            mimeType: file.type
+        }));
+
+        if (audioFiles.length > 0) {
+            navigate('/Landingpage', { state: { audioFiles } });  // Pass audio files as state
+        } else {
+            alert('Please select only audio files.');
         }
     };
-    
     
       // Google Drive Integration
       const [openPicker, authResponse] = useDrivePicker();
@@ -90,18 +96,18 @@ function HomePage() {
             callbackFunction: (data) => {
                 console.log('Google Drive callback data:', data);
     
-                if (data.action === 'picked') { // Ensure files were picked
-                    const audioFiles = data.docs.filter(doc => doc.mimeType.startsWith('audio/'));
-    
+                if (data.action === 'picked') {
+                    const audioFiles = data.docs.map(doc => ({
+                        name: doc.name,
+                        url: doc.url, // This should be a direct link to access the file
+                        mimeType: doc.mimeType
+                    }));
+
                     if (audioFiles.length > 0) {
-                        console.log('Audio files selected from Google Drive:', audioFiles);
-                        navigate('/Landingpage');  // Navigate to Landingpage if audio files are selected
+                        navigate('/Landingpage', { state: { audioFiles } });  // Pass audio files as state
                     } else {
-                        console.log('No audio files selected');
                         alert('Please select only audio files.');
                     }
-                } else {
-                    console.log('User canceled or closed the picker');
                 }
             },
         });
