@@ -78,33 +78,36 @@ function HomePage() {
       // Google Drive Integration
       const [openPicker, authResponse] = useDrivePicker();
       const handleGoogleDrive = () => {
-        // Logic for Google Drive integration
         openPicker({
-          clientId: "473620447998-mljs5baieqfr2bfk9berae2suhb7fqag.apps.googleusercontent.com",
-          developerKey: "AIzaSyApSN-CVcrcURGIUIAS3wtNgIlOszHwk2k",
-          viewId: "DOCS",
-          showUploadView: true,
-          showUploadFolders: true,
-          supportDrives: true,
-          multiselect: true,
-          callbackFunction: (data) => {
-            console.log('Google Drive callback data:', data);
-
-            if (data.action === 'picked') { // Ensure you're checking for 'picked' action, which means files were selected
-                console.log('Files selected from Google Drive:', data.docs);
-
-                if (data.docs && data.docs.length > 0) {
-                    navigate('/Landingpage');  // Navigate to Landingpage after files are selected
+            clientId: "473620447998-mljs5baieqfr2bfk9berae2suhb7fqag.apps.googleusercontent.com",
+            developerKey: "AIzaSyApSN-CVcrcURGIUIAS3wtNgIlOszHwk2k",
+            showUploadView: true,
+            showUploadFolders: true,
+            supportDrives: true,
+            multiselect: true,
+            viewId: "AUDIO", // or you can remove this if it restricts the file types incorrectly
+            mimeTypes: ['audio/mpeg', 'audio/wav', 'audio/mp3', 'audio/x-wav', 'audio/x-m4a'], // Allow specific audio types
+            callbackFunction: (data) => {
+                console.log('Google Drive callback data:', data);
+    
+                if (data.action === 'picked') { // Ensure files were picked
+                    const audioFiles = data.docs.filter(doc => doc.mimeType.startsWith('audio/'));
+    
+                    if (audioFiles.length > 0) {
+                        console.log('Audio files selected from Google Drive:', audioFiles);
+                        navigate('/Landingpage');  // Navigate to Landingpage if audio files are selected
+                    } else {
+                        console.log('No audio files selected');
+                        alert('Please select only audio files.');
+                    }
                 } else {
-                    console.log('No files selected');
+                    console.log('User canceled or closed the picker');
                 }
-            } else {
-                console.log('User canceled or closed the picker');
-            }
-          },
-        })
+            },
+        });
         console.log('Google Drive clicked');
-      };
+    };
+    
     
   return (
     <div style={pageStyle}>
@@ -112,7 +115,14 @@ function HomePage() {
         <h1 style={headingStyle}>Mellowdies</h1>
         <p style={paragraphStyle}>Upload a file!</p>
 
-        <input type="file" style={buttonStyle} onChange={handleFileUpload} /> {/* Make sure the function is used here */}
+        {/* Accept only audio files */}
+        <input
+            type="file"
+            style={buttonStyle}
+            accept="audio/*"  // This restricts file selection to audio files only
+            onChange={handleFileUpload}
+        />
+
 
          <button style={buttonStyle} onClick={handleGoogleDrive}> {/* Additional upload buttons */}
              Upload from Google Drive
