@@ -1,19 +1,41 @@
-import React from 'react';
+import React, { useState } from 'react';
+import fastforward from '../images/fast-forward.png';  // Forward
+import pause from '../images/pause.png';  // Pause
+import play from '../images/play.png';  // Play
+import rewindstart from '../images/startofmusic.png';  // Rewind from the start
+import backwards from '../images/backwards.png';  // Backwards
+import endofmusic from '../images/endofmusic.png';  // Backwards
 
 const buttonContainerStyle = {
     display: 'flex',
-    flexDirection: 'column',  // Stack buttons vertically
+    flexDirection: 'row',  // Arrange buttons horizontally
     position: 'fixed',
-    right: '20px',  // Distance from the right edge of the screen
-    top: '50%',
-    transform: 'translateY(-50%)',  // Center the container vertically
-    alignItems: 'flex-end',  // Align buttons to the right within the container
+    bottom: '20px',  // Distance from the bottom of the screen
+    left: '65%',
+    transform: 'translateX(-50%)',  // Center the container horizontally
+    alignItems: 'center',  // Align buttons to the center within the container
+};
+
+const buttonStyle = {
+    background: 'none',  // Remove default button background
+    border: 'none',  // Remove default button border
+    padding: '10px',  // Add padding for clickable area
+    cursor: 'pointer',  // Change cursor to pointer on hover
+    marginBottom: '10px',  // Space between buttons
+};
+
+const iconStyle = {
+    width: '30px',  // Adjust width of the icons
+    height: '30px',  // Adjust height of the icons
 };
 
 function PlayButton({ wavesurferRef, isReady, speed, setSpeed }) {
+    const [isPlaying, setIsPlaying] = useState(false);
+
     const handlePlayPause = () => {
         if (wavesurferRef.current && isReady) {
             wavesurferRef.current.playPause();  // Toggle play/pause
+            setIsPlaying(!isPlaying);  // Toggle the playing state
         } else {
             console.log('WaveSurfer is not ready yet.');
         }
@@ -44,16 +66,36 @@ function PlayButton({ wavesurferRef, isReady, speed, setSpeed }) {
         }
     };
 
+    const handleGoToStart = () => {
+        if (wavesurferRef.current && isReady) {
+            wavesurferRef.current.seekTo(0);  // Go to the start of the track
+            setIsPlaying(false);  // Reset play/pause state
+        }
+    };
+
+    const handleGoToEnd = () => {
+        if (wavesurferRef.current && isReady) {
+            wavesurferRef.current.seekTo(1);  // Go to the end of the track
+            setIsPlaying(false);  // Reset play/pause state
+        }
+    };
+
     return (
         <div style={buttonContainerStyle}>
-            <button onClick={handlePlayPause} style={{ padding: '10px 20px', fontSize: '16px', marginBottom: '10px' }} disabled={!isReady}>
-                Play/Pause
+            <button onClick={handleGoToStart} style={buttonStyle} disabled={!isReady}>
+                <img src={rewindstart} alt="Go to Start" style={iconStyle} />
             </button>
-            <button onClick={handleBackward} style={{ padding: '10px 20px', fontSize: '16px', marginBottom: '10px' }} disabled={!isReady}>
-                Backward 5s
+            <button onClick={handleBackward} style={buttonStyle} disabled={!isReady}>
+                <img src={backwards} alt="Backward 5s" style={iconStyle} />
             </button>
-            <button onClick={handleForward} style={{ padding: '10px 20px', fontSize: '16px', marginBottom: '10px' }} disabled={!isReady}>
-                Forward 5s
+            <button onClick={handlePlayPause} style={buttonStyle} disabled={!isReady}>
+                <img src={isPlaying ? pause : play} alt="Play/Pause" style={iconStyle} />
+            </button>
+            <button onClick={handleForward} style={buttonStyle} disabled={!isReady}>
+                <img src={fastforward} alt="Forward 5s" style={iconStyle} />
+            </button>
+            <button onClick={handleGoToEnd} style={buttonStyle} disabled={!isReady}>
+                <img src={endofmusic} alt="Go to End" style={iconStyle} />
             </button>
             <div style={{ marginBottom: '10px' }}>
                 <label htmlFor="speed">Speed: </label>

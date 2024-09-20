@@ -5,7 +5,7 @@ import Menu from './Menu.js';
 import cloud from '../images/cloud.png';  // Adjust the path if needed
 import PlayButton from './PlayButton.js';
 
-const pagebackground= {
+const pagebackground = {
     backgroundSize: 'cover',
     backgroundImage: `url(${cloud})`,  // Set the image as the background
     backgroundPosition: 'center',  // Centers the background
@@ -15,37 +15,31 @@ const pagebackground= {
     display: 'flex',
     flexDirection: 'column',  // Arrange children in a column
     fontFamily: 'Concert One',  // Use Concert One font
-}
+};
+
 
 const trackbackground = {
-    width: '75%',
+      width: '75%',
     height: '80%',
-    radius: '30px',
     position: 'fixed',
-    top: '50%',
-    right: '0',
-    transform: 'translateY(-50%)',
+    top: '0',  // Position the box at the top of the screen
+    right: '0',  // Align the box to the right side of the screen
     display: 'flex',
     justifyContent: 'left',
     alignItems: 'left',
-    border: '2px solid #ffffff',  // Sharp white border
     backgroundColor: 'rgba(255, 255, 255, 0.3)',  // Slightly transparent white background
-    fontFamily: "'Concert One', cursive",  // Apply Concert One font
-    marginTop: '10px', 
-    marginRight: '2%', // Space between the buttons
-    textAlign: 'center',
-    fontSize: '1.2rem',
+    marginTop: '5px',  // Space between the box and the top of the screen
     boxShadow: '0px 0px 15px 5px rgba(255, 255, 255, 0.6)',  // Soft, glowy white shadow
-    border: 'none',
+    overflowX: 'auto',  // Enable horizontal scrolling
+    overflowY: 'hidden',  // Disable vertical scrolling
+
 };
 
-const headingStyle = {
-    color: '#000000',  // Black text color
-    fontSize: '2rem',
-    marginBottom: '10px',  // Space below the heading
-    marginTop: '0',  // Space above the heading
-    textAlign: 'left',
+const waveformStyle = {
+    width: '100%',  // Ensure waveform takes the full width of the container
+    height: '100%',  // Ensure waveform takes the full height of the container
 };
+
 
 function Landingpage() {
     const waveformRef = useRef(null);
@@ -63,13 +57,14 @@ function Landingpage() {
                 container: waveformRef.current,
                 waveColor: 'blue',
                 progressColor: '#00FFFF',  // The color of the progress bar
-                height: 75,
+                height: 75,  // Increase the height to make it more prominent
                 autoCenter: true,  // Ensures the progress bar stays centered
-                 interact: true,  // Enable user interaction (clicking, dragging)
+                interact: true,  // Enable user interaction (clicking, dragging)
                 backend: 'MediaElement',  // Use the MediaElement backend to support interaction
                 cursorWidth: 2,  // Visual indication of the cursor
                 cursorColor: '#FF0000',
                 backgroundColor: 'rgba(255, 255, 255, 255)',  // Slightly transparent white background
+                minPxPerSec: 100,  // Zoom in on the waveform
             });
 
             if (wavesurferRef.current) {
@@ -104,13 +99,11 @@ function Landingpage() {
     }, [audioFiles]);
 
     return (
-        <div style= {pagebackground}>
-            <h1 style={headingStyle}>Mellowdies</h1>
+        <div style={pagebackground}>
             <div style={trackbackground}>
-                <div ref={waveformRef} style={{ width: '100%' }}></div> {/* Waveform will be displayed here */}
-            </div>
-
-            <Menu/>
+    <div ref={waveformRef} style={waveformStyle}></div> {/* Waveform will be displayed here */}
+</div>
+           <Menu/>
 
             {audioFiles && audioFiles.length > 0 ? (
                 <PlayButton

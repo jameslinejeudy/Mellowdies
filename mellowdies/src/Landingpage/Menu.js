@@ -2,8 +2,8 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 const menubackground = {
-    width: '100%',
-    height: '8%',
+    width: '25%',
+    height: '100%',
     display: 'flex',
     justifyContent: 'left',
     alignItems: 'left',
