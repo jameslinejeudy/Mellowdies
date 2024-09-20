@@ -3,7 +3,6 @@ import gifBackground from './images/skybackground.png';  // Adjust the path if n
 import  { useEffect } from 'react';
 import useDrivePicker from 'react-google-drive-picker';
 import { useNavigate } from 'react-router-dom';  // Ensure useNavigate is imported correctly
-import Landingpage from './Landingpage.js';
 
 
 
