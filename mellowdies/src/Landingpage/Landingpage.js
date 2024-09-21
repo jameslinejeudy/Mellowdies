@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import WaveSurfer from 'wavesurfer.js';
 import { useLocation } from 'react-router-dom';
-import Menu from './Menu.js';
+import Sidebar from './Sidebar.js';
 import cloud from '../images/cloud.png';  // Adjust the path if needed
 import PlayButton from './PlayButton.js';
+
 
 const pagebackground = {
     backgroundSize: 'cover',
@@ -35,9 +36,25 @@ const trackbackground = {
 
 };
 
+const trackNameStyle = {
+    position: 'absolute',
+    bottom: '10px',  // Position it 10px from the bottom
+    left: '10px',  // Position it 10px from the left
+    color: '#000000',  // White text color for visibility
+    fontSize: '0.8rem',  // Adjust the font size
+    zIndex: '1002',  // Ensure it stays above other elements
+    padding: '5px',  // Optional: Add some padding around the text
+    borderRadius: '5px',  // Optional: Round the corners of the background
+};
+
 const waveformStyle = {
     width: '100%',  // Ensure waveform takes the full width of the container
-    height: '100%',  // Ensure waveform takes the full height of the container
+    height: 'calc(100% - 30px)',  // Subtract 30px to make space for the scrollbar
+};
+
+// Add padding at the bottom to create space for the scrollbar
+const paddingBottomStyle = {
+    paddingBottom: '30px',  // Adjust this value to increase/decrease space
 };
 
 
@@ -73,7 +90,8 @@ function Landingpage() {
 
                 // Listen for the ready event to ensure the WaveSurfer instance is fully loaded
                 wavesurferRef.current.on('ready', () => {
-                    setIsReady(true);  // Set the state to true when ready
+                    setIsReady(true); 
+                    // Adjust this to match your trackbackground height
                 });
                 // Update the progress state
                 wavesurferRef.current.on('audioprocess', () => {
@@ -101,9 +119,12 @@ function Landingpage() {
     return (
         <div style={pagebackground}>
             <div style={trackbackground}>
+            <div style={trackNameStyle}>
+                {audioFiles.length > 0 && audioFiles[0].name ? audioFiles[0].name : "Track Name"}
+            </div>
     <div ref={waveformRef} style={waveformStyle}></div> {/* Waveform will be displayed here */}
 </div>
-           <Menu/>
+           <Sidebar/>
 
             {audioFiles && audioFiles.length > 0 ? (
                 <PlayButton

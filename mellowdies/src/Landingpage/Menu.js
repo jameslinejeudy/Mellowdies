@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import menubutton from '../images/menubutton.png';
 
 const menubackground = {
     width: '25%',
@@ -8,7 +8,7 @@ const menubackground = {
     justifyContent: 'left',
     alignItems: 'left',
     border: '2px solid #ffffff',  // Sharp white border
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',  // Slightly transparent white background
+    backgroundColor: '#ffffff',  // Slightly transparent white background
     fontFamily: "'Concert One', cursive",  // Apply Concert One font
     textAlign: 'left',
     fontSize: '1.2rem',
@@ -28,17 +28,18 @@ const textstyle = {
     textAlign: 'left',
 };
 
+const buttonStyle = {
+    background: 'none',  // Remove default button background
+    border: 'none',  // Remove default button border
+    padding: '0',  // Remove default button padding
+    cursor: 'pointer',  // Ensure cursor changes to pointer on hover
+};
 
 function Menu() {
   return (
-    <div style= {menubackground}>
-        <p1 style= {textstyle}>
-            Mellowdies
-        </p1>
+    <div style={menubackground}>
     </div>
-
- );
+  );
 }
 
 export default Menu;
-
