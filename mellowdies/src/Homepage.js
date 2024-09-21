@@ -76,9 +76,10 @@ function HomePage() {
         if (audioFiles.length > 0) {
             navigate('/Landingpage', { state: { audioFiles } });  // Pass audio files as state
         } else {
-            alert('Please select only audio files.');
+            alert('Please select audio files.');
         }
     };
+    
     
       // Google Drive Integration
       const [openPicker, authResponse] = useDrivePicker();
@@ -124,6 +125,7 @@ function HomePage() {
         <input
             type="file"
             style={buttonStyle}
+            multiple  
             accept="audio/*"  // This restricts file selection to audio files only
             onChange={handleFileUpload}
         />

@@ -4,7 +4,7 @@ import pause from '../images/pause.png';  // Pause
 import play from '../images/play.png';  // Play
 import rewindstart from '../images/startofmusic.png';  // Rewind from the start
 import backwards from '../images/backwards.png';  // Backwards
-import endofmusic from '../images/endofmusic.png';  // Backwards
+import endofmusic from '../images/endofmusic.png';  // End of music
 
 const buttonContainerStyle = {
     display: 'flex',
@@ -29,12 +29,14 @@ const iconStyle = {
     height: '30px',  // Adjust height of the icons
 };
 
-function PlayButton({ wavesurferRef, isReady, speed, setSpeed }) {
+function PlayButton({ wavesurferRefs, isReady, speed, setSpeed }) {
     const [isPlaying, setIsPlaying] = useState(false);
 
     const handlePlayPause = () => {
-        if (wavesurferRef.current && isReady) {
-            wavesurferRef.current.playPause();  // Toggle play/pause
+        if (wavesurferRefs.current.length && isReady) {
+            wavesurferRefs.current.forEach(waveSurfer => {
+                waveSurfer.playPause();  // Toggle play/pause
+            });
             setIsPlaying(!isPlaying);  // Toggle the playing state
         } else {
             console.log('WaveSurfer is not ready yet.');
@@ -42,40 +44,50 @@ function PlayButton({ wavesurferRef, isReady, speed, setSpeed }) {
     };
 
     const handleSpeedChange = (speed) => {
-        if (wavesurferRef.current && isReady) {
-            wavesurferRef.current.setPlaybackRate(speed);
+        if (wavesurferRefs.current.length && isReady) {
+            wavesurferRefs.current.forEach(waveSurfer => {
+                waveSurfer.setPlaybackRate(speed);
+            });
             setSpeed(speed);
         }
     };
 
     const handleForward = () => {
-        if (wavesurferRef.current && isReady) {
-            const currentTime = wavesurferRef.current.getCurrentTime();
-            const duration = wavesurferRef.current.getDuration();
-            const newTime = Math.min(currentTime + 5, duration);  // Skip forward 5 seconds, but not beyond the duration
-            wavesurferRef.current.seekTo(newTime / duration);  // `seekTo` expects a value between 0 and 1
+        if (wavesurferRefs.current.length && isReady) {
+            wavesurferRefs.current.forEach(waveSurfer => {
+                const currentTime = waveSurfer.getCurrentTime();
+                const duration = waveSurfer.getDuration();
+                const newTime = Math.min(currentTime + 5, duration);  // Skip forward 5 seconds, but not beyond the duration
+                waveSurfer.seekTo(newTime / duration);  // `seekTo` expects a value between 0 and 1
+            });
         }
     };
     
     const handleBackward = () => {
-        if (wavesurferRef.current && isReady) {
-            const currentTime = wavesurferRef.current.getCurrentTime();
-            const newTime = Math.max(currentTime - 5, 0);  // Skip back 5 seconds, but not before the start
-            const duration = wavesurferRef.current.getDuration();
-            wavesurferRef.current.seekTo(newTime / duration);  // `seekTo` expects a value between 0 and 1
+        if (wavesurferRefs.current.length && isReady) {
+            wavesurferRefs.current.forEach(waveSurfer => {
+                const currentTime = waveSurfer.getCurrentTime();
+                const newTime = Math.max(currentTime - 5, 0);  // Skip back 5 seconds, but not before the start
+                const duration = waveSurfer.getDuration();
+                waveSurfer.seekTo(newTime / duration);  // `seekTo` expects a value between 0 and 1
+            });
         }
     };
 
     const handleGoToStart = () => {
-        if (wavesurferRef.current && isReady) {
-            wavesurferRef.current.seekTo(0);  // Go to the start of the track
+        if (wavesurferRefs.current.length && isReady) {
+            wavesurferRefs.current.forEach(waveSurfer => {
+                waveSurfer.seekTo(0);  // Go to the start of the track
+            });
             setIsPlaying(false);  // Reset play/pause state
         }
     };
 
     const handleGoToEnd = () => {
-        if (wavesurferRef.current && isReady) {
-            wavesurferRef.current.seekTo(1);  // Go to the end of the track
+        if (wavesurferRefs.current.length && isReady) {
+            wavesurferRefs.current.forEach(waveSurfer => {
+                waveSurfer.seekTo(1);  // Go to the end of the track
+            });
             setIsPlaying(false);  // Reset play/pause state
         }
     };
