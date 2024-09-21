@@ -19,8 +19,8 @@ const pagebackground = {
 };
 
 
-const trackbackground = {
-      width: '75%',
+const musicbackground = {
+    width: '75%',
     height: '80%',
     position: 'fixed',
     top: '0',  // Position the box at the top of the screen
@@ -32,9 +32,24 @@ const trackbackground = {
     marginTop: '5px',  // Space between the box and the top of the screen
     boxShadow: '0px 0px 15px 5px rgba(255, 255, 255, 0.6)',  // Soft, glowy white shadow
     overflowX: 'auto',  // Enable horizontal scrolling
-    overflowY: 'hidden',  // Disable vertical scrolling
+    overflowY: 'auto',  // Disable vertical scrolling
 
 };
+
+const trackbox = {
+    width: '75%',
+    height: '5%',
+    position: 'fixed',
+    top: '0',  // Position the box at the top of the screen
+    right: '0',  // Align the box to the right side of the screen
+    display: 'flex',
+    justifyContent: 'left',
+    alignItems: 'left',
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',  // Slightly transparent white background
+    marginTop: '5px',  // Space between the box and the top of the screen
+    boxShadow: '0px 0px 15px 5px rgba(255, 255, 255, 0.6)',  // Soft, glowy white shadow
+}
+
 
 const trackNameStyle = {
     position: 'absolute',
@@ -49,12 +64,8 @@ const trackNameStyle = {
 
 const waveformStyle = {
     width: '100%',  // Ensure waveform takes the full width of the container
-    height: 'calc(100% - 30px)',  // Subtract 30px to make space for the scrollbar
-};
-
-// Add padding at the bottom to create space for the scrollbar
-const paddingBottomStyle = {
-    paddingBottom: '30px',  // Adjust this value to increase/decrease space
+    height: '100%',  // Subtract 30px to make space for the scrollbar
+    position: 'relative',  // Ensure proper stacking of elements
 };
 
 
@@ -118,12 +129,14 @@ function Landingpage() {
 
     return (
         <div style={pagebackground}>
-            <div style={trackbackground}>
-            <div style={trackNameStyle}>
-                {audioFiles.length > 0 && audioFiles[0].name ? audioFiles[0].name : "Track Name"}
+            <div style={musicbackground}>
+                <div ref={waveformRef} style={waveformStyle}>
+                <div style={trackNameStyle}>
+            {audioFiles.length > 0 && audioFiles[0].name ? audioFiles[0].name : "Track Name"}
+        </div>
+                </div>
             </div>
-    <div ref={waveformRef} style={waveformStyle}></div> {/* Waveform will be displayed here */}
-</div>
+
            <Sidebar/>
 
             {audioFiles && audioFiles.length > 0 ? (
