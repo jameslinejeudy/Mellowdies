@@ -21,13 +21,27 @@ const sidebarContainerStyle = {
 };
 
 const menubuttonStyle = {
+    display: 'flex',
+    flexDirection: 'row',  
     position: 'fixed', // puts it all the way at the top
-    top: '2%',  // Adjust to add some space from the top
+    top: '1%',  // Adjust to add some space from the top
+    left: '0.5%',
     zIndex: '1001',  // Ensure it stays on top of the menu
     cursor: 'pointer',
-    background: 'none',
+    backgroundColor: 'rgba(255, 255, 255, 0.0)',  // Slightly transparent white background
     border: 'none',
     padding: '0',
+    width: '2%',
+};
+
+const headingStyle = {
+    fontSize: '1.5rem',  // Adjust the font size as needed
+    color: '#000000',  // Adjust the color as needed
+    margin: 0,  // Remove any default margin
+    padding: 0,  // Remove any default padding
+    fontFamily: 'Concert One',  // Use Concert One font
+    marginLeft: '10px',
+
 };
 
 function Sidebar() {
@@ -40,8 +54,11 @@ function Sidebar() {
   return (
     <div style={sidebarContainerStyle}>
       <button style={menubuttonStyle} onClick={toggleMenu}>
-        <img src={menubutton} alt="Menu Button" style={{  width: '7%'}} />
+        <img src={menubutton} alt="Menu Button" style={{  width: '100%'}} />
+        <h1 style={headingStyle}>Mellowdies</h1>
+
       </button>
+
       {isMenuVisible && <Menu />}  {/* Conditionally render the Menu component */}
     </div>
   );

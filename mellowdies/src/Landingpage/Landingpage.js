@@ -31,9 +31,6 @@ const musicbackground = {
     backgroundColor: 'rgba(255, 255, 255, 0.3)',  // Slightly transparent white background
     marginTop: '5px',  // Space between the box and the top of the screen
     boxShadow: '0px 0px 15px 5px rgba(255, 255, 255, 0.6)',  // Soft, glowy white shadow
-    overflowX: 'auto',  // Enable horizontal scrolling
-    overflowY: 'auto',  // Disable vertical scrolling
-
 };
 
 const trackbox = {
@@ -65,7 +62,8 @@ const trackNameStyle = {
 const waveformStyle = {
     width: '100%',  // Ensure waveform takes the full width of the container
     height: '100%',  // Subtract 30px to make space for the scrollbar
-    position: 'relative',  // Ensure proper stacking of elements
+    position: 'absolute',  // Ensure the waveform is positioned absolutely to allow movement
+    left: 0,  // Start the waveform from the left
 };
 
 

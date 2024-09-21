@@ -10,7 +10,6 @@ const menubackground = {
     border: '2px solid #ffffff',  // Sharp white border
     backgroundColor: '#ffffff',  // Slightly transparent white background
     fontFamily: "'Concert One', cursive",  // Apply Concert One font
-    textAlign: 'left',
     fontSize: '1.2rem',
     boxShadow: '0px 0px 15px 5px rgba(255, 255, 255, 0.6)',  // Soft, glowy white shadow
     border: 'none',
@@ -23,21 +22,17 @@ const menubackground = {
 const textstyle = {
     color: '#000000',  // Black text color
     fontSize: '2rem',
-    marginBottom: '10px',  // Space below the heading
-    marginTop: '0',  // Space above the heading
-    textAlign: 'left',
+    textAlign: 'center',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
 };
 
-const buttonStyle = {
-    background: 'none',  // Remove default button background
-    border: 'none',  // Remove default button border
-    padding: '0',  // Remove default button padding
-    cursor: 'pointer',  // Ensure cursor changes to pointer on hover
-};
 
 function Menu() {
   return (
     <div style={menubackground}>
+        <h1 style={textstyle}> This Is The Menu </h1>
     </div>
   );
 }
