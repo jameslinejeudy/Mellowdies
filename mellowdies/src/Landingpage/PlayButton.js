@@ -29,84 +29,37 @@ const iconStyle = {
     height: '30px',  // Adjust height of the icons
 };
 
-function PlayButton({ wavesurferRefs, isReady, speed, setSpeed }) {
+function PlayButton({ playAllTracks, forwardAllTracks, backwardAllTracks, seekAllTracks, changeSpeedAllTracks, isReady, speed }) {
     const [isPlaying, setIsPlaying] = useState(false);
 
     const handlePlayPause = () => {
-        if (wavesurferRefs.current.length && isReady) {
-            wavesurferRefs.current.forEach(waveSurfer => {
-                waveSurfer.playPause();  // Toggle play/pause
-            });
+        if (isReady) {
+            playAllTracks();
             setIsPlaying(!isPlaying);  // Toggle the playing state
-        } else {
-            console.log('WaveSurfer is not ready yet.');
         }
     };
 
-    const handleSpeedChange = (speed) => {
-        if (wavesurferRefs.current.length && isReady) {
-            wavesurferRefs.current.forEach(waveSurfer => {
-                waveSurfer.setPlaybackRate(speed);
-            });
-            setSpeed(speed);
-        }
-    };
-
-    const handleForward = () => {
-        if (wavesurferRefs.current.length && isReady) {
-            wavesurferRefs.current.forEach(waveSurfer => {
-                const currentTime = waveSurfer.getCurrentTime();
-                const duration = waveSurfer.getDuration();
-                const newTime = Math.min(currentTime + 5, duration);  // Skip forward 5 seconds, but not beyond the duration
-                waveSurfer.seekTo(newTime / duration);  // `seekTo` expects a value between 0 and 1
-            });
-        }
-    };
-    
-    const handleBackward = () => {
-        if (wavesurferRefs.current.length && isReady) {
-            wavesurferRefs.current.forEach(waveSurfer => {
-                const currentTime = waveSurfer.getCurrentTime();
-                const newTime = Math.max(currentTime - 5, 0);  // Skip back 5 seconds, but not before the start
-                const duration = waveSurfer.getDuration();
-                waveSurfer.seekTo(newTime / duration);  // `seekTo` expects a value between 0 and 1
-            });
-        }
-    };
-
-    const handleGoToStart = () => {
-        if (wavesurferRefs.current.length && isReady) {
-            wavesurferRefs.current.forEach(waveSurfer => {
-                waveSurfer.seekTo(0);  // Go to the start of the track
-            });
-            setIsPlaying(false);  // Reset play/pause state
-        }
-    };
-
-    const handleGoToEnd = () => {
-        if (wavesurferRefs.current.length && isReady) {
-            wavesurferRefs.current.forEach(waveSurfer => {
-                waveSurfer.seekTo(1);  // Go to the end of the track
-            });
-            setIsPlaying(false);  // Reset play/pause state
+    const handleSpeedChange = (newSpeed) => {
+        if (isReady) {
+            changeSpeedAllTracks(newSpeed);
         }
     };
 
     return (
         <div style={buttonContainerStyle}>
-            <button onClick={handleGoToStart} style={buttonStyle} disabled={!isReady}>
+            <button onClick={() => seekAllTracks(0)} style={buttonStyle} disabled={!isReady}>
                 <img src={rewindstart} alt="Go to Start" style={iconStyle} />
             </button>
-            <button onClick={handleBackward} style={buttonStyle} disabled={!isReady}>
+            <button onClick={backwardAllTracks} style={buttonStyle} disabled={!isReady}>
                 <img src={backwards} alt="Backward 5s" style={iconStyle} />
             </button>
             <button onClick={handlePlayPause} style={buttonStyle} disabled={!isReady}>
                 <img src={isPlaying ? pause : play} alt="Play/Pause" style={iconStyle} />
             </button>
-            <button onClick={handleForward} style={buttonStyle} disabled={!isReady}>
+            <button onClick={forwardAllTracks} style={buttonStyle} disabled={!isReady}>
                 <img src={fastforward} alt="Forward 5s" style={iconStyle} />
             </button>
-            <button onClick={handleGoToEnd} style={buttonStyle} disabled={!isReady}>
+            <button onClick={() => seekAllTracks(1)} style={buttonStyle} disabled={!isReady}>
                 <img src={endofmusic} alt="Go to End" style={iconStyle} />
             </button>
             <div style={{ marginBottom: '10px' }}>

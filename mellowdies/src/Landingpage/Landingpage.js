@@ -112,6 +112,43 @@ function Landingpage() {
         }
     }, [audioFiles]);
 
+    const playAllTracks = () => {
+        wavesurferRefs.current.forEach(waveSurfer => {
+            waveSurfer.playPause();
+        });
+    };
+
+    const seekAllTracks = (seekTo) => {
+        wavesurferRefs.current.forEach(waveSurfer => {
+            waveSurfer.seekTo(seekTo);
+        });
+    };
+
+    const changeSpeedAllTracks = (newSpeed) => {
+        setSpeed(newSpeed);
+        wavesurferRefs.current.forEach(waveSurfer => {
+            waveSurfer.setPlaybackRate(newSpeed);
+        });
+    };
+
+    const forwardAllTracks = () => {
+        wavesurferRefs.current.forEach(waveSurfer => {
+            const currentTime = waveSurfer.getCurrentTime();
+            const duration = waveSurfer.getDuration();
+            const newTime = Math.min(currentTime + 5, duration);  // Skip forward 5 seconds, but not beyond the duration
+            waveSurfer.seekTo(newTime / duration);  // `seekTo` expects a value between 0 and 1
+        });
+    };
+
+    const backwardAllTracks = () => {
+        wavesurferRefs.current.forEach(waveSurfer => {
+            const currentTime = waveSurfer.getCurrentTime();
+            const newTime = Math.max(currentTime - 5, 0);  // Skip back 5 seconds, but not before the start
+            const duration = waveSurfer.getDuration();
+            waveSurfer.seekTo(newTime / duration);  // `seekTo` expects a value between 0 and 1
+        });
+    };
+
     return (
         <div style={pagebackground}>
             <div style={musicbackground}>
@@ -127,10 +164,13 @@ function Landingpage() {
 
             {audioFiles && audioFiles.length > 0 ? (
                 <PlayButton
-                    wavesurferRefs={wavesurferRefs}  // Pass the refs correctly here
+                    playAllTracks={playAllTracks}
+                    forwardAllTracks={forwardAllTracks}
+                    backwardAllTracks={backwardAllTracks}
+                    seekAllTracks={seekAllTracks}
+                    changeSpeedAllTracks={changeSpeedAllTracks}
                     isReady={isReady}
                     speed={speed}
-                    setSpeed={setSpeed}
                 />
             ) : (
                 <p>No audio tracks available.</p>
