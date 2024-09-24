@@ -23,6 +23,8 @@ const sidebarContainerStyle = {
 const menubuttonStyle = {
     display: 'flex',
     flexDirection: 'row',  
+    alignItems: 'center',
+    justifyContent: 'center',
     position: 'fixed', // puts it all the way at the top
     top: '1%',  // Adjust to add some space from the top
     left: '0.5%',
@@ -31,17 +33,60 @@ const menubuttonStyle = {
     backgroundColor: 'rgba(255, 255, 255, 0.0)',  // Slightly transparent white background
     border: 'none',
     padding: '0',
-    width: '2%',
+    width: 'auto',
+    height: 'auto',
 };
 
 const headingStyle = {
+  display: 'flex',
+  flexDirection: 'row',  
+  alignItems: 'center',
+  justifyContent: 'center',
     fontSize: '1.5rem',  // Adjust the font size as needed
     color: '#000000',  // Adjust the color as needed
     margin: 0,  // Remove any default margin
     padding: 0,  // Remove any default padding
     fontFamily: 'Concert One',  // Use Concert One font
     marginLeft: '10px',
+    marginTop: '-2px',
+    height: 'auto',
+};
 
+const aibuttonStyle = {
+  display: 'flex',
+  flexDirection: 'row',  
+  alignItems: 'center',
+  justifyContent: 'center',
+  position: 'fixed', // puts it all the way at the top
+  top: '1%',  // Adjust to add some space from the top
+  right: '77%',
+  zIndex: '1001',  // Ensure it stays on top of the menu
+  cursor: 'pointer',
+  backgroundColor: 'rgba(255, 255, 255, 0.0)',  // Slightly transparent white background
+  border: 'none',
+  padding: '0',
+  width: 'auto',
+  height: 'auto',
+  marginLeft: '275px',
+  marginTop: '3px',
+};
+
+const mixerbuttonStyle = {
+  display: 'flex',
+  flexDirection: 'row',  
+  alignItems: 'center',
+  justifyContent: 'center',
+  position: 'fixed', // puts it all the way at the top
+  top: '1%',  // Adjust to add some space from the top
+  right: '79%',
+  zIndex: '1001',  // Ensure it stays on top of the menu
+  cursor: 'pointer',
+  backgroundColor: 'rgba(255, 255, 255, 0.0)',  // Slightly transparent white background
+  border: 'none',
+  padding: '0',
+  width: 'auto',
+  height: 'auto',
+  marginTop: '3px',
 };
 
 function Sidebar() {
@@ -54,11 +99,15 @@ function Sidebar() {
   return (
     <div style={sidebarContainerStyle}>
       <button style={menubuttonStyle} onClick={toggleMenu}>
-        <img src={menubutton} alt="Menu Button" style={{  width: '100%'}} />
-        <h1 style={headingStyle}>Mellowdies</h1>
-
+        <img src={menubutton} alt="Menu Button" style={{  width: '33px', height: 'auto'}} />
+        <h1 style={headingStyle}>MELLOWDIES</h1>
       </button>
-
+      <button style={aibuttonStyle} onClick={toggleMenu}>  {/* edit onClick when integrated */}
+        <h1 style={headingStyle}>AI</h1>
+      </button>
+      <button style={mixerbuttonStyle} onClick={toggleMenu}>  {/* edit onClick when integrated */}
+        <h1 style={headingStyle}>Mixer</h1>
+      </button>
       {isMenuVisible && <Menu />}  {/* Conditionally render the Menu component */}
     </div>
   );

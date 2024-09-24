@@ -1,5 +1,5 @@
 import React from 'react';
-import gifBackground from './images/skybackground.png';  // Adjust the path if needed
+import gifBackground from './images/yea.png';  // Adjust the path if needed
 import  { useEffect } from 'react';
 import useDrivePicker from 'react-google-drive-picker';
 import { useNavigate } from 'react-router-dom';  // Ensure useNavigate is imported correctly
@@ -113,13 +113,17 @@ function HomePage() {
         });
         console.log('Google Drive clicked');
     };
+
+    const handleNoFile = () => {
+      navigate('/Landingpage');
+    }
     
     
   return (
     <div style={pageStyle}>
       <div style={containerStyle}>  {/* Container to hold text at the top */}
-        <h1 style={headingStyle}>Mellowdies</h1>
-        <p style={paragraphStyle}>Upload a file!</p>
+        <h1 style={headingStyle}>MELLOWDIES</h1>
+        //<p style={paragraphStyle}>UPLOAD AN AUDIO FILE TO START</p>//
 
         {/* Accept only audio files */}
         <input
@@ -132,7 +136,12 @@ function HomePage() {
 
 
          <button style={buttonStyle} onClick={handleGoogleDrive}> {/* Additional upload buttons */}
-             Upload from Google Drive
+             Google Drive
+         </button>
+
+        {/* If they want to just go to the workspace and add tracks from there */}
+         <button style={buttonStyle} onClick={handleNoFile}> {/* Additional upload buttons */}
+             Continue Without Upload
          </button>
 
       </div>

@@ -1,8 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Homepage from './Homepage.js';
-import Landingpage from './Landingpage/Landingpage.js';
-import Menu from './Landingpage/Menu.js';
+import Landingpage from './LandingPage/LandingPage.js';
+import Menu from './LandingPage/Menu.js';
 
 
 function App() {
