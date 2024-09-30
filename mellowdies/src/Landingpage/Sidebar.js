@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import menubutton from '../images/menubutton.png';
+import sparkless from '../images/drawstar.png';
 import Menu from './Menu';
 
 const sidebarContainerStyle = {
@@ -25,7 +26,7 @@ const sidebarContainerStyle = {
 
 const buttonStyle = {
     padding: '8px 16px',  // Reduced padding for a more standard button size
-    borderRadius: '10px',  // Slightly less rounded corners
+    borderRadius: '30px',  // Slightly less rounded corners
     border: '2px solid #ffffff',  // Sharp white border
     backgroundColor: 'rgba(255, 255, 255, 0.5)',  // Slightly transparent white background
     color: '#000',  // Black text color
@@ -37,6 +38,8 @@ const buttonStyle = {
     fontSize: '1rem',  // Slightly smaller font size
     boxShadow: '2px 2px 4px white, -2px -2px 4px white',  // Slightly smaller shadow effect
     alignSelf: 'center',  // Centers the button horizontally within the sidebar
+    flexDirection: 'row',  // Ensure items stack vertically
+
 };
 
 const menubuttonStyle = {
@@ -89,7 +92,7 @@ function Sidebar() {
         <h1 style={headingStyle}>MELLOWDIES</h1>
       </button>
       <button style={buttonStyle} onClick={toggleMenu}>  {/* edit onClick when integrated */}
-        <h1 style={headingStyle}>AI Suggestion</h1>
+        <h1 style={headingStyle}>✨AI Suggestion✨</h1>
       </button>
       <button style={buttonStyle} onClick={toggleMenu}>  {/* edit onClick when integrated */}
         <h1 style={headingStyle}>Mixer</h1>
