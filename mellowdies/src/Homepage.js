@@ -92,7 +92,7 @@ function HomePage() {
             supportDrives: true,
             multiselect: true,
             viewId: "AUDIO", // or you can remove this if it restricts the file types incorrectly
-            mimeTypes: ['audio/mpeg', 'audio/wav', 'audio/mp3', 'audio/x-wav', 'audio/x-m4a'], // Allow specific audio types
+            mimeTypes: ['audio/mpeg', 'audio/wav', 'audio/mp3', 'audio/x-wav', 'audio/x-m4a', 'audio/flac'], // Allow specific audio types
             callbackFunction: (data) => {
                 console.log('Google Drive callback data:', data);
     

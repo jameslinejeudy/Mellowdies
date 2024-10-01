@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import menubutton from '../images/menubutton.png';
 import sparkless from '../images/drawstar.png';
 import Menu from './Menu';
+import AIMenu from './Ai';
 
 const sidebarContainerStyle = {
     width: '25%',
@@ -74,30 +75,33 @@ const headingStyle = {
     height: 'auto',
 };
 
-
-
-
-
 function Sidebar() {
-  const [isMenuVisible, setMenuVisible] = useState(false);
+  const [isMenuVisible, setMenuVisible] = useState(null);
 
-  const toggleMenu = () => {
-    setMenuVisible(!isMenuVisible);
+  const toggleMenu = (menu) => {
+    setMenuVisible(isMenuVisible === menu ? null : menu);
+  };
+
+  const handleBack = () => {
+    setMenuVisible(null); // Hide the current menu
   };
 
   return (
     <div style={sidebarContainerStyle}>
-      <button style={menubuttonStyle} onClick={toggleMenu}>
+      <button style={menubuttonStyle} onClick={() => toggleMenu('mainMenu')}>
         <img src={menubutton} alt="Menu Button" style={{  width: '33px', height: 'auto'}} />
         <h1 style={headingStyle}>MELLOWDIES</h1>
       </button>
-      <button style={buttonStyle} onClick={toggleMenu}>  {/* edit onClick when integrated */}
+      <button style={buttonStyle} onClick={() => toggleMenu('aiSuggestionMenu')}>  {/* edit onClick when integrated */}
         <h1 style={headingStyle}>✨AI Suggestion✨</h1>
       </button>
-      <button style={buttonStyle} onClick={toggleMenu}>  {/* edit onClick when integrated */}
+      <button style={buttonStyle} onClick={() => toggleMenu('mixerMenu')}>  {/* edit onClick when integrated */}
         <h1 style={headingStyle}>Mixer</h1>
       </button>
-      {isMenuVisible && <Menu />}  {/* Conditionally render the Menu component */}
+      {/* Conditionally render different menus based on which one is visible */}
+      {isMenuVisible === 'mainMenu' && <Menu handleBack={handleBack} />}
+      {isMenuVisible === 'aiSuggestionMenu' && <AIMenu handleBack={handleBack} />}
+      {isMenuVisible === 'mixerMenu' && <Menu handleBack={handleBack} />}
     </div>
   );
 }
