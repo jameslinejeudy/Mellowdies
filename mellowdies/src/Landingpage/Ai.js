@@ -2,7 +2,7 @@ import menubutton from '../images/menubutton.png';
 import React, { useState } from "react";
 import { Client } from "@gradio/client";
 
-const app = await Client.connect("https://facebook-musicgen.hf.space/");
+//const app = await Client.connect("https://facebook-musicgen.hf.space/");
 
 const menubackground = {
   width: '25%',
