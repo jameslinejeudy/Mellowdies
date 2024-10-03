@@ -100,18 +100,17 @@ async function generateMusic(description, audioFileUrl) {
     const response = await fetch('http://localhost:3001/api/musicgen', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         description: description,
         audioUrl: audioFileUrl,
-        fn_index: 0  // Using fn_index 0 for text-to-music
+        fn_index: 0,  // Using fn_index 0 for text-to-music
       })
     });
 
     const result = await response.json();
-    
-    // Log the actual result to see what the API is returning
+
     console.log("Music generation result:", result);
     
     if (result) {
@@ -125,17 +124,23 @@ async function generateMusic(description, audioFileUrl) {
   }
 }
 
-
 // Example usage:
 const description = "happy rock";
 const audioFileUrl = "https://github.com/gradio-app/gradio/raw/main/test/test_files/audio_sample.wav";
 
-generateMusic(description, audioFileUrl).then((audio) => {
-  if (audio) {
-    console.log("Generated music:", audio);
+generateMusic(description, audioFileUrl).then((response) => {
+  if (response) {
+    console.log("Generated music response:", response);
+    if (response.data && response.data[0]) {
+      const generatedMusicUrl = response.data[0];  // Assuming the audio data is in response.data[0]
+      console.log("Generated music URL:", generatedMusicUrl);
+    } else {
+      console.error("No audio data found in response.");
+    }
   }
 });
 
+//above is a test
 
 // Counter to track the number of connection attempts (for testing)
 let i = 0;
@@ -157,13 +162,31 @@ function AIMenu({ handleBack }) {
     const connectToClient = async () => {
       try {
         someFunction(); // Call the counter for testing
-        console.log("Connecting to API...");
-        const appInstance = await Client.connect("https://facebook-musicgen.hf.space/");
-        console.log("Connected to API:", appInstance);
+        console.log("Connecting to API via proxy...");
+  
+        // Replace Client.connect with fetch to hit the local proxy server
+        const response = await fetch('http://localhost:3001/api/musicgen', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            description: 'happy rock', // Replace this with dynamic data if needed
+            audioUrl: 'https://github.com/gradio-app/gradio/raw/main/test/test_files/audio_sample.wav',
+            fn_index: 0, // Using fn_index 0 for text-to-music conversion
+          }),
+        });
+  
+        if (!response.ok) {
+          throw new Error('Failed to connect to the proxy server.');
+        }
+  
+        const appInstance = await response.json();
+        console.log('Connected to API through proxy:', appInstance);
         setApp(appInstance);
       } catch (error) {
-        console.error("Failed to connect to the API:", error);
-        setErrorMessage("Failed to connect to the MusicGen API. Please try again later.");
+        console.error('Failed to connect to the API:', error);
+        setErrorMessage('Failed to connect to the MusicGen API via proxy. Please try again later.');
       }
     };
   

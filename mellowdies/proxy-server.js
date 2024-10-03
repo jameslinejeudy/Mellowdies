@@ -1,6 +1,8 @@
 const express = require('express');
 const axios = require('axios');
 const cors = require('cors');  // Import CORS middleware
+const FormData = require('form-data'); // To handle file uploads
+const fetch = require('node-fetch'); // To fetch the audio file from URL
 
 const app = express();
 const port = 3001;
@@ -17,16 +19,26 @@ app.post('/api/musicgen', async (req, res) => {
   const { description, audioUrl, fn_index } = req.body;
 
   try {
-    // Log the request being sent to the MusicGen API
     console.log("Sending request to MusicGen API with data:", { description, audioUrl, fn_index });
 
-    // Make a request to the MusicGen API from the backend
-    const response = await axios.post('https://facebook-musicgen.hf.space/api/predict/', {
-      inputs: [description, audioUrl],
-      fn_index: fn_index || 0  // Set the function index to 0 if not provided
+    // Step 1: Download the audio file from the provided URL
+    const audioResponse = await fetch(audioUrl);
+    const audioBuffer = await audioResponse.buffer(); // Get the audio as a buffer (file)
+
+    // Step 2: Create form data for sending to the MusicGen API
+    const formData = new FormData();
+    formData.append('data', description);  // Add description input
+    formData.append('file', audioBuffer, 'audio_sample.wav');  // Add audio blob input
+    formData.append('fn_index', fn_index);  // Add the function index
+
+    // Step 3: Make a request to the MusicGen API from the backend
+    const response = await axios.post('https://facebook-musicgen.hf.space/api/predict/', formData, {
+      headers: {
+        ...formData.getHeaders() // Use correct headers for multipart/form-data
+      }
     });
 
-    // Log the successful response from the MusicGen API
+    // Step 4: Log the successful response from the MusicGen API
     console.log("Received response from MusicGen API:", response.data);
 
     // Forward the MusicGen API response back to the client
@@ -48,3 +60,4 @@ app.post('/api/musicgen', async (req, res) => {
 app.listen(port, () => {
   console.log(`Proxy server running at http://localhost:${port}`);
 });
+
