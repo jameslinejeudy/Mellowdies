@@ -1,9 +1,6 @@
 How to run:
+Current API is able to call and retrieve audio file, but its corrupted...
 
-Open a terminal and navigate to project directory
-Type "Node proxy-server.js" to run proxy server. This is to send requests from backend proxy, as front end calls are blocked
-In a different terminal, navigate to project directory and run "npm start"
-Upload a file or not in localhost:3000 that opens
-Click the AI suggestion button
-Notice the log: An API request is being sent and there is a response...
-Will need to work beyond this of course, but its a start
+go to project directory and run "Node testApi.js"
+You will see it will succeed and a new .wav file will be generated, but it wont load/work...
+Need to find issue
