@@ -13,7 +13,7 @@ async function testMusicGenAPI() {
     console.log("Connected to the API. Submitting a request with fn_index: 0...");
 
     // Submit a request to the MusicGen API (fn_index: 0)
-    const result = await app.predict(0, ["silly bee"]);
+    const result = await app.predict(0, ["Taylor swift"]);
     console.log("Generated Music Result:", result?.data);
 
     const wavFilePath = result?.data?.[1]?.name;
