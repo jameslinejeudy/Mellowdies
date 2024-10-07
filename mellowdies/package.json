@@ -23,10 +23,13 @@
   },
   "devDependencies": {
     "@gradio/client": "^1.6.0-beta.3",
+    "concurrently": "^9.0.1",
     "react-scripts": "5.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
+    "server": "node server.mjs", 
+    "dev": "concurrently \"npm start\" \"npm run server\"",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "deploy": "npm run build && some-deploy-script",
