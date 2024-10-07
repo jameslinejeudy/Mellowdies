@@ -27,8 +27,6 @@ async function testMusicGenAPI() {
     const wavFileUrl = `https://facebook-musicgen.hf.space/file=${wavFilePath}`;
     console.log("WAV file URL:", wavFileUrl);
 
-    // Introduce a delay of 1 minute (60000 milliseconds) before checking the file
-    await delay(60000);
 
     // Attempt to download the WAV file
     const outputPath = './downloaded_music.wav';
@@ -37,7 +35,7 @@ async function testMusicGenAPI() {
     if (success) {
       console.log("WAV file downloaded successfully to", outputPath);
     } else {
-      console.log("WAV file could not be downloaded.");
+      console.log("Check your project directory for file...");
     }
 
   } catch (error) {
