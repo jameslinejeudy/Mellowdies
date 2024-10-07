@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import menubutton from '../images/menubutton.png';
 import sparkless from '../images/drawstar.png';
-import Menu from './Menu';
-import AIMenu from './Ai';
+import Menu from './Menu.js';
+import AIMenu from './Ai.js';
 
 const sidebarContainerStyle = {
     width: '25%',
