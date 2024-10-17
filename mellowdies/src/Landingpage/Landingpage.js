@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import WaveSurfer from 'wavesurfer.js';
+import RegionsPlugin from "wavesurfer.js/dist/plugins/regions.js";
 import { useLocation } from 'react-router-dom';
 import Sidebar from './Sidebar.js';
 import cloud from '../images/cloud.png';
@@ -52,101 +53,70 @@ const waveformStyle = {
 };
 
 function Landingpage() {
-    const wavesurferRefs = useRef([]);  // Array to hold refs for each WaveSurfer instance
+    const wavesurferRefs = useRef([]);
     const location = useLocation();
     const { audioFiles } = location.state || { audioFiles: [] };
     const [isReady, setIsReady] = useState(false);
     const [speed, setSpeed] = useState(1);
     const [progress, setProgress] = useState(0);
+    const regions = RegionsPlugin.create();
 
     useEffect(() => {
-        // Initialize the wavesurferRefs array
         wavesurferRefs.current = [];
-
         if (audioFiles && audioFiles.length > 0) {
             audioFiles.forEach((file, index) => {
-                const containerId = `waveform-${index}`;
-
                 const waveSurfer = WaveSurfer.create({
-                    container: `#${containerId}`,
+                    container: `#waveform-${index}`,
                     waveColor: 'blue',
                     progressColor: '#00FFFF',
                     height: 75,
-                    autoCenter: true,
-                    interact: true,
                     backend: 'MediaElement',
-                    cursorWidth: 2,
-                    cursorColor: '#FF0000',
-                    backgroundColor: 'rgba(255, 255, 255, 0)',
-                    minPxPerSec: 100,
+                    plugins: [regions],
                 });
-
+    
                 waveSurfer.load(file.url);
-
-                waveSurfer.on('ready', () => {
-                    setIsReady(true);
-                });
-
+    
+                waveSurfer.on('ready', () => setIsReady(true));
+    
                 waveSurfer.on('audioprocess', () => {
                     setProgress(waveSurfer.getCurrentTime() / waveSurfer.getDuration() * 100);
                 });
-
+    
                 waveSurfer.on('seek', (progress) => {
                     setProgress(progress * 100);
                 });
-
-                // Store the waveSurfer instance in the refs array
-                wavesurferRefs.current[index] = waveSurfer;
-            });
-
-            // Cleanup function to properly handle the destruction of WaveSurfer instances
-            return () => {
-                wavesurferRefs.current.forEach(waveSurfer => {
-                    if (waveSurfer) {
-                        waveSurfer.destroy();
-                    }
+                
+                regions.on('region-created', (region) => {
+                    regions.getRegions().forEach((r) => {
+                        if (r.id !== region.id) {
+                            r.remove();
+                        }
+                    });
                 });
-            };
-        } else {
-            console.log('No audio files available to display.');
-        }
+
+                // Remove region if it's clicked again
+                regions.on('region-clicked', (region, e) => {
+                    e.stopPropagation(); // prevent triggering a click on the waveform
+                    region.remove();
+                });
+
+                // Allow region creation by dragging
+                regions.enableDragSelection({
+                    color: 'rgba(245, 137, 5, 0.4)',
+                });
+
+                    wavesurferRefs.current[index] = waveSurfer;
+                });
+        
+                return () => {
+                    wavesurferRefs.current.forEach(waveSurfer => waveSurfer.destroy());
+                };
+            }
     }, [audioFiles]);
 
-    const playAllTracks = () => {
-        wavesurferRefs.current.forEach(waveSurfer => {
-            waveSurfer.playPause();
-        });
-    };
-
-    const seekAllTracks = (seekTo) => {
-        wavesurferRefs.current.forEach(waveSurfer => {
-            waveSurfer.seekTo(seekTo);
-        });
-    };
-
-    const changeSpeedAllTracks = (newSpeed) => {
-        setSpeed(newSpeed);
-        wavesurferRefs.current.forEach(waveSurfer => {
-            waveSurfer.setPlaybackRate(newSpeed);
-        });
-    };
-
-    const forwardAllTracks = () => {
-        wavesurferRefs.current.forEach(waveSurfer => {
-            const currentTime = waveSurfer.getCurrentTime();
-            const duration = waveSurfer.getDuration();
-            const newTime = Math.min(currentTime + 5, duration);  // Skip forward 5 seconds, but not beyond the duration
-            waveSurfer.seekTo(newTime / duration);  // `seekTo` expects a value between 0 and 1
-        });
-    };
-
-    const backwardAllTracks = () => {
-        wavesurferRefs.current.forEach(waveSurfer => {
-            const currentTime = waveSurfer.getCurrentTime();
-            const newTime = Math.max(currentTime - 5, 0);  // Skip back 5 seconds, but not before the start
-            const duration = waveSurfer.getDuration();
-            waveSurfer.seekTo(newTime / duration);  // `seekTo` expects a value between 0 and 1
-        });
+    const handlePlaybackRateChange = (rate) => {
+        setSpeed(rate);
+        wavesurferRefs.current.forEach(waveSurfer => waveSurfer.setPlaybackRate(rate));
     };
 
     return (
@@ -160,15 +130,26 @@ function Landingpage() {
                 ))}
             </div>
 
-            <Sidebar/>
+            <Sidebar />
 
             {audioFiles && audioFiles.length > 0 ? (
                 <PlayButton
-                    playAllTracks={playAllTracks}
-                    forwardAllTracks={forwardAllTracks}
-                    backwardAllTracks={backwardAllTracks}
-                    seekAllTracks={seekAllTracks}
-                    changeSpeedAllTracks={changeSpeedAllTracks}
+                    playAllTracks={() => wavesurferRefs.current.forEach(waveSurfer => waveSurfer.playPause())}
+                    forwardAllTracks={() => {
+                        wavesurferRefs.current.forEach(waveSurfer => {
+                            const currentTime = waveSurfer.getCurrentTime();
+                            const duration = waveSurfer.getDuration();
+                            waveSurfer.seekTo((currentTime + 5) / duration);
+                        });
+                    }}
+                    backwardAllTracks={() => {
+                        wavesurferRefs.current.forEach(waveSurfer => {
+                            const currentTime = waveSurfer.getCurrentTime();
+                            waveSurfer.seekTo(Math.max((currentTime - 5) / waveSurfer.getDuration(), 0));
+                        });
+                    }}
+                    seekAllTracks={(seekTo) => wavesurferRefs.current.forEach(waveSurfer => waveSurfer.seekTo(seekTo))}
+                    changeSpeedAllTracks={handlePlaybackRateChange}
                     isReady={isReady}
                     speed={speed}
                 />
