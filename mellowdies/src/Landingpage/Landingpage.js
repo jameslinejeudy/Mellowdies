@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import WaveSurfer from 'wavesurfer.js';
+import TimelinePlugin from "wavesurfer.js/dist/plugins/timeline";
 import { useLocation } from 'react-router-dom';
 import Sidebar from './Sidebar.js';
-import cloud from '../images/cloud.png';
+import cloud from '../images/backgrounds/cloud.png';
 import PlayButton from './PlayButton.js';
 
 const pagebackground = {
@@ -51,6 +52,13 @@ const waveformStyle = {
     marginBottom: '20px',
 };
 
+const timelineStyle = {
+    width: '100%',
+    height: '75px',
+    position: 'relative',
+};
+
+
 function Landingpage() {
     const wavesurferRefs = useRef([]);  // Array to hold refs for each WaveSurfer instance
     const location = useLocation();
@@ -66,6 +74,7 @@ function Landingpage() {
         if (audioFiles && audioFiles.length > 0) {
             audioFiles.forEach((file, index) => {
                 const containerId = `waveform-${index}`;
+                const timelineId = `timeline-${index}`;                
 
                 const waveSurfer = WaveSurfer.create({
                     container: `#${containerId}`,
@@ -79,6 +88,15 @@ function Landingpage() {
                     cursorColor: '#FF0000',
                     backgroundColor: 'rgba(255, 255, 255, 0)',
                     minPxPerSec: 100,
+                    plugins: [
+                        TimelinePlugin.create({
+                            container: `#${timelineId}`,
+                            primaryColor: '#000',
+                            secondaryColor: '#c0c0c0',
+                            primaryFontColor: '#000',
+                            secondaryFontColor: '#000',
+                        })
+                    ]
                 });
 
                 waveSurfer.load(file.url);
@@ -155,6 +173,7 @@ function Landingpage() {
                 {audioFiles.map((file, index) => (
                     <div key={index} style={waveformStyle}>
                         <div style={trackNameStyle}>{file.name}</div>
+                        <div id={`timeline-${index}`} style={timelineStyle}></div>
                         <div id={`waveform-${index}`} style={{ width: '100%', height: '100%' }}></div>
                     </div>
                 ))}
