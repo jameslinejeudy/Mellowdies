@@ -12,7 +12,8 @@ app.use(cors());
 app.use(express.json());
 
 app.post('/api/generate-music', async (req, res) => {
-  const { description } = req.body;
+  const { description } = req.body.description;
+  const { audioURL } = req.body.regionURL;
 
   try {
     console.log(`[Server] Received request to generate music for description: "${description}"`);
@@ -24,7 +25,7 @@ app.post('/api/generate-music', async (req, res) => {
 
     // Request music generation
     console.log("[Server] Sending generation request to MusicGen API...");
-    const result = await musicClient.predict(0, [description]);
+    const result = await musicClient.predict(0, [description], [audioURL]);
     console.log("[Server] Received response from MusicGen API:", result?.data);
 
     // Extract WAV file path

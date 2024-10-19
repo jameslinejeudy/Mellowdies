@@ -6,13 +6,21 @@ const descriptionBoxStyle = { /* styles remain unchanged */ };
 const backButtonStyle = { /* styles remain unchanged */ };
 const contentStyle = { /* styles remain unchanged */ };
 
-function AIMenu({ handleBack }) {
+function AIMenu({ handleBack, regionURL }) {
   const [loading, setLoading] = useState(false);
   const [description, setDescription] = useState("");
   const [errorMessage, setErrorMessage] = useState(null);
   const [progressMessage, setProgressMessage] = useState(null);
+  const [sendToAI, setSendToAI] = useState(false);  // Checkbox state
 
   const handleGenerateMusic = async () => {
+
+    if (setSendToAI) {
+      regionURL = regionToSend();
+    } else {
+      regionURL = "";
+    }
+
     setLoading(true);
     setErrorMessage(null);
     setProgressMessage("Connecting to the server...");
@@ -23,7 +31,7 @@ function AIMenu({ handleBack }) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ description }),
+        body: JSON.stringify({ description, regionURL }),  // Send checkbox value to server
       });
 
       if (!response.ok) {
@@ -68,6 +76,16 @@ function AIMenu({ handleBack }) {
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
+        <div>
+          <label>
+            <input
+              type="checkbox"
+              checked={sendToAI}
+              onChange={(e) => setSendToAI(e.target.checked)}
+            />
+            Send selected music region to AI
+          </label>
+        </div>
         <button style={generateButtonStyle} onClick={handleGenerateMusic} disabled={loading}>
           {loading ? "Processing..." : "Generate Music"}
         </button>
