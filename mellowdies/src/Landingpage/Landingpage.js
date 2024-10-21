@@ -110,7 +110,6 @@ function Landingpage() {
             <div className="musicbackground">
                 {audioFiles.map((file, index) => (
                     <div key={index} className="waveformStyle">
-                        <div className="trackNameStyle">{file.name}</div>
                         <div id={`waveform-${index}`} style={{ width: '100%', height: '100%' }}></div>
                     </div>
                 ))}
