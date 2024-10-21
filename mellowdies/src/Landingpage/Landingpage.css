@@ -50,9 +50,20 @@
     background-color: rgba(255, 255, 255, 0.7);
 }
 
-
 .timelineStyle {
-    width: 100%;
-    height: 75px;
-    position: relative;
+    width: 75%;  /* Set the timeline width to 75% */
+    height: 30px;  /* Set the height of the timeline */
+    background-color: #fff;  /* Ensure the background is visible */
+    margin-bottom: 10px;  /* Add some space between the timeline and waveforms */
+    margin-left: auto;  /* Align the timeline to the right */
+    margin-right: 0;  /* Make sure it's aligned all the way to the right */
+    overflow: hidden; 
+    color: #000;  /* Ensure the text is visible */
+    font-size: 12px; 
+}
+
+.timelineStyle .timeline-labels {
+    color: #000;  /* Ensure font color is visible */
+    font-family: Arial, sans-serif;  /* Set a readable font */
+    font-size: 12px;  /* Make the font size large enough to be readable */
 }
