@@ -15,12 +15,6 @@ function AIMenu({ handleBack, regionURL }) {
 
   const handleGenerateMusic = async () => {
 
-    if (setSendToAI) {
-      regionURL = regionToSend();
-    } else {
-      regionURL = "";
-    }
-
     setLoading(true);
     setErrorMessage(null);
     setProgressMessage("Connecting to the server...");

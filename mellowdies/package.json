@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "audiobuffer-slice": "^0.0.7",
+    "audiobuffer-to-wav": "^1.0.0",
     "axios": "^1.7.7",
     "buffer": "^6.0.3",
     "cors": "^2.8.5",
@@ -28,7 +30,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "server": "node server.mjs", 
+    "server": "node server.mjs",
     "dev": "concurrently \"npm start\" \"npm run server\"",
     "build": "react-scripts build",
     "test": "react-scripts test",
