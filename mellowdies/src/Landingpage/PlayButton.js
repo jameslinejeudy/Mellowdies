@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import fastforward from '../images/fast-forward.png';  // Forward
-import pause from '../images/pause.png';  // Pause
-import play from '../images/play.png';  // Play
-import rewindstart from '../images/startofmusic.png';  // Rewind from the start
-import backwards from '../images/backwards.png';  // Backwards
-import endofmusic from '../images/endofmusic.png';  // End of music
+import fastforward from '../images/icons/fast-forward.png';  // Forward
+import pause from '../images/icons/pause.png';  // Pause
+import play from '../images/icons/play.png';  // Play
+import rewindstart from '../images/icons/startofmusic.png';  // Rewind from the start
+import backwards from '../images/icons/backwards.png';  // Backwards
+import endofmusic from '../images/icons/endofmusic.png';  // End of music
 
 const buttonContainerStyle = {
     display: 'flex',
@@ -62,8 +62,8 @@ function PlayButton({ playAllTracks, forwardAllTracks, backwardAllTracks, seekAl
             <button onClick={() => seekAllTracks(1)} style={buttonStyle} disabled={!isReady}>
                 <img src={endofmusic} alt="Go to End" style={iconStyle} />
             </button>
-            <div style={{ marginBottom: '10px' }}>
-                <label htmlFor="speed">Speed: </label>
+            <div style={{ marginBottom: '13px' }}>
+                <label htmlFor="speed">SPEED: </label>
                 <select
                     id="speed"
                     value={speed}

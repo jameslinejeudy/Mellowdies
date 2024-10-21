@@ -1,5 +1,5 @@
 import React from 'react';
-import gifBackground from './images/yea.png';  // Adjust the path if needed
+import gifBackground from './images/backgrounds/yea.png';  // Adjust the path if needed
 import  { useEffect } from 'react';
 import useDrivePicker from 'react-google-drive-picker';
 import { useNavigate } from 'react-router-dom';  // Ensure useNavigate is imported correctly

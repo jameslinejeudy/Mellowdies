@@ -1,5 +1,5 @@
 import React from 'react';
-import menubutton from '../images/menubutton.png';
+import menubutton from '../images/icons/menubutton.png';
 
 const menubackground = {
   width: '25%',
