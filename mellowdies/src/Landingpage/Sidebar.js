@@ -73,7 +73,7 @@ const headingStyle = {
     height: 'auto',
 };
 
-function Sidebar({regionURL}) {
+function Sidebar({waveData}) {
   const [isMenuVisible, setMenuVisible] = useState(null);
   
   // Create an AudioContext
@@ -148,7 +148,7 @@ function Sidebar({regionURL}) {
         handlePanningChange={handlePanningChange} 
         handleNoiseReductionChange={handleNoiseReductionChange} 
       />}
-      {isMenuVisible === 'aiSuggestionMenu' && <AIMenu handleBack={handleBack} regionURL={regionURL}/>}
+      {isMenuVisible === 'aiSuggestionMenu' && <AIMenu handleBack={handleBack} waveData={waveData}/>}
       {isMenuVisible === 'mixerMenu' && <Menu 
         handleBack={handleBack} 
         handleEqualizerChange={handleEqualizerChange} 

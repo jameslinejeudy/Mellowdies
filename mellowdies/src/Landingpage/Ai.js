@@ -6,18 +6,47 @@ const descriptionBoxStyle = { /* styles remain unchanged */ };
 const backButtonStyle = { /* styles remain unchanged */ };
 const contentStyle = { /* styles remain unchanged */ };
 
-function AIMenu({ handleBack, regionURL }) {
+var toWav = require('audiobuffer-to-wav');
+var slicer = require('audiobuffer-slice');
+let wavURL = "";
+let sliceBuffer = null;
+
+function getAudioSlice(buffer, region) {
+  slicer(buffer, region.start * 1000, region.end * 1000, function(error, slicedBuffer) {
+      if (error) {
+          console.error(error);
+          return;
+      } else {
+          sliceBuffer = slicedBuffer;
+      }
+  })
+  return sliceBuffer;
+}
+
+function bufferToWavURL(buffer) {
+  var blob = new window.Blob([new DataView(toWav(buffer))], {type: "audio/wav"});
+  wavURL = window.URL.createObjectURL(blob);
+  return wavURL;
+}
+
+function AIMenu({ handleBack, waveData }) {
   const [loading, setLoading] = useState(false);
   const [description, setDescription] = useState("");
   const [errorMessage, setErrorMessage] = useState(null);
   const [progressMessage, setProgressMessage] = useState(null);
   const [sendToAI, setSendToAI] = useState(false);  // Checkbox state
-
+  
   const handleGenerateMusic = async () => {
-
     setLoading(true);
     setErrorMessage(null);
     setProgressMessage("Connecting to the server...");
+
+    if (sendToAI != false) {
+      let buffer = waveData[0].waveSurfer.getDecodedData();
+      let region = (waveData[0].regions.getRegions())[0];
+      let slicedBuffer = getAudioSlice(buffer, region);
+      wavURL = bufferToWavURL(slicedBuffer);
+    }
 
     try {
       const response = await fetch("http://localhost:3001/api/generate-music", {
@@ -25,7 +54,7 @@ function AIMenu({ handleBack, regionURL }) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ description, regionURL }),  // Send checkbox value to server
+        body: JSON.stringify({ description, wavURL }),  // Send checkbox value to server
       });
 
       if (!response.ok) {
