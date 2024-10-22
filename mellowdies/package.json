@@ -9,6 +9,7 @@
     "crypto-browserify": "^3.12.0",
     "dropbox": "^10.34.0",
     "express": "^4.21.0",
+    "express-fileupload": "^1.5.1",
     "form-data": "^4.0.0",
     "node-fetch": "^3.3.2",
     "os-browserify": "^0.3.0",

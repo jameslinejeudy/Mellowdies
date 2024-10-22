@@ -9,21 +9,32 @@ const contentStyle = { /* styles remain unchanged */ };
 function AIMenu({ handleBack }) {
   const [loading, setLoading] = useState(false);
   const [description, setDescription] = useState("");
+  const [file, setFile] = useState(null); // New state to store the uploaded file
   const [errorMessage, setErrorMessage] = useState(null);
   const [progressMessage, setProgressMessage] = useState(null);
 
+  const handleFileChange = (event) => {
+    setFile(event.target.files[0]); // Capture the uploaded file
+  };
+
   const handleGenerateMusic = async () => {
+    if (!description && !file) {
+      setErrorMessage("Please provide a description or upload a file.");
+      return;
+    }
+
     setLoading(true);
     setErrorMessage(null);
     setProgressMessage("Connecting to the server...");
 
     try {
+      const formData = new FormData(); // Create form data object to send description and file
+      formData.append("description", description);
+      if (file) formData.append("file", file);
+
       const response = await fetch("http://localhost:3001/api/generate-music", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ description }),
+        body: formData, // Send form data instead of JSON
       });
 
       if (!response.ok) {
@@ -38,7 +49,7 @@ function AIMenu({ handleBack }) {
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `${description}_generated_music.wav`;
+      a.download = `${description || "uploaded_file"}_generated_music.wav`;
 
       // Trigger download
       document.body.appendChild(a);
@@ -68,6 +79,7 @@ function AIMenu({ handleBack }) {
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
+        <input type="file" onChange={handleFileChange} /> {/* Add file input */}
         <button style={generateButtonStyle} onClick={handleGenerateMusic} disabled={loading}>
           {loading ? "Processing..." : "Generate Music"}
         </button>
