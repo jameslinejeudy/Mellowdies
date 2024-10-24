@@ -27,17 +27,13 @@
     box-shadow: 0px 0px 15px 5px rgba(255, 255, 255, 0.6);
     overflow-y: auto;
     padding: 10px;
-    overflow-x: scroll;  /* Force a horizontal scroll bar */
-    overflow-y: auto;  /* No vertical scroll bar */
     white-space: nowrap;  /* Prevent wrapping so tracks stay in one line */
 }
 
 .waveformStyle {
-    width: auto;
     height: 75px;
-    position: relative;
     margin-bottom: 20px;
-    overflow: hidden;  
+    position: relative;
 }
 
 .trackNameStyle {
@@ -51,19 +47,8 @@
 }
 
 .timelineStyle {
-    width: 75%;  /* Set the timeline width to 75% */
-    height: 30px;  /* Set the height of the timeline */
-    background-color: #fff;  /* Ensure the background is visible */
+    width: 100%;  /* Set the timeline width to 75% */
     margin-bottom: 10px;  /* Add some space between the timeline and waveforms */
-    margin-left: auto;  /* Align the timeline to the right */
-    margin-right: 0;  /* Make sure it's aligned all the way to the right */
-    overflow: hidden; 
-    color: #000;  /* Ensure the text is visible */
-    font-size: 12px; 
-}
-
-.timelineStyle .timeline-labels {
-    color: #000;  /* Ensure font color is visible */
-    font-family: Arial, sans-serif;  /* Set a readable font */
-    font-size: 12px;  /* Make the font size large enough to be readable */
+    font-size: 12px;
+    position: relative;
 }

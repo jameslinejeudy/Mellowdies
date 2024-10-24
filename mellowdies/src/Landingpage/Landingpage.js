@@ -16,6 +16,9 @@ function Landingpage() {
     let longestDuration = 0;  // Variable to track the longest track duration
 
     useEffect(() => {
+        // Initialize the wavesurferRefs array
+        wavesurferRefs.current = [];
+
         if (audioFiles && audioFiles.length > 0) {
             audioFiles.forEach((file, index) => {
                 const containerId = `waveform-${index}`;
@@ -32,10 +35,9 @@ function Landingpage() {
                     cursorWidth: 2,
                     cursorColor: '#FF0000',
                     backgroundColor: 'rgba(255, 255, 255, 0)',
+                    url:file.url,
                     minPxPerSec: 100,  // Adjust this for width control
                 });
-
-                waveSurfer.load(file.url);
 
                 waveSurfer.on('ready', () => {
                     setIsReady(true);
@@ -48,17 +50,15 @@ function Landingpage() {
                     // Add the timeline plugin only for the first track
                     if (index === 0) {
                         const timeline = TimelinePlugin.create({
-                            container: '#timeline',  // Use the single timeline container at the top
-                            height: 30,
+                            insertPosition: 'beforebegin',
                             primaryColor: '#000',
                             secondaryColor: '#c0c0c0',
                             primaryFontColor: '#000',
                             secondaryFontColor: '#000',
-                            duration: longestDuration,
-                            timeInterval: Math.ceil(longestDuration / 10),  // Interval between markers
-                            primaryLabelInterval: Math.ceil(longestDuration / 5),
-                            secondaryLabelInterval: Math.ceil(longestDuration / 10),
-                            fontSize: 12,  // Ensure the font size is big enough to be visible
+                            secondaryLabelOpacity: 0.9,
+                            timeInterval: 0.2,
+                            primaryLabelInterval: 5,
+                            secondaryLabelInterval: 1,
                         });
 
                         waveSurfer.registerPlugin(timeline);
@@ -66,6 +66,7 @@ function Landingpage() {
                 });
 
                 wavesurferRefs.current[index] = waveSurfer;
+                
             });
 
             // Cleanup function to properly handle the destruction of WaveSurfer instances
@@ -81,26 +82,20 @@ function Landingpage() {
         }
     }, [audioFiles]);
 
-    // Synchronize scroll behavior for the music background
-    const handleScroll = () => {
-        const scrollLeft = musicbackgroundRef.current.scrollLeft;
-        wavesurferRefs.current.forEach((waveSurfer) => {
-            waveSurfer.drawer.wrapper.scrollLeft = scrollLeft;  // Sync WaveSurfer scroll
-        });
-    };
-
     return (
         <div className="pagebackground">
-            <div id="timeline" className="timelineStyle"></div>  {/* Single timeline container */}
 
             <div
                 className="musicbackground"
                 ref={musicbackgroundRef}
-                onScroll={handleScroll}  // Listen to the scroll event
             >
                 {audioFiles.map((file, index) => (
-                    <div key={index} className="waveformStyle">
-                        <div id={`waveform-${index}`} style={{ height: '100%' }}></div>
+                    <div>
+                        <div id="trackName" className="trackNameStyle">{file.name}</div>
+                        <div id="timeline" className="timelineStyle"></div>
+                        <div key={index} className="waveformStyle">
+                            <div id={`waveform-${index}`} style={{  width: '100%',height: '100%' }}></div>
+                        </div>
                     </div>
                 ))}
             </div>
