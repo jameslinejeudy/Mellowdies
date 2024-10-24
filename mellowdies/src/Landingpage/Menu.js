@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
+import menubutton from '../images/icons/menubutton.png';
 
 const menubackground = {
   width: '25%',

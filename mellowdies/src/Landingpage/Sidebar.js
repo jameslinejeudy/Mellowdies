@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import menubutton from '../images/menubutton.png';
-import sparkless from '../images/drawstar.png';
+import React, { useState } from 'react';
+import menubutton from '../images/icons/menubutton.png';
+import sparkless from '../images/icons/drawstar.png';
 import Menu from './Menu.js';
 import AIMenu from './Ai.js';
 
@@ -131,11 +131,11 @@ function Sidebar({waveData}) {
         <img src={menubutton} alt="Menu Button" style={{ width: '33px', height: 'auto'}} />
         <h1 style={headingStyle}>MELLOWDIES</h1>
       </button>
-      <button style={buttonStyle} onClick={() => toggleMenu('aiSuggestionMenu')}>
-        <h1 style={headingStyle}>✨AI Suggestion✨</h1>
+      <button style={buttonStyle} onClick={() => toggleMenu('aiSuggestionMenu')}>  {/* edit onClick when integrated */}
+        <h1 style={headingStyle}>✨AI SUGGESTION✨</h1>
       </button>
-      <button style={buttonStyle} onClick={() => toggleMenu('mixerMenu')}>
-        <h1 style={headingStyle}>Mixer</h1>
+      <button style={buttonStyle} onClick={() => toggleMenu('mixerMenu')}>  {/* edit onClick when integrated */}
+        <h1 style={headingStyle}>MIXER</h1>
       </button>
       {/* Conditionally render different menus based on which one is visible */}
       {isMenuVisible === 'mainMenu' && <Menu 

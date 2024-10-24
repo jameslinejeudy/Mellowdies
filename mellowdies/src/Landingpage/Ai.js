@@ -32,11 +32,22 @@ function bufferToWavURL(buffer) {
 function AIMenu({ handleBack, waveData }) {
   const [loading, setLoading] = useState(false);
   const [description, setDescription] = useState("");
+  const [file, setFile] = useState(null); // New state to store the uploaded file
   const [errorMessage, setErrorMessage] = useState(null);
   const [progressMessage, setProgressMessage] = useState(null);
   const [sendToAI, setSendToAI] = useState(false);  // Checkbox state
   
+
+  const handleFileChange = (event) => {
+    setFile(event.target.files[0]); // Capture the uploaded file
+  };
+
   const handleGenerateMusic = async () => {
+    if (!description && !file) {
+      setErrorMessage("Please provide a description or upload a file.");
+      return;
+    }
+
     setLoading(true);
     setErrorMessage(null);
     setProgressMessage("Connecting to the server...");
@@ -46,15 +57,17 @@ function AIMenu({ handleBack, waveData }) {
       let region = (waveData[0].regions.getRegions())[0];
       let slicedBuffer = getAudioSlice(buffer, region);
       wavURL = bufferToWavURL(slicedBuffer);
+      console.log(wavURL);
     }
 
     try {
+      const formData = new FormData(); // Create form data object to send description and file
+      formData.append("description", description);
+      if (file) formData.append("file", file);
+
       const response = await fetch("http://localhost:3001/api/generate-music", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ description, wavURL }),  // Send checkbox value to server
+        body: formData, // Send form data instead of JSON
       });
 
       if (!response.ok) {
@@ -69,7 +82,7 @@ function AIMenu({ handleBack, waveData }) {
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `${description}_generated_music.wav`;
+      a.download = `${description || "uploaded_file"}_generated_music.wav`;
 
       // Trigger download
       document.body.appendChild(a);
@@ -109,6 +122,7 @@ function AIMenu({ handleBack, waveData }) {
             Send selected music region to AI
           </label>
         </div>
+        <input type="file" onChange={handleFileChange} /> {/* Add file input */}
         <button style={generateButtonStyle} onClick={handleGenerateMusic} disabled={loading}>
           {loading ? "Processing..." : "Generate Music"}
         </button>
