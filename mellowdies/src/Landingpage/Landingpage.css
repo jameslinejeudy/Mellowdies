@@ -52,3 +52,26 @@
     font-size: 12px;
     position: relative;
 }
+
+.exportButton {
+    padding: 8px 16px;
+    border-radius: 30px;
+    border: 2px solid #ffffff;
+    background-color: rgba(255, 255, 255, 0.5);
+    color: #000;
+    font-family: 'Concert One', cursive;
+    cursor: pointer;
+    width: 25%;
+    margin-bottom: 10px;
+    text-align: center;
+    font-size: 1rem;
+    box-shadow: 2px 2px 4px white, -2px -2px 4px white;
+    align-self: center;
+    flex-direction: row;
+
+    /* Position the button in the bottom-right corner */
+    position: fixed;
+    bottom: 20px;  /* Distance from the bottom of the screen */
+    right: 20px;   /* Distance from the right of the screen */
+    width: auto;   /* Adjust width to fit content */
+}

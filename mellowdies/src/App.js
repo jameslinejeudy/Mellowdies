@@ -4,6 +4,8 @@ import Homepage from './Homepage.js';
 import Landingpage from './Landingpage/Landingpage.js';
 import Menu from './Landingpage/Menu.js';
 import AIMenu from './Landingpage/Ai.js';
+import Exportpage from './Exportpage/Exportpage.js';
+
 
 
 function App() {
@@ -14,6 +16,7 @@ function App() {
         <Route path="/Landingpage" element={<Landingpage />} />
         <Route path="/Menu" element={<Menu />} />
         <Route path="/AIMenu" element={<AIMenu />} />
+        <Route path="/Exportpage" element={<Exportpage />} />
       </Routes>
     </Router> 
  );

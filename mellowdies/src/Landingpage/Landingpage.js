@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';  // Import useNavigate at the top
 import WaveSurfer from 'wavesurfer.js';
 import RegionsPlugin from "wavesurfer.js/dist/plugins/regions.js";
 import TimelinePlugin from 'wavesurfer.js/dist/plugins/timeline';  // Import the timeline plugin
@@ -7,10 +8,13 @@ import Sidebar from './Sidebar.js';
 import './Landingpage.css';  
 import PlayButton from './PlayButton.js';
 
+
+
 const waveSurferData = [];
 const regions = RegionsPlugin.create();
 
 function Landingpage() {
+    const navigate = useNavigate();  // Define navigate using the useNavigate hook
     const wavesurferRefs = useRef([]);
     const containerRefs = useRef([]);
     const musicbackgroundRef = useRef(null);  // Ref for the music background container
@@ -140,6 +144,11 @@ function Landingpage() {
             ) : (
                 <p>No audio tracks available.</p>
             )}
+
+            <button className="exportButton" onClick={() => navigate('/Exportpage')}>
+                Export
+            </button> 
+
         </div>
     );
 }
