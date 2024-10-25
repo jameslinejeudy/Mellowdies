@@ -6,6 +6,83 @@
     margin: 0;
     display: flex;
     flex-direction: column;
-    font-family: 'Concert One', sans-serif;
-    background-image: url('../images/backgrounds/cloud.png'); /* Adjust path based on your project structure */
+    justify-content: center;
+    align-items: center;
+    background-color: #f0f0f5;
+}
+
+.circle-shape {
+    width: 200px;
+    height: 200px;
+    background: url('../images/backgrounds/pinkback.jpg'); /* Replace with the correct path to your image */
+    background-size: cover;
+    background-position: center;
+    border-radius: 50%;
+    margin-bottom: 20px;
+    margin-top: -10%;
+}
+
+#waveform {
+    width: 100%;
+    max-width: 600px;
+    height: 100px;
+    margin: 20px 0;
+}
+
+.timeline-container {
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10px;
+    position: relative;
+}
+
+.timeline-slider {
+    width: 100%;
+    appearance: none;
+    height: 8px;
+    background: #ccc;
+    border-radius: 5px;
+    outline: none;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+.timeline-slider::-webkit-slider-thumb {
+    appearance: none;
+    width: 15px;
+    height: 15px;
+    background: #ff6600;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.timeline-slider::-moz-range-thumb {
+    width: 15px;
+    height: 15px;
+    background: #ff6600;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.time-display {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    color: #000;
+}
+
+.play-button-container {
+    position: absolute;
+    bottom: 10%; /* Move the play buttons below the timeline */
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+}
+
+.play-button-container button {
+    margin: 0 10px;
 }

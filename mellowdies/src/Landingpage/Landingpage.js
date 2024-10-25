@@ -115,6 +115,88 @@ function Landingpage() {
         scheduleWaveSurferInitialization();
     }
 
+    const mergeAudioFiles = async () => {
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const buffers = await Promise.all(audioFiles.map(async (file) => {
+            const response = await fetch(file.url);
+            const arrayBuffer = await response.arrayBuffer();
+            return await audioContext.decodeAudioData(arrayBuffer);
+        }));
+    
+        // Find the longest buffer to create an output buffer with enough space for mixing
+        const maxLength = Math.max(...buffers.map(buffer => buffer.length));
+    
+        // Create an output buffer with the longest length
+        const outputBuffer = audioContext.createBuffer(
+            buffers[0].numberOfChannels,
+            maxLength,
+            audioContext.sampleRate
+        );
+    
+        // Mix the buffers together
+        buffers.forEach((buffer) => {
+            for (let channel = 0; channel < buffer.numberOfChannels; channel++) {
+                const outputData = outputBuffer.getChannelData(channel);
+                const inputData = buffer.getChannelData(channel);
+                for (let i = 0; i < inputData.length; i++) {
+                    outputData[i] += inputData[i];  // Add the audio data to mix
+                }
+            }
+        });
+    
+        // Convert the mixed output buffer to a WAV file blob
+        const mergedBlob = await bufferToWaveBlob(outputBuffer, audioContext.sampleRate);
+    
+        // Navigate to the export page with the merged audio
+        navigate('/Exportpage', { state: { mergedAudio: URL.createObjectURL(mergedBlob) } });
+    };
+    
+
+    const bufferToWaveBlob = (buffer, sampleRate) => {
+        const numOfChannels = buffer.numberOfChannels;
+        const length = buffer.length * numOfChannels * 2 + 44;
+        const result = new DataView(new ArrayBuffer(length));
+    
+        const writeString = (view, offset, string) => {
+            for (let i = 0; i < string.length; i++) {
+                view.setUint8(offset + i, string.charCodeAt(i));
+            }
+        };
+    
+        let offset = 0;
+    
+        // RIFF chunk descriptor
+        writeString(result, offset, 'RIFF'); offset += 4;
+        result.setUint32(offset, 36 + buffer.length * numOfChannels * 2, true); offset += 4;
+        writeString(result, offset, 'WAVE'); offset += 4;
+    
+        // FMT sub-chunk
+        writeString(result, offset, 'fmt '); offset += 4;
+        result.setUint32(offset, 16, true); offset += 4;  // Subchunk1Size (16 for PCM)
+        result.setUint16(offset, 1, true); offset += 2;   // AudioFormat (1 for PCM)
+        result.setUint16(offset, numOfChannels, true); offset += 2; // NumChannels
+        result.setUint32(offset, sampleRate, true); offset += 4;    // SampleRate
+        result.setUint32(offset, sampleRate * 2 * numOfChannels, true); offset += 4; // ByteRate
+        result.setUint16(offset, numOfChannels * 2, true); offset += 2; // BlockAlign
+        result.setUint16(offset, 16, true); offset += 2; // BitsPerSample
+    
+        // data sub-chunk
+        writeString(result, offset, 'data'); offset += 4;
+        result.setUint32(offset, buffer.length * numOfChannels * 2, true); offset += 4;
+    
+        // Write interleaved PCM samples
+        for (let i = 0; i < buffer.length; i++) {
+            for (let channel = 0; channel < numOfChannels; channel++) {
+                const sample = buffer.getChannelData(channel)[i];
+                const clampedSample = Math.max(-1, Math.min(1, sample));
+                result.setInt16(offset, clampedSample < 0 ? clampedSample * 0x8000 : clampedSample * 0x7FFF, true);
+                offset += 2;
+            }
+        }
+    
+        // Return the blob
+        return new Blob([result], { type: 'audio/wav' });
+    };
     return (
         <div className="pagebackground">
             <div
@@ -145,9 +227,12 @@ function Landingpage() {
                 <p>No audio tracks available.</p>
             )}
 
-            <button className="exportButton" onClick={() => navigate('/Exportpage')}>
-                Export
-            </button> 
+            <button className="exportButton" onClick={async () => {
+            await mergeAudioFiles();  // Wait for the audio merging to complete
+            navigate('/Exportpage');  // Navigate to the export page after merging
+            }}>
+            Export
+            </button>
 
         </div>
     );
