@@ -75,18 +75,6 @@ const headingStyle = {
 
 function Sidebar({waveData}) {
   const [isMenuVisible, setMenuVisible] = useState(null);
-  
-  // Create an AudioContext
-  const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-  
-  // Initialize audio nodes
-  const gainNode = audioContext.createGain();
-  const equalizerNode = audioContext.createBiquadFilter();
-  equalizerNode.type = 'peaking'; // Set equalizer type (e.g., peaking)
-  
-  // Connect nodes (example: connect equalizer to gain)
-  gainNode.connect(audioContext.destination);
-  equalizerNode.connect(gainNode);
 
   const toggleMenu = (menu) => {
     setMenuVisible(isMenuVisible === menu ? null : menu);
@@ -94,35 +82,6 @@ function Sidebar({waveData}) {
 
   const handleBack = () => {
     setMenuVisible(null);
-  };
-
-  const handleEqualizerChange = (type, value) => {
-    equalizerNode.type = type;  // Set equalizer type (e.g., 'lowshelf', 'highshelf')
-    equalizerNode.gain.value = value; // Adjust the gain of the equalizer
-  };
-
-  const handleReverbChange = (value) => {
-    // Implement reverb effect logic here
-  };
-
-  const handleEchoChange = (value) => {
-    // Implement echo effect logic here
-  };
-
-  const handlePitchChange = (value) => {
-    // Implement pitch change logic here
-  };
-
-  const handleCompressionChange = (value) => {
-    // Implement compression logic here
-  };
-
-  const handlePanningChange = (value) => {
-    // Implement panning logic here
-  };
-
-  const handleNoiseReductionChange = (value) => {
-    // Implement noise reduction logic here
   };
 
   return (
@@ -138,27 +97,9 @@ function Sidebar({waveData}) {
         <h1 style={headingStyle}>MIXER</h1>
       </button>
       {/* Conditionally render different menus based on which one is visible */}
-      {isMenuVisible === 'mainMenu' && <Menu 
-        handleBack={handleBack} 
-        handleEqualizerChange={handleEqualizerChange} 
-        handleReverbChange={handleReverbChange} 
-        handleEchoChange={handleEchoChange} 
-        handlePitchChange={handlePitchChange} 
-        handleCompressionChange={handleCompressionChange} 
-        handlePanningChange={handlePanningChange} 
-        handleNoiseReductionChange={handleNoiseReductionChange} 
-      />}
+      {isMenuVisible === 'mainMenu' && <Menu/>}
       {isMenuVisible === 'aiSuggestionMenu' && <AIMenu handleBack={handleBack} waveData={waveData}/>}
-      {isMenuVisible === 'mixerMenu' && <Menu 
-        handleBack={handleBack} 
-        handleEqualizerChange={handleEqualizerChange} 
-        handleReverbChange={handleReverbChange} 
-        handleEchoChange={handleEchoChange} 
-        handlePitchChange={handlePitchChange} 
-        handleCompressionChange={handleCompressionChange} 
-        handlePanningChange={handlePanningChange} 
-        handleNoiseReductionChange={handleNoiseReductionChange} 
-      />}
+      {isMenuVisible === 'mixerMenu' && <Menu handleBack={handleBack}/>}
     </div>
   );
 }
