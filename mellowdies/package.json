@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "audio-buffer-utils": "^5.1.2",
     "audiobuffer-slice": "^0.0.7",
+    "audiobuffer-to-blob": "^1.0.2",
     "audiobuffer-to-wav": "^1.0.0",
     "axios": "^1.7.7",
     "buffer": "^6.0.3",

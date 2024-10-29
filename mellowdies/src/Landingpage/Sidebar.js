@@ -99,7 +99,7 @@ function Sidebar({waveData}) {
       {/* Conditionally render different menus based on which one is visible */}
       {isMenuVisible === 'mainMenu' && <Menu/>}
       {isMenuVisible === 'aiSuggestionMenu' && <AIMenu handleBack={handleBack} waveData={waveData}/>}
-      {isMenuVisible === 'mixerMenu' && <Menu handleBack={handleBack}/>}
+      {isMenuVisible === 'mixerMenu' && <Menu handleBack={handleBack} waveData={waveData}/>}
     </div>
   );
 }

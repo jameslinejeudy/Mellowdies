@@ -47,7 +47,6 @@ function Landingpage() {
                     cursorColor: '#FF0000',
                     backgroundColor: 'rgba(255, 255, 255, 0)',
                     url:file.url,
-                    minPxPerSec: 100,  // Adjust this for width control
                     plugins: [regions],
                 });
     

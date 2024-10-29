@@ -37,6 +37,7 @@ function AIMenu({ handleBack, waveData }) {
   const [errorMessage, setErrorMessage] = useState(null);
   const [progressMessage, setProgressMessage] = useState(null);
   const [sendToAI, setSendToAI] = useState(false);  // Checkbox state
+  let wavURL = "";
 
   const handleFileChange = (event) => {
     setFile(event.target.files[0]); // Capture the uploaded file
@@ -59,10 +60,19 @@ function AIMenu({ handleBack, waveData }) {
       // Adjust this based on user selection or logic
       fn_index = 0;  // Change this value depending on what you want to pass for testing
     }
+
+    if (sendToAI != false) {
+      let buffer = waveData[0].waveSurfer.getDecodedData();
+      let region = (waveData[0].regions.getRegions())[0];
+      let slicedBuffer = getAudioSlice(buffer, region);
+      wavURL = bufferToWavURL(slicedBuffer);
+      console.log(wavURL);
+    }
   
     try {
       const formData = new FormData(); // Create form data object to send description, file, and fn_index
       formData.append("description", description);
+      formData.append("audio", wavURL);
       formData.append("apiChoice", apiChoice); // Include the API choice
       formData.append("fn_index", fn_index); // Include the fn_index for new API
       if (file) formData.append("file", file);
