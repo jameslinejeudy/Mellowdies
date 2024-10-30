@@ -87,7 +87,7 @@ var blobber = require('audiobuffer-to-blob');
 
 function Menu({ handleBack, waveData }) {
   const [isGainModalOpen, setGainModalOpen] = useState(false);
-  const [gainValue, setGainValue] = useState(1);
+  const [gainValue, setGainValue] = useState(100);
   
   const reverse = () => {
     let buffer = waveData[0].waveSurfer.getDecodedData();
@@ -137,16 +137,104 @@ function Menu({ handleBack, waveData }) {
   const openGainModal = () => setGainModalOpen(true);
   const closeGainModal = () => setGainModalOpen(false);
 
-  const adjustGain = (e) => {
+  const adjustGain = () => {
     let buffer = waveData[0].waveSurfer.getDecodedData();
     let region = (waveData[0].regions.getRegions())[0];
-    const newGainValue = parseFloat(e.target.value);
-    setGainValue(newGainValue);
     let sampleRate = buffer.sampleRate;
+    let gain = gainValue / 100;
+    let start = Math.floor(region.start * sampleRate);
+    let end = Math.ceil(region.end * sampleRate);
 
     if (buffer) {
-      utils.fill(buffer, (value, i, channel) => (value[i]*newGainValue), region.start * sampleRate, region.end * sampleRate);
-      console.log('Gain adjusted:', newGainValue);
+      for (let channel = 0; channel < buffer.numberOfChannels; channel += 1) {
+        let channelData = buffer.getChannelData(channel);
+    
+        for (let sample = start; sample < end; sample += 1) {
+            channelData[sample] *= gain;
+        }
+      }
+      console.log('Gain adjusted:', gain);
+      let blob = blobber(buffer);
+      waveData[0].waveSurfer.empty();
+      waveData[0].waveSurfer.loadBlob(blob).catch(error => console.log(error));
+    }
+  };
+
+  const fadeIn = () => {
+    let buffer = waveData[0].waveSurfer.getDecodedData();
+    let region = (waveData[0].regions.getRegions())[0];
+    let sampleRate = buffer.sampleRate;
+    let start = Math.floor(region.start * sampleRate);
+    let end = Math.ceil(region.end * sampleRate);
+    let stepInc = 1 / (end-start);
+    let currGain = 0;
+    let steps = 0;
+
+    if (buffer) {
+      for (let channel = 0; channel < buffer.numberOfChannels; channel += 1) {
+        let channelData = buffer.getChannelData(channel);
+    
+        for (let sample = start; sample < end; sample += 1) {
+            channelData[sample] *= (currGain + (steps * stepInc));
+            steps += 1;
+        }
+        steps = 0;
+      }
+      console.log('Region Faded In');
+      let blob = blobber(buffer);
+      waveData[0].waveSurfer.empty();
+      waveData[0].waveSurfer.loadBlob(blob).catch(error => console.log(error));
+    }
+  };
+
+  const fadeOut = () => {
+    let buffer = waveData[0].waveSurfer.getDecodedData();
+    let region = (waveData[0].regions.getRegions())[0];
+    let sampleRate = buffer.sampleRate;
+    let start = Math.floor(region.start * sampleRate);
+    let end = Math.ceil(region.end * sampleRate);
+    let stepInc = 1 / (end-start);
+    let currGain = 1;
+    let steps = 0;
+
+    if (buffer) {
+      for (let channel = 0; channel < buffer.numberOfChannels; channel += 1) {
+        let channelData = buffer.getChannelData(channel);
+    
+        for (let sample = start; sample < end; sample += 1) {
+            channelData[sample] *= (currGain - (steps * stepInc));
+            steps += 1;
+        }
+        steps = 0;
+      }
+      console.log('Region Faded In');
+      let blob = blobber(buffer);
+      waveData[0].waveSurfer.empty();
+      waveData[0].waveSurfer.loadBlob(blob).catch(error => console.log(error));
+    }
+  };
+
+  const distort = () => {
+    const deg = Math.PI / 180;
+    let buffer = waveData[0].waveSurfer.getDecodedData();
+    let region = (waveData[0].regions.getRegions())[0];
+    let sampleRate = buffer.sampleRate;
+    let start = Math.floor(region.start * sampleRate);
+    let end = Math.ceil(region.end * sampleRate);
+    let steps = 0;
+
+    if (buffer) {
+      for (let channel = 0; channel < buffer.numberOfChannels; channel += 1) {
+        let channelData = buffer.getChannelData(channel);
+    
+        for (let sample = start; sample < end; sample += 1) {
+            const x = (steps * 2) / (end - start) - 1;
+            channelData[sample] = channelData[sample] * (((3 + (end - start)) * x * 20 * deg) / (Math.PI + (end - start) * Math.abs(x))) ;
+            steps += 1;
+        }
+        steps = 0;
+      }
+      console.log('Region Distorted');
       let blob = blobber(buffer);
       waveData[0].waveSurfer.empty();
       waveData[0].waveSurfer.loadBlob(blob).catch(error => console.log(error));
@@ -169,29 +257,44 @@ function Menu({ handleBack, waveData }) {
         <button style={reverseButtonStyle} onClick={normalize}>
           Normalize Selected Region
         </button>
-        {/*
+
+        <button style={reverseButtonStyle} onClick={fadeIn}>
+          Fade In Region
+        </button>
+
+        <button style={reverseButtonStyle} onClick={fadeOut}>
+          Fade Out Region
+        </button>
+
+        <button style={reverseButtonStyle} onClick={distort}>
+          Distort Region
+        </button>
+        
         <button style={adjustGainButtonStyle} onClick={openGainModal}>
           Adjust Gain
         </button>
 
-        {/*isGainModalOpen && (
+        {isGainModalOpen && (
           <>
-            <div style={overlayStyle} onClick={closeGainModal} />
-            <div style={modalStyle}>
-              <h2>Adjust Gain</h2>
-              <input
-                type="range"
-                min="0"
-                max="2"
-                step="0.01"
-                value={gainValue}
-                onChange={adjustGain}
-                style={sliderStyle}
-              />
+             <div style={overlayStyle} onClick={closeGainModal} />
+              <div style={modalStyle}>
+                <h2>Gain Percentage</h2>
+                <input
+                  id="gains"
+                  type="range"
+                  min="0"
+                  max="200"
+                  step="0.01"
+                  value={gainValue}
+                  onInput={(e) => setGainValue(e.target.value)}
+                  style={sliderStyle}
+                />
+                <output id="gainVal">{gainValue}%</output>
               <button onClick={closeGainModal} style={backButtonStyle}>Close</button>
+              <button onClick={adjustGain} style={backButtonStyle}>Apply Gain</button>
             </div>
           </>
-        )*/}
+        )}
       </div>
     </div>
   );
