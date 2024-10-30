@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';  // Import useNavigate at the top
 import WaveSurfer from 'wavesurfer.js';
 import RegionsPlugin from "wavesurfer.js/dist/plugins/regions.js";
@@ -7,7 +7,7 @@ import { useLocation } from 'react-router-dom';
 import Sidebar from './Sidebar.js';
 import './Landingpage.css';  
 import PlayButton from './PlayButton.js';
-
+import PlusIcon from '../images/icons/plus.png'
 
 
 const waveSurferData = [];
@@ -19,10 +19,19 @@ function Landingpage() {
     const containerRefs = useRef([]);
     const musicbackgroundRef = useRef(null);  // Ref for the music background container
     const location = useLocation();
-    const { audioFiles } = location.state || { audioFiles: [] };
+
+    const [audioFiles, setAudioFiles] = useState(location.state?.audioFiles || []);
     const [isReady, setIsReady] = useState(false);
     const [speed, setSpeed] = useState(1);
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const fileInputRef = useRef(null); // Create a ref for the file input
     let longestDuration = 0;  // Variable to track the longest track duration
+
+    useEffect(() => {
+        if (location.state?.audioFiles) {
+            setAudioFiles(location.state.audioFiles);
+        }
+    }, [location.state]);
 
     const initializeWaveSurfer = () => {
         wavesurferRefs.current = [];
@@ -196,6 +205,33 @@ function Landingpage() {
         // Return the blob
         return new Blob([result], { type: 'audio/wav' });
     };
+
+    const handleFilesButtonClick = () => {
+        fileInputRef.current.click(); 
+        setIsDropdownOpen(false);
+    };
+
+    // adding new files
+    const handleAddFiles = (event) => {
+        const newFiles = Array.from(event.target.files).map(file => ({
+            name: file.name,
+            url: URL.createObjectURL(file),
+            mimeType: file.type
+        }));
+
+    // Check if newFiles is not empty before updating state
+    if (newFiles.length > 0) {
+        setAudioFiles((prevAudioFiles) => [...prevAudioFiles, ...newFiles]);  // Update state with new files
+    } else {
+        alert('Please select audio files.');
+    }
+};
+
+    // dropdown menu
+    const toggleDropdown = () => {
+        setIsDropdownOpen(!isDropdownOpen);
+    };
+
     return (
         <div className="pagebackground">
             <div
@@ -232,6 +268,26 @@ function Landingpage() {
             }}>
             Export
             </button>
+          
+            <button className="dropdownButton" onClick={toggleDropdown}>
+                <img src={PlusIcon} alt="Add Tracks" style={{ width: '22px', height: '22px' }} />
+            </button>
+
+            {isDropdownOpen && (
+                 <div className="dropdownMenu">
+                    <button onClick={handleFilesButtonClick}>FILES</button>
+                    <button onClick={() => alert('Google Drive Selected')}>GOOGLE DRIVE</button>
+                </div>
+            )}
+
+            <input
+                type="file"
+                multiple
+                ref={fileInputRef}
+                accept='audio/*'
+                style={{ display: 'none' }}
+                onChange={handleAddFiles} 
+            />
 
         </div>
     );
