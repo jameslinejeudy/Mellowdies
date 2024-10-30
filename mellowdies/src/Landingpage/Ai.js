@@ -81,7 +81,9 @@ function AIMenu({ handleBack, waveData }) {
         method: "POST",
         body: formData, // Send form data instead of JSON
       });
-  
+      
+      console.log(formData);
+      
       if (!response.ok) {
         throw new Error("Server failed to generate music.");
       }
