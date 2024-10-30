@@ -1,9 +1,8 @@
-import React from 'react';
 import gifBackground from './images/backgrounds/yea.png';  // Adjust the path if needed
 import  { useEffect } from 'react';
 import useDrivePicker from 'react-google-drive-picker';
 import { useNavigate } from 'react-router-dom';  // Ensure useNavigate is imported correctly
-
+import React, { useRef, useState } from 'react';
 
 
 
@@ -65,6 +64,8 @@ const containerStyle = {
 function HomePage() {
     const navigate = useNavigate();  // Initialize useNavigate
 
+    const fileInputRef = useRef(null);
+
     const handleFileUpload = (event) => {
         const files = event.target.files;
         const audioFiles = Array.from(files).map(file => ({
@@ -118,31 +119,36 @@ function HomePage() {
       navigate('/Landingpage');
     }
     
+    const handleFilesButtonClick = () => {
+      fileInputRef.current.click();
+    };
     
   return (
     <div style={pageStyle}>
-      <div style={containerStyle}>  {/* Container to hold text at the top */}
+      <div style={containerStyle}> 
         <h1 style={headingStyle}>MELLOWDIES</h1>
         //<p style={paragraphStyle}>UPLOAD AN AUDIO FILE TO START</p>//
 
-        {/* Accept only audio files */}
-        <input
-            type="file"
-            style={buttonStyle}
-            multiple  
-            accept="audio/*"  // This restricts file selection to audio files only
-            onChange={handleFileUpload}
-        />
-
-
-         <button style={buttonStyle} onClick={handleGoogleDrive}> {/* Additional upload buttons */}
-             Google Drive
+        <button style={buttonStyle} onClick={handleFilesButtonClick}> 
+             FILES
          </button>
 
-        {/* If they want to just go to the workspace and add tracks from there */}
-         <button style={buttonStyle} onClick={handleNoFile}> {/* Additional upload buttons */}
-             Continue Without Upload
+         <button style={buttonStyle} onClick={handleGoogleDrive}> 
+             GOOGLE DRIVE
          </button>
+
+         <button style={buttonStyle} onClick={handleNoFile}> 
+             CONTINUE WITHOUT UPLOAD
+         </button>
+
+         <input
+                type="file"
+                multiple
+                ref={fileInputRef}
+                accept='audio/*'
+                style={{ display: 'none' }}
+                onChange={handleFileUpload} 
+            />
 
       </div>
     </div>

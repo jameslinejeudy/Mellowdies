@@ -75,3 +75,44 @@
     right: 20px;   /* Distance from the right of the screen */
     width: auto;   /* Adjust width to fit content */
 }
+
+.dropdownButton {
+    cursor: pointer;
+    margin-bottom: 9px;
+    text-align: center;
+    align-self: center;
+    flex-direction: row;
+    background: transparent;  
+    border: none;          
+    padding: 0;    
+    position: fixed;
+    top: 16px;  
+    right: 20px;   
+    width: auto;   
+}
+
+.dropdownMenu {
+    position: absolute;
+    background-color: white; 
+    border: 1px solid #ccc;  
+    z-index: 1000;           
+    margin-top: 5px;  
+    position: fixed;
+    top: 33px; 
+    right: 15px;  
+    width: 70px;      
+}
+
+.dropdownMenu button {
+    width: 100%;         
+    border: none;         
+    padding: 10px;        
+    background: none;       
+    text-align: right;      
+    font-family: 'Concert One', cursive;   
+}
+
+.dropdownMenu button:hover {
+    background-color: #f0f0f0;  
+}
+
