@@ -87,7 +87,14 @@ var blobber = require('audiobuffer-to-blob');
 
 function Menu({ handleBack, waveData }) {
   const [isGainModalOpen, setGainModalOpen] = useState(false);
+  const [isDelayModalOpen, setDelayModalOpen] = useState(false);
+  const [isDistortionModalOpen, setDistortionModalOpen] = useState(false);
   const [gainValue, setGainValue] = useState(100);
+  const [delayTime, setDelayTime] = useState(0.00);
+  const [feedback, setFeedback] = useState(0.00);
+  const [wetness, setWetness] = useState(0.00);
+  const [dryness, setDryness] = useState(0.00);
+  const [gainDistortValue, setGainDistortValue] = useState(100);
   
   const reverse = () => {
     let buffer = waveData[0].waveSurfer.getDecodedData();
@@ -214,32 +221,83 @@ function Menu({ handleBack, waveData }) {
     }
   };
 
+  const openDistortionModal = () => setDistortionModalOpen(true);
+  const closeDistortionModal = () => setDistortionModalOpen(false);
+
   const distort = () => {
-    const deg = Math.PI / 180;
     let buffer = waveData[0].waveSurfer.getDecodedData();
     let region = (waveData[0].regions.getRegions())[0];
     let sampleRate = buffer.sampleRate;
+    let gain = gainDistortValue / 100;
     let start = Math.floor(region.start * sampleRate);
     let end = Math.ceil(region.end * sampleRate);
-    let steps = 0;
 
     if (buffer) {
       for (let channel = 0; channel < buffer.numberOfChannels; channel += 1) {
         let channelData = buffer.getChannelData(channel);
     
         for (let sample = start; sample < end; sample += 1) {
-            const x = (steps * 2) / (end - start) - 1;
-            channelData[sample] = channelData[sample] * (((3 + (end - start)) * x * 20 * deg) / (Math.PI + (end - start) * Math.abs(x))) ;
-            steps += 1;
+            channelData[sample] = Math.atan(gain*channelData[sample]);
         }
-        steps = 0;
       }
-      console.log('Region Distorted');
+      console.log('Distorted Region', gain);
       let blob = blobber(buffer);
       waveData[0].waveSurfer.empty();
       waveData[0].waveSurfer.loadBlob(blob).catch(error => console.log(error));
     }
   };
+
+  const openDelayModal = () => setDelayModalOpen(true);
+  const closeDelayModal = () => setDelayModalOpen(false);
+
+  const delay = () => {
+    let buffer = waveData[0].waveSurfer.getDecodedData();
+    let region = (waveData[0].regions.getRegions())[0];
+    let sampleRate = buffer.sampleRate;
+    let start = Math.floor(region.start * sampleRate);
+    let end = Math.ceil(region.end * sampleRate);
+    let delayLen = delayTime;
+    let delaySamples = Math.ceil(delayLen * sampleRate);
+    let wet = wetness;
+    let dry = dryness;
+    let feeder = feedback;
+    let index = 0;
+
+    if (buffer) {
+      let numChannels = buffer.numberOfChannels;
+      if (numChannels === 1) {
+        let channelData = buffer.getChannelData(0);
+        let delayBuffer = new Float32Array(channelData.subarray(start, end + 1));
+        for (let sample = start; sample < end; sample += 1) {
+          let delayed = delayBuffer[index];
+          channelData[sample] = (channelData[sample] * dry) + (delayed * wet) ;
+          delayBuffer[index] = feeder * (delayed + channelData[sample]);
+          index += 1;
+        }
+      } else if (numChannels === 2) {
+        let channelLeft = buffer.getChannelData(0);
+        let channelRight = buffer.getChannelData(1);
+        let delayLeft = new Float32Array(channelLeft.subarray(start, end + 1));
+        let delayRight = new Float32Array(channelRight.subarray(start, end + 1));
+        delayLeft = channelLeft;
+        delayRight = channelRight;
+        for (let sample = start; sample < end; sample += 1) {
+          let delayed_left = delayLeft[index];
+          let delayed_right = delayRight[index];
+          channelLeft[sample] = (channelLeft[sample] * dry) + (delayed_left * wet) ;
+          channelRight[sample] = (channelRight[sample] * dry) + (delayed_right * wet) ;
+          delayLeft[index] = feeder * (delayed_left + channelLeft[sample]);
+          delayRight[index] = feeder * (delayed_right + channelRight[sample]);
+          index += 1;
+        }
+      }
+      console.log('Region Delayed');
+      let blob = blobber(buffer);
+      waveData[0].waveSurfer.empty();
+      waveData[0].waveSurfer.loadBlob(blob).catch(error => console.log(error));
+    }
+  };
+
 
   return (
     <div style={menubackground}>
@@ -265,10 +323,6 @@ function Menu({ handleBack, waveData }) {
         <button style={reverseButtonStyle} onClick={fadeOut}>
           Fade Out Region
         </button>
-
-        <button style={reverseButtonStyle} onClick={distort}>
-          Distort Region
-        </button>
         
         <button style={adjustGainButtonStyle} onClick={openGainModal}>
           Adjust Gain
@@ -292,6 +346,97 @@ function Menu({ handleBack, waveData }) {
                 <output id="gainVal">{gainValue}%</output>
               <button onClick={closeGainModal} style={backButtonStyle}>Close</button>
               <button onClick={adjustGain} style={backButtonStyle}>Apply Gain</button>
+            </div>
+          </>
+        )}
+
+        <button style={adjustGainButtonStyle} onClick={openDelayModal}>
+          Adjust Delay
+        </button>
+
+        {isDelayModalOpen && (
+          <>
+             <div style={overlayStyle} onClick={closeDelayModal} />
+              <div style={modalStyle}>
+                <h2>Delay Time</h2>
+                <input
+                  id="delayT"
+                  type="range"
+                  min="0"
+                  max="6"
+                  step="0.01"
+                  value={delayTime}
+                  onInput={(e) => setDelayTime(e.target.value)}
+                  style={sliderStyle}
+                />
+                <output id="delayVal">{delayTime}</output>
+
+                <h2>Feedback</h2>
+                <input
+                  id="feedback"
+                  type="range"
+                  min="0"
+                  max="1"
+                  step="0.01"
+                  value={feedback}
+                  onInput={(e) => setFeedback(e.target.value)}
+                  style={sliderStyle}
+                />
+                <output id="feedVal">{feedback}</output>
+
+                <h2>Wet</h2>
+                <input
+                  id="wets"
+                  type="range"
+                  min="0"
+                  max="1"
+                  step="0.01"
+                  value={wetness}
+                  onInput={(e) => setWetness(e.target.value)}
+                  style={sliderStyle}
+                />
+                <output id="wetVal">{wetness}</output>
+
+                <h2>Dry</h2>
+                <input
+                  id="dryer"
+                  type="range"
+                  min="0"
+                  max="1"
+                  step="0.01"
+                  value={dryness}
+                  onInput={(e) => setDryness(e.target.value)}
+                  style={sliderStyle}
+                />
+                <output id="dryVal">{dryness}</output>
+              <button onClick={closeDelayModal} style={backButtonStyle}>Close</button>
+              <button onClick={delay} style={backButtonStyle}>Apply Delay</button>
+            </div>
+          </>
+        )}
+
+        <button style={adjustGainButtonStyle} onClick={openDistortionModal}>
+          Apply Distortion
+        </button>
+
+        {isDistortionModalOpen && (
+          <>
+             <div style={overlayStyle} onClick={closeDistortionModal} />
+              <div style={modalStyle}>
+                <h2>Gain Percentage</h2>
+                <input
+                  id="gains"
+                  type="range"
+                  min="0"
+                  max="200"
+                  step="0.01"
+                  value={gainDistortValue}
+                  onInput={(e) => setGainDistortValue(e.target.value)}
+                  style={sliderStyle}
+                />
+                <output id="gainDistortVal">{gainDistortValue}%</output>
+              <button onClick={closeDistortionModal} style={backButtonStyle}>Close</button>
+              <button onClick={distort} style={backButtonStyle}>Apply Distortion</button>
             </div>
           </>
         )}
