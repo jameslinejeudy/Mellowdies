@@ -29,7 +29,7 @@ const iconStyle = {
     height: '30px',  // Adjust height of the icons
 };
 
-function PlayButton({ wavesurferRefs, setSpeed, isReady, speed }) {
+function PlayButton({ wavesurferRefs, setSpeed, isReady, speed, aContext }) {
     const [isPlaying, setIsPlaying] = useState(false);
 
     const playAllTracks = () => {
@@ -85,7 +85,7 @@ function PlayButton({ wavesurferRefs, setSpeed, isReady, speed }) {
             <button onClick={backwardAllTracks} style={buttonStyle} disabled={!isReady}>
                 <img src={backwards} alt="Backward 5s" style={iconStyle} />
             </button>
-            <button onClick={playAllTracks} style={buttonStyle} disabled={!isReady}>
+            <button id="playbutton" onClick={playAllTracks} style={buttonStyle} disabled={!isReady}>
                 <img src={isPlaying ? pause : play} alt="Play/Pause" style={iconStyle} />
             </button>
             <button onClick={forwardAllTracks} style={buttonStyle} disabled={!isReady}>

@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';  // Import useNavigate at the top
 import WaveSurfer from 'wavesurfer.js';
+import WebAudioPlayer from 'wavesurfer.js/dist/webaudio.js';
 import RegionsPlugin from "wavesurfer.js/dist/plugins/regions.js";
 import TimelinePlugin from 'wavesurfer.js/dist/plugins/timeline';  // Import the timeline plugin
 import { useLocation } from 'react-router-dom';
@@ -12,6 +13,24 @@ import PlusIcon from '../images/icons/plus.png'
 
 const waveSurferData = [];
 const regions = RegionsPlugin.create();
+const audioContext = new AudioContext();
+const webAudioPlayer = new WebAudioPlayer(audioContext);
+const eqBands = [32, 64, 125, 250, 500, 1000, 2000, 4000, 8000, 16000]
+let filters = []
+
+function createFilters (audioCtx, band) {
+    const filter = audioCtx.createBiquadFilter()
+    filter.type = band <= 32 ? 'lowshelf' : band >= 16000 ? 'highshelf' : 'peaking'
+    filter.gain.value = 0
+    filter.Q.value = 1 // resonance
+    filter.frequency.value = band // the cut-off frequency
+    return filter
+  }
+
+for (let i = 0; i < 10; i++) {
+    let filter = createFilters(webAudioPlayer.audioContext, eqBands[i])
+    filters.push(filter);
+}
 
 function Landingpage() {
     const navigate = useNavigate();  // Define navigate using the useNavigate hook
@@ -43,7 +62,9 @@ function Landingpage() {
                     console.error(`Container for index ${index} not found`);
                     return;
                 }
-    
+
+                webAudioPlayer.src = file.url;
+
                 const waveSurfer = WaveSurfer.create({
                     container: container, // Safely use the container
                     waveColor: 'blue',
@@ -51,15 +72,14 @@ function Landingpage() {
                     height: 75,
                     autoCenter: true,
                     interact: true,
-                    backend: 'MediaElement',
                     cursorWidth: 2,
                     cursorColor: '#FF0000',
                     backgroundColor: 'rgba(255, 255, 255, 0)',
-                    minPxPerSec: 200,
-                    url:file.url,
+                    minPxPerSec: 50,
+                    media: webAudioPlayer,
                     plugins: [regions],
                 });
-    
+
                 waveSurfer.on('ready', () => {setIsReady(true);
                     const buffer = waveSurfer.getDecodedData();
         
@@ -110,7 +130,7 @@ function Landingpage() {
                 });
     
                 wavesurferRefs.current[index] = waveSurfer;
-                waveSurferData.push({ waveSurfer, regions });
+                waveSurferData.push({ waveSurfer, regions, filters, webAudioPlayer});
                 
             });
         }
@@ -160,7 +180,6 @@ function Landingpage() {
         navigate('/Exportpage', { state: { mergedAudio: URL.createObjectURL(mergedBlob) } });
     };
     
-
     const bufferToWaveBlob = (buffer, sampleRate) => {
         const numOfChannels = buffer.numberOfChannels;
         const length = buffer.length * numOfChannels * 2 + 44;
@@ -253,11 +272,12 @@ function Landingpage() {
             <Sidebar waveData={waveSurferData}/>
 
             {audioFiles && audioFiles.length > 0 ? (
-                <PlayButton
+                <PlayButton 
                     wavesurferRefs={wavesurferRefs}
                     setSpeed={setSpeed}  // Pass the setSpeed function
                     isReady={isReady}
                     speed={speed}
+                    aContext={audioContext}
                 />
             ) : (
                 <p>No audio tracks available.</p>
