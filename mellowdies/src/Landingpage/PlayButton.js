@@ -95,19 +95,6 @@ function PlayButton({ wavesurferRefs, setSpeed, isReady, speed, aContext }) {
                 <img src={endofmusic} alt="Go to End" style={iconStyle} />
             </button>
             <div style={{ marginBottom: '13px' }}>
-                <label htmlFor="speed">SPEED: </label>
-                <select
-                    id="speed"
-                    value={speed}
-                    onChange={(e) => changeSpeedAllTracks(parseFloat(e.target.value))}
-                    disabled={!isReady}
-                    style={{ padding: '5px', fontSize: '16px' }}
-                >
-                    <option value="0.5">0.5x</option>
-                    <option value="1">1x</option>
-                    <option value="1.5">1.5x</option>
-                    <option value="2">2x</option>
-                </select>
             </div>
         </div>
     );

@@ -23,20 +23,27 @@ function Exportpage() {
     const wavesurferRefs = useRef([]);
     const progressBarRef = useRef(null);
 
+     // Web Audio API setup for beat detection
+     const audioContext = useRef(new (window.AudioContext || window.webkitAudioContext)());
+     const analyser = useRef(audioContext.current.createAnalyser());
+
     // Initialize WaveSurfer when the audio is ready
     useEffect(() => {
         if (mergedAudio && waveformRef.current) {
             wavesurfer.current = WaveSurfer.create({
                 container: waveformRef.current,
-                waveColor: '#000',
-                progressColor: '#000',
+                waveColor: 'linear-gradient(90deg, rgba(255, 0, 150, 1), rgba(0, 204, 255, 1))', // Gradient color
+                progressColor: 'rgba(0, 204, 255, 0.5)', // Lighter progress color for contrast
                 height: 100,
-                barWidth: 2,
-                barGap: 1,
+                barWidth: 3,
+                barHeight: 1, // This can be adjusted dynamically if needed
+                barGap: 2,
                 cursorColor: 'transparent',
                 responsive: true,
                 normalize: true,
+            
             });
+            
 
             wavesurfer.current.on('audioprocess', () => {
                 setCurrentTime(wavesurfer.current.getCurrentTime());
