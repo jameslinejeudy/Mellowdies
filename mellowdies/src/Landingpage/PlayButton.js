@@ -10,10 +10,11 @@ const buttonContainerStyle = {
     display: 'flex',
     flexDirection: 'row',  // Arrange buttons horizontally
     position: 'fixed',
+    left: '25%',
     bottom: '20px',  // Distance from the bottom of the screen
-    left: center,
     transform: 'translateX(-50%)',  // Center the container horizontally
     alignItems: 'center',  // Align buttons to the center within the container
+
 };
 
 const buttonStyle = {
