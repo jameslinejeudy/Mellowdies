@@ -285,7 +285,6 @@ function Landingpage() {
 
             <button className="exportButton" onClick={async () => {
             await mergeAudioFiles();  // Wait for the audio merging to complete
-            navigate('/Exportpage');  // Navigate to the export page after merging
             }}>
             Export
             </button>
