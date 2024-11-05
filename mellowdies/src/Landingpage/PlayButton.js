@@ -95,6 +95,7 @@ function PlayButton({ wavesurferRefs, setSpeed, isReady, speed, aContext }) {
                 <img src={endofmusic} alt="Go to End" style={iconStyle} />
             </button>
             <div style={{ marginBottom: '13px' }}>
+                
             </div>
         </div>
     );

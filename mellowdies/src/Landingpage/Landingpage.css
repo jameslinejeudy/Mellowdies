@@ -54,27 +54,30 @@
 }
 
 .exportButton {
-    padding: 8px 16px;
-    border-radius: 30px;
-    border: 2px solid #ffffff;
-    background-color: rgba(255, 255, 255, 0.5);
-    color: #000;
-    font-family: 'Concert One', cursive;
+    text-align: center; /* Center text horizontally */
+    display: flex; /* Use flex to center */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    background: none;
+    border: 2px solid black;
+    border-radius: 20px;
+    padding: 10px;
+    margin-left: 10px;
+    font-size: 20px;
+    font-weight: 0; /* Set to a lighter weight for thinner text */
+    color: black;
     cursor: pointer;
-    width: 25%;
-    margin-bottom: 10px;
-    text-align: center;
-    font-size: 1rem;
-    box-shadow: 2px 2px 4px white, -2px -2px 4px white;
-    align-self: center;
-    flex-direction: row;
-
-    /* Position the button in the bottom-right corner */
+    font-family: inherit;
+    outline: none;
     position: fixed;
-    bottom: 20px;  /* Distance from the bottom of the screen */
-    right: 20px;   /* Distance from the right of the screen */
-    width: auto;   /* Adjust width to fit content */
+    bottom: 40px;  /* Distance from the bottom of the screen */
+    right: 5%;   /* Distance from the right of the screen */
+    width: 100px; /* Set desired width here */
+    height: 37px;
+
 }
+
+
 
 .dropdownButton {
     cursor: pointer;
