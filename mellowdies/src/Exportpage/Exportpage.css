@@ -18,15 +18,14 @@
     background-size: cover;
     background-position: center;
     border-radius: 50%;
-    margin-bottom: 20px;
     margin-top: -10%;
 }
 
 #waveform {
     width: 100%;
     max-width: 600px;
-    height: 100px;
-    margin: 20px 0;
+    height: 75px;
+    margin-top: 10px;
 }
 
 .timeline-container {
@@ -35,7 +34,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 10px;
     position: relative;
 }
 
@@ -47,7 +45,7 @@
     border-radius: 5px;
     outline: none;
     cursor: pointer;
-    margin-bottom: 10px;
+    right: center;
 }
 
 .timeline-slider::-webkit-slider-thumb {
@@ -76,7 +74,7 @@
 
 .play-button-container {
     position: absolute;
-    bottom: 10%; /* Move the play buttons below the timeline */
+    bottom: 25%; /* Move the play buttons below the timeline */
     left: 50%;
     transform: translateX(-50%);
     display: flex;
@@ -86,3 +84,26 @@
 .play-button-container button {
     margin: 0 10px;
 }
+
+.buttons {
+    text-align: center; /* Center text horizontally */
+    display: flex; /* Use flex to center */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    background: none;
+    border: 2px solid black;
+    border-radius: 20px;
+    padding: 10px;
+    font-size: 20px;
+    font-weight: 0; /* Set to a lighter weight for thinner text */
+    color: black;
+    cursor: pointer;
+    font-family: inherit;
+    outline: none;
+    position: fixed;
+    bottom: 20%;  /* Distance from the bottom of the screen */
+    right: center;   /* Distance from the right of the screen */
+    width: 25%; /* Set desired width here */
+    height: 37px;
+}
+

@@ -34,10 +34,11 @@ function Exportpage() {
                 container: waveformRef.current,
                 waveColor: 'linear-gradient(90deg, rgba(255, 0, 150, 1), rgba(0, 204, 255, 1))', // Gradient color
                 progressColor: 'rgba(0, 204, 255, 0.5)', // Lighter progress color for contrast
-                height: 100,
-                barWidth: 3,
+                height: 50,
+                barWidth: 4,
                 barHeight: 1, // This can be adjusted dynamically if needed
-                barGap: 2,
+                barGap: 3,
+                barRadius: 100,
                 cursorColor: 'transparent',
                 responsive: true,
                 normalize: true,
@@ -77,13 +78,10 @@ function Exportpage() {
 
     return (
         <div className="pagebackground">
-            {/* Circle-shaped image */}
             <div className="circle-shape"></div>
-
-            {/* Waveform container */}
+            <div style={{ marginBottom: '20px' }}> </div>
             <div id="waveform" ref={waveformRef} className="waveform"></div>
-
-            {/* Custom timeline progress bar */}
+            <div style={{ marginBottom: '10px' }}> </div>
             <div className="timeline-container">
                 <input
                     type="range"
@@ -100,6 +98,7 @@ function Exportpage() {
                     <span>{formatTime(duration)}</span>
                 </div>
             </div>
+            <div style={{ marginBottom: '10px' }}> </div>
 
             {/* Play buttons from PlayButton.js */}
             <div className="play-button-container">
@@ -110,6 +109,30 @@ function Exportpage() {
                     speed={speed}
                 />
             </div>
+            <button
+    className="buttons"
+    onClick={async () => {
+        if (mergedAudio) {
+            const response = await fetch(mergedAudio); // Fetch the audio file
+            const blob = await response.blob(); // Convert the response to a blob
+            const url = URL.createObjectURL(blob); // Create a temporary URL for download
+
+            // Create a hidden anchor element and trigger download
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'downloaded_audio.mp3'; // Set the file name and extension
+            a.click();
+
+            // Clean up the URL object after download
+            URL.revokeObjectURL(url);
+        } else {
+            alert("Audio file is not available for download.");
+        }
+    }}
+>
+    Download
+</button>
+
         </div>
     );
 }
