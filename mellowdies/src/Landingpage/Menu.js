@@ -99,6 +99,12 @@ const sliderContainerStyle = {
 var utils = require("audio-buffer-utils");
 var blobber = require('audiobuffer-to-blob');
 
+const buffers = [];
+
+function storeBuffer (buffer) {
+  buffers.push(buffer);
+}
+
 function combFilter (samples, sampleLength, delay, decay, sampleRate) {
   let delaySamples = Math.ceil(delay * (sampleRate / 1000));
   let combFilterSamples = samples;
@@ -192,8 +198,18 @@ function Menu({ handleBack, waveData}) {
       console.log("EQ applied")
   }
   
+  const undo = () => {
+    if (buffers.length >= 1) {
+      let blob = blobber(buffers.pop());
+      waveData[0].waveSurfer.empty();
+      waveData[0].waveSurfer.loadBlob(blob).catch(error => console.log(error));
+    }
+  }
+
   const reverse = () => {
     let buffer = waveData[0].waveSurfer.getDecodedData();
+    let clone = utils.clone(buffer)
+    storeBuffer(clone);
     let region = (waveData[0].regions.getRegions())[0];
     let sampleRate = buffer.sampleRate;
     if (buffer) {
@@ -209,6 +225,8 @@ function Menu({ handleBack, waveData}) {
 
   const invert = () => {
     let buffer = waveData[0].waveSurfer.getDecodedData();
+    let clone = utils.clone(buffer)
+    storeBuffer(clone);
     let region = (waveData[0].regions.getRegions())[0];
     let sampleRate = buffer.sampleRate;
     if (buffer) {
@@ -224,6 +242,8 @@ function Menu({ handleBack, waveData}) {
 
   const normalize = () => {
     let buffer = waveData[0].waveSurfer.getDecodedData();
+    let clone = utils.clone(buffer)
+    storeBuffer(clone);
     let region = (waveData[0].regions.getRegions())[0];
     let sampleRate = buffer.sampleRate;
     if (buffer) {
@@ -242,6 +262,8 @@ function Menu({ handleBack, waveData}) {
 
   const adjustGain = () => {
     let buffer = waveData[0].waveSurfer.getDecodedData();
+    let clone = utils.clone(buffer)
+    storeBuffer(clone);
     let region = (waveData[0].regions.getRegions())[0];
     let sampleRate = buffer.sampleRate;
     let gain = gainValue / 100;
@@ -265,6 +287,8 @@ function Menu({ handleBack, waveData}) {
 
   const fadeIn = () => {
     let buffer = waveData[0].waveSurfer.getDecodedData();
+    let clone = utils.clone(buffer)
+    storeBuffer(clone);
     let region = (waveData[0].regions.getRegions())[0];
     let sampleRate = buffer.sampleRate;
     let start = Math.floor(region.start * sampleRate);
@@ -292,6 +316,8 @@ function Menu({ handleBack, waveData}) {
 
   const fadeOut = () => {
     let buffer = waveData[0].waveSurfer.getDecodedData();
+    let clone = utils.clone(buffer)
+    storeBuffer(clone);
     let region = (waveData[0].regions.getRegions())[0];
     let sampleRate = buffer.sampleRate;
     let start = Math.floor(region.start * sampleRate);
@@ -322,6 +348,8 @@ function Menu({ handleBack, waveData}) {
 
   const distort = () => {
     let buffer = waveData[0].waveSurfer.getDecodedData();
+    let clone = utils.clone(buffer)
+    storeBuffer(clone);
     let region = (waveData[0].regions.getRegions())[0];
     let sampleRate = buffer.sampleRate;
     let gain = gainDistortValue / 100;
@@ -348,6 +376,8 @@ function Menu({ handleBack, waveData}) {
 
   const delay = () => {
     let buffer = waveData[0].waveSurfer.getDecodedData();
+    let clone = utils.clone(buffer)
+    storeBuffer(clone);
     let region = (waveData[0].regions.getRegions())[0];
     let sampleRate = buffer.sampleRate;
     let start = Math.floor(region.start * sampleRate);
@@ -397,6 +427,8 @@ function Menu({ handleBack, waveData}) {
 
   const reverb = () => {
     let buffer = waveData[0].waveSurfer.getDecodedData();
+    let clone = utils.clone(buffer)
+    storeBuffer(clone);
     let region = (waveData[0].regions.getRegions())[0];
     let sampleRate = buffer.sampleRate;
     let start = Math.floor(region.start * sampleRate);
@@ -806,10 +838,14 @@ function Menu({ handleBack, waveData}) {
 
               <button onClick={closeEquaModal} style={backButtonStyle}>Close</button>
               <button onClick={setFilter} style={backButtonStyle}>Apply EQ</button>
+
             </div>
             </div>
           </>
         )}
+        <button style={adjustGainButtonStyle} onClick={undo}>
+          Undo
+        </button>
       </div>
     </div>
   );
