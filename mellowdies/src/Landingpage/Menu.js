@@ -99,8 +99,7 @@ const sliderContainerStyle = {
 var utils = require("audio-buffer-utils");
 var blobber = require('audiobuffer-to-blob');
 
-const buffers = [];
-
+let buffers = [];
 function storeBuffer (buffer) {
   buffers.push(buffer);
 }
@@ -203,6 +202,14 @@ function Menu({ handleBack, waveData}) {
       let blob = blobber(buffers.pop());
       waveData[0].waveSurfer.empty();
       waveData[0].waveSurfer.loadBlob(blob).catch(error => console.log(error));
+    }
+  }
+
+  const reset = () => {
+    if (buffers.length >= 1) {
+      waveData[0].waveSurfer.empty();
+      waveData[0].waveSurfer.loadBlob(blobber(buffers[0])).catch(error => console.log(error));
+      buffers = [];
     }
   }
 
@@ -845,6 +852,10 @@ function Menu({ handleBack, waveData}) {
         )}
         <button style={adjustGainButtonStyle} onClick={undo}>
           Undo
+        </button>
+
+        <button style={adjustGainButtonStyle} onClick={reset}>
+          Reset
         </button>
       </div>
     </div>
