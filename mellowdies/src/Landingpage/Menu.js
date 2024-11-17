@@ -1,100 +1,5 @@
 import React, {useState}  from 'react';
-
-const menubackground = {
-  width: '25%',
-  height: '100%',
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'flex-start',
-  alignItems: 'left',
-  border: '2px solid #ffffff',
-  backgroundColor: '#ffffff',
-  fontFamily: "'Concert One', cursive",
-  fontSize: '1.2rem',
-  boxShadow: '0px 0px 15px 5px rgba(255, 255, 255, 0.6)',
-  border: 'none',
-  position: 'fixed',
-  top: '0',
-  left: '0',
-  zIndex: '1000',
-  paddingTop: '20px',
-  overflowY: 'auto', // Enable vertical scrolling
-  maxHeight: '100%', // Set a maximum height for the menu
-};
-
-const backButtonStyle = {
-  marginTop: '10px',
-  background: '#007bff',
-  color: '#fff',
-  border: 'none',
-  padding: '10px 20px',
-  borderRadius: '5px',
-  cursor: 'pointer',
-  fontSize: '16px',
-  textAlign: 'center',
-  width: 'auto',
-  display: 'inline-block',
-  transition: 'background 0.3s ease',
-};
-
-const reverseButtonStyle = {
-  ...backButtonStyle,
-  background: '#ff5722', // Different color for reverse button
-};
-
-const sliderStyle = {
-  width: '80%',
-  margin: '10px auto',
-};
-
-const adjustGainButtonStyle = {
-  ...backButtonStyle,
-  background: '#4caf50', // Different color for adjust gain button
-};
-
-
-const modalStyle = {
-  position: 'fixed',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 'auto',
-  height: 'auto',
-  backgroundColor: '#fff',
-  padding: '20px',
-  borderRadius: '10px',
-  boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.3)',
-  zIndex: '1001',
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-};
-
-const overlayStyle = {
-  position: 'fixed',
-  top: '0',
-  left: '0',
-  right: '0',
-  bottom: '0',
-  backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  zIndex: '1000',
-};
-
-const contentStyle = {
-  flexGrow: 1,
-  paddingTop: '20px',
-};
-
-const verticalSliderStyle = {
-  orient: 'vertical', // Ensures the slider is vertical
-  appearance : 'slider-vertical',
-}
-
-const sliderContainerStyle = {
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-};
+import './Menu.css';
 
 var utils = require("audio-buffer-utils");
 var blobber = require('audiobuffer-to-blob');
@@ -489,38 +394,39 @@ function Menu({ handleBack, waveData}) {
   
 
   return (
-    <div style={menubackground}>
-      <div style={contentStyle}>
-        <button style={backButtonStyle} onClick={handleBack}>Back</button>
+    <div className="menubackground">
+      <div className="contentStyle">
+        <div className='buttonContainer'>
+        <button className="navigationButtonStyle" onClick={handleBack}>Back</button>
 
-        <button style={reverseButtonStyle} onClick={reverse}>
+        <button  className="simpleButtonStyle" onClick={reverse}>
           Reverse Selected Region
         </button>
 
-        <button style={reverseButtonStyle} onClick={invert}>
+        <button  className="simpleButtonStyle" onClick={invert}>
           Invert Selected Region
         </button>
 
-        <button style={reverseButtonStyle} onClick={normalize}>
+        <button  className="simpleButtonStyle" onClick={normalize}>
           Normalize Selected Region
         </button>
 
-        <button style={reverseButtonStyle} onClick={fadeIn}>
+        <button  className="simpleButtonStyle" onClick={fadeIn}>
           Fade In Region
         </button>
 
-        <button style={reverseButtonStyle} onClick={fadeOut}>
+        <button  className="simpleButtonStyle" onClick={fadeOut}>
           Fade Out Region
         </button>
         
-        <button style={adjustGainButtonStyle} onClick={openGainModal}>
+        <button  className="modalButtonStyle" onClick={openGainModal}>
           Adjust Gain
         </button>
 
         {isGainModalOpen && (
           <>
-             <div style={overlayStyle} onClick={closeGainModal} />
-              <div style={modalStyle}>
+             <div className="overlayStyle" onClick={closeGainModal} />
+              <div className="modalStyle">
                 <h2>Gain Percentage</h2>
                 <input
                   id="gains"
@@ -530,23 +436,23 @@ function Menu({ handleBack, waveData}) {
                   step="0.01"
                   value={gainValue}
                   onInput={(e) => setGainValue(e.target.value)}
-                  style={sliderStyle}
+                  className="sliderStyle"
                 />
                 <output id="gainVal">{gainValue}%</output>
-              <button onClick={closeGainModal} style={backButtonStyle}>Close</button>
-              <button onClick={adjustGain} style={backButtonStyle}>Apply Gain</button>
+              <button onClick={closeGainModal} className="navigationButtonStyle">Close</button>
+              <button onClick={adjustGain} className="navigationButtonStyle">Apply Gain</button>
             </div>
           </>
         )}
 
-        <button style={adjustGainButtonStyle} onClick={openDelayModal}>
+        <button  className="modalButtonStyle" onClick={openDelayModal}>
           Adjust Delay
         </button>
 
         {isDelayModalOpen && (
           <>
-             <div style={overlayStyle} onClick={closeDelayModal} />
-              <div style={modalStyle}>
+             <div className="overlayStyle" onClick={closeDelayModal} />
+              <div className="modalStyle">
                 <h2>Delay Time</h2>
                 <input
                   id="delayT"
@@ -556,7 +462,7 @@ function Menu({ handleBack, waveData}) {
                   step="0.01"
                   value={delayTime}
                   onInput={(e) => setDelayTime(e.target.value)}
-                  style={sliderStyle}
+                  className="sliderStyle"
                 />
                 <output id="delayVal">{delayTime}</output>
 
@@ -569,7 +475,7 @@ function Menu({ handleBack, waveData}) {
                   step="0.01"
                   value={feedback}
                   onInput={(e) => setFeedback(e.target.value)}
-                  style={sliderStyle}
+                  className="sliderStyle"
                 />
                 <output id="feedVal">{feedback}</output>
 
@@ -582,7 +488,7 @@ function Menu({ handleBack, waveData}) {
                   step="0.01"
                   value={wetness}
                   onInput={(e) => setWetness(e.target.value)}
-                  style={sliderStyle}
+                  className="sliderStyle"
                 />
                 <output id="wetVal">{wetness}</output>
 
@@ -595,23 +501,23 @@ function Menu({ handleBack, waveData}) {
                   step="0.01"
                   value={dryness}
                   onInput={(e) => setDryness(e.target.value)}
-                  style={sliderStyle}
+                  className="sliderStyle"
                 />
                 <output id="dryVal">{dryness}</output>
-              <button onClick={closeDelayModal} style={backButtonStyle}>Close</button>
-              <button onClick={delay} style={backButtonStyle}>Apply Delay</button>
+              <button onClick={closeDelayModal} className="navigationButtonStyle">Close</button>
+              <button onClick={delay} className="navigationButtonStyle">Apply Delay</button>
             </div>
           </>
         )}
 
-        <button style={adjustGainButtonStyle} onClick={openDistortionModal}>
+        <button  className="modalButtonStyle" onClick={openDistortionModal}>
           Apply Distortion
         </button>
 
         {isDistortionModalOpen && (
           <>
-             <div style={overlayStyle} onClick={closeDistortionModal} />
-              <div style={modalStyle}>
+             <div className="overlayStyle" onClick={closeDistortionModal} />
+              <div className="modalStyle">
                 <h2>Gain Percentage</h2>
                 <input
                   id="gains"
@@ -621,23 +527,23 @@ function Menu({ handleBack, waveData}) {
                   step="0.01"
                   value={gainDistortValue}
                   onInput={(e) => setGainDistortValue(e.target.value)}
-                  style={sliderStyle}
+                  className="sliderStyle"
                 />
                 <output id="gainDistortVal">{gainDistortValue}%</output>
-              <button onClick={closeDistortionModal} style={backButtonStyle}>Close</button>
-              <button onClick={distort} style={backButtonStyle}>Apply Distortion</button>
+              <button onClick={closeDistortionModal} className="navigationButtonStyle">Close</button>
+              <button onClick={distort} className="navigationButtonStyle">Apply Distortion</button>
             </div>
           </>
         )}
 
-        <button style={adjustGainButtonStyle} onClick={openReverbModal}>
+        <button  className="modalButtonStyle" onClick={openReverbModal}>
           Apply Reverb
         </button>
 
         {isReverbModalOpen && (
           <>
-             <div style={overlayStyle} onClick={closeReverbModal} />
-              <div style={modalStyle}>
+             <div className="overlayStyle" onClick={closeReverbModal} />
+              <div className="modalStyle">
                 <h2>Time</h2>
                 <input
                   id="reverbT"
@@ -647,7 +553,7 @@ function Menu({ handleBack, waveData}) {
                   step="0.01"
                   value={reverbTime}
                   onInput={(e) => setReverbTime(e.target.value)}
-                  style={sliderStyle}
+                  className="sliderStyle"
                 />
                 <output id="reverbTime">{reverbTime}</output>
 
@@ -660,7 +566,7 @@ function Menu({ handleBack, waveData}) {
                   step="0.01"
                   value={decay}
                   onInput={(e) => setDecay(e.target.value)}
-                  style={sliderStyle}
+                  className="sliderStyle"
                 />
                 <output id="decayVal">{decay}</output>
 
@@ -673,26 +579,26 @@ function Menu({ handleBack, waveData}) {
                   step="0.01"
                   value={reverbWet}
                   onInput={(e) => setReverbWet(e.target.value)}
-                  style={sliderStyle}
+                  className="sliderStyle"
                 />
                 <output id="wetRVal">{reverbWet}</output>
 
-              <button onClick={closeReverbModal} style={backButtonStyle}>Close</button>
-              <button onClick={reverb} style={backButtonStyle}>Apply Reverb</button>
+              <button onClick={closeReverbModal} className="navigationButtonStyle">Close</button>
+              <button onClick={reverb} className="navigationButtonStyle">Apply Reverb</button>
             </div>
           </>
         )}
 
-        <button style={adjustGainButtonStyle} onClick={openEquaModal}>
+        <button  className="modalButtonStyle" onClick={openEquaModal}>
           10-Band Equalizer
         </button>
 
         {isEquaModalOpen && (
           <>
-             <div style={overlayStyle} onClick={closeEquaModal} />
-              <div style={modalStyle}>
+             <div className="overlayStyle" onClick={closeEquaModal} />
+              <div className="modalStyle">
               <div style={{ display: 'flex', gap: '5px' }}>
-                <div style={sliderContainerStyle}>
+                <div className="sliderContainerStyle">
                   <h2>32Hz</h2>
                     <input
                       id="filter0"
@@ -702,12 +608,12 @@ function Menu({ handleBack, waveData}) {
                       step="0.1"
                       value={filter0Val}
                       onInput={(e) => setFilter0(e.target.value)}
-                      style={verticalSliderStyle}
+                      className="verticalSliderStyle"
                     />
                     <output id="0">{filter0Val} dB</output>
                 </div>
                 
-                <div style={sliderContainerStyle}>
+                <div className="sliderContainerStyle">
                   <h2>64Hz</h2>
                     <input
                       id="filter1"
@@ -717,12 +623,12 @@ function Menu({ handleBack, waveData}) {
                       step="0.1"
                       value={filter1Val}
                       onInput={(e) => setFilter1(e.target.value)}
-                      style={verticalSliderStyle}
+                      className="verticalSliderStyle"
                     />
                     <output id="1">{filter1Val} dB</output>
                 </div>
 
-                <div style={sliderContainerStyle}>
+                <div className="sliderContainerStyle">
                   <h2>125Hz</h2>
                   <input
                     id="filter2"
@@ -732,12 +638,12 @@ function Menu({ handleBack, waveData}) {
                     step="0.1"
                     value={filter2Val}
                     onInput={(e) => setFilter2(e.target.value)}
-                    style={verticalSliderStyle}
+                    className="verticalSliderStyle"
                   />
                   <output id="2">{filter2Val} dB</output>
                   </div>
 
-                <div style={sliderContainerStyle}> 
+                <div className="sliderContainerStyle"> 
                 <h2>250Hz</h2>
                 <input
                   id="filter3"
@@ -747,12 +653,12 @@ function Menu({ handleBack, waveData}) {
                   step="0.1"
                   value={filter3Val}
                   onInput={(e) => setFilter3(e.target.value)}
-                  style={verticalSliderStyle}
+                  className="verticalSliderStyle"
                 />
                 <output id="3">{filter3Val} dB</output>
                 </div>
                  
-                <div style={sliderContainerStyle}>
+                <div className="sliderContainerStyle">
                 <h2>500Hz</h2>
                 <input
                   id="filter4"
@@ -762,13 +668,13 @@ function Menu({ handleBack, waveData}) {
                   step="0.1"
                   value={filter4Val}
                   onInput={(e) => setFilter4(e.target.value)}
-                  style={verticalSliderStyle}
+                  className="verticalSliderStyle"
                 />
                 <output id="4">{filter4Val} dB</output>
                 </div>
                  
 
-                <div style={sliderContainerStyle}>
+                <div className="sliderContainerStyle">
                 <h2>1000Hz</h2>
                 <input
                   id="filter5"
@@ -778,12 +684,12 @@ function Menu({ handleBack, waveData}) {
                   step="0.1"
                   value={filter5Val}
                   onInput={(e) => setFilter5(e.target.value)}
-                  style={verticalSliderStyle}
+                  className="verticalSliderStyle"
                 />
                 <output id="5">{filter5Val} dB</output>
                 </div>
                  
-                <div style={sliderContainerStyle}>
+                <div className="sliderContainerStyle">
                 <h2>2000Hz</h2>
                 <input
                   id="filter6"
@@ -793,12 +699,12 @@ function Menu({ handleBack, waveData}) {
                   step="0.1"
                   value={filter6Val}
                   onInput={(e) => setFilter6(e.target.value)}
-                  style={verticalSliderStyle}
+                  className="verticalSliderStyle"
                 />
                 <output id="6">{filter6Val} dB</output>
                 </div>
                  
-                <div style={sliderContainerStyle}>
+                <div className="sliderContainerStyle">
                 <h2>4000Hz</h2>
                 <input
                   id="filter7"
@@ -808,12 +714,12 @@ function Menu({ handleBack, waveData}) {
                   step="0.1"
                   value={filter7Val}
                   onInput={(e) => setFilter7(e.target.value)}
-                  style={verticalSliderStyle}
+                  className="verticalSliderStyle"
                 />
                 <output id="7">{filter7Val} dB</output>
                 </div>
                  
-                <div style={sliderContainerStyle}>
+                <div className="sliderContainerStyle">
                 <h2>8000Hz</h2>
                 <input
                   id="filter8"
@@ -823,12 +729,12 @@ function Menu({ handleBack, waveData}) {
                   step="0.1"
                   value={filter8Val}
                   onInput={(e) => setFilter8(e.target.value)}
-                  style={verticalSliderStyle}
+                  className="verticalSliderStyle"
                 />
                 <output id="8">{filter8Val} dB</output>
                 </div>
                  
-                <div style={sliderContainerStyle}>
+                <div className="sliderContainerStyle">
                 <h2>16000Hz</h2>
                 <input
                   id="filter9"
@@ -838,25 +744,26 @@ function Menu({ handleBack, waveData}) {
                   step="0.1"
                   value={filter9Val}
                   onInput={(e) => setFilter9(e.target.value)}
-                  style={verticalSliderStyle}
+                  className="verticalSliderStyle"
                 />
                 <output id="9">{filter9Val} dB</output>
                 </div>
 
-              <button onClick={closeEquaModal} style={backButtonStyle}>Close</button>
-              <button onClick={setFilter} style={backButtonStyle}>Apply EQ</button>
+              <button onClick={closeEquaModal} className="navigationButtonStyle">Close</button>
+              <button onClick={setFilter} className="navigationButtonStyle">Apply EQ</button>
 
             </div>
             </div>
           </>
         )}
-        <button style={adjustGainButtonStyle} onClick={undo}>
+        <button  className="resetButtonStyle" onClick={undo}>
           Undo
         </button>
 
-        <button style={adjustGainButtonStyle} onClick={reset}>
+        <button  className="resetButtonStyle" onClick={reset}>
           Reset
         </button>
+        </div>
       </div>
     </div>
   );

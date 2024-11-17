@@ -6,9 +6,9 @@ import RegionsPlugin from "wavesurfer.js/dist/plugins/regions.js";
 import TimelinePlugin from 'wavesurfer.js/dist/plugins/timeline';  // Import the timeline plugin
 import { useLocation } from 'react-router-dom';
 import Sidebar from './Sidebar.js';
-import './Landingpage.css';  
 import PlayButton from './PlayButton.js';
-import PlusIcon from '../images/icons/plus.png'
+import PlusIcon from '../images/icons/plus.png';
+import './Landingpage.css';  
 
 
 const waveSurferData = [];
