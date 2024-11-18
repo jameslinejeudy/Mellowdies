@@ -73,6 +73,11 @@ function Menu({ handleBack, waveData}) {
   const [filter7Val, setFilter7] = useState(filters[7].gain.value);
   const [filter8Val, setFilter8] = useState(filters[8].gain.value);
   const [filter9Val, setFilter9] = useState(filters[9].gain.value);
+  const [showAdvanced, setShowAdvanced] = useState(false);
+
+  const toggleAdvancedOptions = () => {
+    setShowAdvanced((prev) => !prev);
+  };
 
   if (isEquaInit === false) {
     waveData[0].webAudioPlayer.gainNode.connect(filters[0])
@@ -763,6 +768,20 @@ function Menu({ handleBack, waveData}) {
         <button  className="resetButtonStyle" onClick={reset}>
           Reset
         </button>
+        <button className="navigationButtonStyle" onClick={toggleAdvancedOptions}>
+            {showAdvanced ? 'Hide Advanced' : 'Show Advanced'}
+          </button>
+          {showAdvanced && (
+            <div className="advancedOptions">
+              <button className="modalButtonStyle" onClick={normalize}>
+                Normalize
+              </button>
+              <button  className="simpleButtonStyle" onClick={invert}>
+                Invert Selected Region
+              </button>
+              {/* Add other advanced buttons here as needed */}
+            </div>
+          )}
         </div>
       </div>
     </div>
