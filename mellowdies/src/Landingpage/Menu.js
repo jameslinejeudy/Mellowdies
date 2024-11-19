@@ -408,24 +408,12 @@ function Menu({ handleBack, waveData}) {
           Reverse Selected Region
         </button>
 
-        <button  className="simpleButtonStyle" onClick={invert}>
-          Invert Selected Region
-        </button>
-
-        <button  className="simpleButtonStyle" onClick={normalize}>
-          Normalize Selected Region
-        </button>
-
         <button  className="simpleButtonStyle" onClick={fadeIn}>
           Fade In Region
         </button>
 
         <button  className="simpleButtonStyle" onClick={fadeOut}>
           Fade Out Region
-        </button>
-        
-        <button  className="modalButtonStyle" onClick={openGainModal}>
-          Adjust Gain
         </button>
 
         {isGainModalOpen && (
@@ -449,10 +437,6 @@ function Menu({ handleBack, waveData}) {
             </div>
           </>
         )}
-
-        <button  className="modalButtonStyle" onClick={openDelayModal}>
-          Adjust Delay
-        </button>
 
         {isDelayModalOpen && (
           <>
@@ -515,10 +499,6 @@ function Menu({ handleBack, waveData}) {
           </>
         )}
 
-        <button  className="modalButtonStyle" onClick={openDistortionModal}>
-          Apply Distortion
-        </button>
-
         {isDistortionModalOpen && (
           <>
              <div className="overlayStyle" onClick={closeDistortionModal} />
@@ -540,10 +520,6 @@ function Menu({ handleBack, waveData}) {
             </div>
           </>
         )}
-
-        <button  className="modalButtonStyle" onClick={openReverbModal}>
-          Apply Reverb
-        </button>
 
         {isReverbModalOpen && (
           <>
@@ -593,10 +569,6 @@ function Menu({ handleBack, waveData}) {
             </div>
           </>
         )}
-
-        <button  className="modalButtonStyle" onClick={openEquaModal}>
-          10-Band Equalizer
-        </button>
 
         {isEquaModalOpen && (
           <>
@@ -776,9 +748,24 @@ function Menu({ handleBack, waveData}) {
               <button className="modalButtonStyle" onClick={normalize}>
                 Normalize
               </button>
-              <button  className="simpleButtonStyle" onClick={invert}>
+              <button  className="modalButtonStyle" onClick={invert}>
                 Invert Selected Region
               </button>
+              <button  className="modalButtonStyle" onClick={openGainModal}>
+                Adjust Gain
+              </button>
+              <button  className="modalButtonStyle" onClick={openDelayModal}>
+                Adjust Delay
+              </button>
+              <button  className="modalButtonStyle" onClick={openDistortionModal}>
+                Apply Distortion
+              </button>
+              <button  className="modalButtonStyle" onClick={openReverbModal}>
+          Apply Reverb
+        </button>
+        <button  className="modalButtonStyle" onClick={openEquaModal}>
+          10-Band Equalizer
+        </button>
               {/* Add other advanced buttons here as needed */}
             </div>
           )}
