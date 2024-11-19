@@ -1,15 +1,85 @@
 import React, { useState } from "react";
 
-const menubackground = { /* styles remain unchanged */ };
-const generateButtonStyle = { /* styles remain unchanged */ };
-const descriptionBoxStyle = { /* styles remain unchanged */ };
-const backButtonStyle = { /* styles remain unchanged */ };
-const contentStyle = { /* styles remain unchanged */ };
-
 var toWav = require('audiobuffer-to-wav');
 var slicer = require('audiobuffer-slice');
 let wavURL = "";
 let sliceBuffer = null;
+
+const menubackground = { /* styles remain unchanged */ };
+
+const contentStyle = {   
+  display: "flex",
+  flexDirection: "column",
+  /*alignItems: "center", */
+  justifyContent: "center", 
+  padding: "20px",
+  maxWidth: "600px", 
+  width: "100%",
+};
+
+const buttonBaseStyle = {
+  padding: "10px 20px",
+  fontSize: "16px",
+  borderRadius: "8px",
+  border: "none",
+  cursor: "pointer",
+  transition: "all 0.3s ease",
+};
+
+const generateButtonStyle = {
+  ...buttonBaseStyle,
+  backgroundColor: "#7d4998",
+  color: "white",
+  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+  marginBottom: "10px",
+  marginTop: "10px",
+};
+
+const backButtonStyle = {
+  ...buttonBaseStyle,
+  backgroundColor: "#b86999",
+  color: "white",
+  marginLeft: "10px",
+  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+  position: "absolute",
+  bottom: "20px",
+  right: "20px",
+};
+
+const hoverEffectStyle = {
+  transform: "scale(1.05)",
+  boxShadow: "0 6px 8px rgba(0, 0, 0, 0.2)",
+};
+
+const descriptionBoxStyle = {
+  width: "100%",
+  height: "150px",
+  padding: "15px",
+  fontSize: "16px",
+  borderRadius: "8px",
+  border: "1px solid #ccc",
+  outline: "none",
+  resize: "none", 
+  boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+  transition: "border-color 0.3s ease, box-shadow 0.3s ease",
+};
+
+const descriptionBoxHoverStyle = {
+  borderColor: "#A020F0",
+  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+};
+
+const inputFileStyle = {
+  display: "inline-block",
+  backgroundColor: "#5c6073",
+  color: "white",
+  padding: "10px 20px",
+  borderRadius: "8px",
+  cursor: "pointer",
+  fontSize: "16px",
+  transition: "all 0.3s ease",
+  textAlign: "center"
+}
 
 function getAudioSlice(buffer, region) {
   slicer(buffer, region.start * 1000, region.end * 1000, function(error, slicedBuffer) {
@@ -37,7 +107,11 @@ function AIMenu({ handleBack, waveData }) {
   const [errorMessage, setErrorMessage] = useState(null);
   const [progressMessage, setProgressMessage] = useState(null);
   const [sendToAI, setSendToAI] = useState(false);  // Checkbox state
+  const [hover, setHover] = useState({ generate: false, back: false });
   let wavURL = "";
+
+  const handleMouseEnter = (button) => setHover({ ...hover, [button]: true });
+  const handleMouseLeave = (button) => setHover({ ...hover, [button]: false });
 
   const handleFileChange = (event) => {
     setFile(event.target.files[0]); // Capture the uploaded file
@@ -119,26 +193,20 @@ function AIMenu({ handleBack, waveData }) {
     <div style={menubackground}>
       <div style={contentStyle}>
         <h1>AI Music Generator</h1>
+        <label>Edit Imported Tracks</label>
         {errorMessage && <div style={{ color: "red" }}>{errorMessage}</div>}
         {progressMessage && <div style={{ color: "blue" }}>{progressMessage}</div>}
 
-        {/* Dropdown for API selection */}
-        <label htmlFor="apiChoice">Choose API:</label>
-        <select
-          id="apiChoice"
-          value={apiChoice}
-          onChange={(e) => setApiChoice(e.target.value)}
-          disabled={loading}
-        >
-          <option value="old">Old API</option>
-          <option value="new">New API</option>
-        </select>
-
         <textarea
-          style={descriptionBoxStyle}
+          style={{
+            ...descriptionBoxStyle,
+            ...(hover ? descriptionBoxHoverStyle : {}),
+          }}
           placeholder="Describe your music..."
           value={description}
           onChange={(e) => setDescription(e.target.value)}
+          onMouseEnter={() => setHover(true)}
+          onMouseLeave={() => setHover(false)}
         />
         <div>
           <label>
@@ -147,14 +215,46 @@ function AIMenu({ handleBack, waveData }) {
               checked={sendToAI}
               onChange={(e) => setSendToAI(e.target.checked)}
             />
-            Send selected music region to AI
+            Only edit selected region
           </label>
         </div>
-        <input type="file" onChange={handleFileChange} /> {/* Add file input */}
-        <button style={generateButtonStyle} onClick={handleGenerateMusic} disabled={loading}>
+        <label style={{ display: "block", marginTop: "10px" }}>OR</label>
+        <label style={{ display: "block", marginTop: "10px" }}>Edit New Track</label>
+        <div style={{ marginTop: "10px", marginBottom: "10px" }}>
+          <input
+            type="file"
+            id="file-input"
+            style={{ display: "none" }}
+            onChange={handleFileChange}
+            accept="audio/*"
+          />
+          <label htmlFor="file-input" style={inputFileStyle}>
+            Choose a file
+          </label>
+        </div>
+        <button
+          style={{
+            ...generateButtonStyle,
+            ...(hover.generate ? hoverEffectStyle : {}),
+          }}
+          onClick={handleGenerateMusic}
+          onMouseEnter={() => handleMouseEnter("generate")}
+          onMouseLeave={() => handleMouseLeave("generate")}
+          disabled={loading}
+        >
           {loading ? "Processing..." : "Generate Music"}
         </button>
-        <button style={backButtonStyle} onClick={handleBack}>Back</button>
+        <button
+          style={{
+            ...backButtonStyle,
+            ...(hover.back ? hoverEffectStyle : {}),
+          }}
+          onClick={handleBack}
+          onMouseEnter={() => handleMouseEnter("back")}
+          onMouseLeave={() => handleMouseLeave("back")}
+        >
+          Back
+        </button>
       </div>
     </div>
   );

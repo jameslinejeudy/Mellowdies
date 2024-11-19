@@ -22,6 +22,17 @@ const sidebarContainerStyle = {
     left: '0',
     zIndex: '1001',
     paddingTop: '5%',
+    transition: 'width 0.3s ease',
+};
+
+const expandedSidebarStyle = {
+  ...sidebarContainerStyle,
+  width: '25%', 
+};
+
+const collapsedSidebarStyle = {
+  ...sidebarContainerStyle,
+  width: '0%',
 };
 
 const buttonStyle = {
@@ -75,6 +86,7 @@ const headingStyle = {
 
 function Sidebar({waveData}) {
   const [isMenuVisible, setMenuVisible] = useState(null);
+  const [isSidebarExpanded, setSidebarExpanded] = useState(true);
 
   const toggleMenu = (menu) => {
     setMenuVisible(isMenuVisible === menu ? null : menu);
@@ -84,22 +96,37 @@ function Sidebar({waveData}) {
     setMenuVisible(null);
   };
 
+  const toggleSidebar = () => {
+    setSidebarExpanded(!isSidebarExpanded);
+  };
+
   return (
-    <div style={sidebarContainerStyle}>
-      <button style={menubuttonStyle} onClick={() => toggleMenu('mainMenu')}>
-        <img src={menubutton} alt="Menu Button" style={{ width: '33px', height: 'auto'}} />
+    <div style={isSidebarExpanded ? expandedSidebarStyle : collapsedSidebarStyle}>
+      <button style={menubuttonStyle} onClick={() => toggleSidebar()}>
+        <img src={menubutton} alt="Menu Button" style={{ width: '33px', height: 'auto' }} />
         <h1 style={headingStyle}>MELLOWDIES</h1>
+
       </button>
-      <button style={buttonStyle} onClick={() => toggleMenu('aiSuggestionMenu')}>  {/* edit onClick when integrated */}
-        <h1 style={headingStyle}>✨AI SUGGESTION✨</h1>
-      </button>
-      <button style={buttonStyle} onClick={() => toggleMenu('mixerMenu')}>  {/* edit onClick when integrated */}
-        <h1 style={headingStyle}>MIXER</h1>
-      </button>
-      {/* Conditionally render different menus based on which one is visible */}
-      {isMenuVisible === 'mainMenu' && <Menu/>}
-      {isMenuVisible === 'aiSuggestionMenu' && <AIMenu handleBack={handleBack} waveData={waveData}/>}
-      {isMenuVisible === 'mixerMenu' && <Menu handleBack={handleBack} waveData={waveData}/>}
+      
+      {isSidebarExpanded && (
+        <>
+          {isMenuVisible === null && (
+            <>
+              <button style={buttonStyle} onClick={() => toggleMenu('aiSuggestionMenu')}>
+                <h1 style={headingStyle}>AI EDITOR</h1>
+              </button>
+              <button style={buttonStyle} onClick={() => toggleMenu('mixerMenu')}>
+                <h1 style={headingStyle}>MIXER</h1>
+              </button>
+            </>
+          )}
+          {isMenuVisible === 'mainMenu' && <Menu />}
+          {isMenuVisible === 'aiSuggestionMenu' && (
+            <AIMenu handleBack={handleBack} waveData={waveData} />
+          )}
+          {isMenuVisible === 'mixerMenu' && <Menu handleBack={handleBack} waveData={waveData} />}
+        </>
+      )}
     </div>
   );
 }
