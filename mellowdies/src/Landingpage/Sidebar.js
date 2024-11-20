@@ -84,16 +84,25 @@ const headingStyle = {
     height: 'auto',
 };
 
-function Sidebar({waveData}) {
+function Sidebar({ waveData, fileLoaded }) {
   const [isMenuVisible, setMenuVisible] = useState(null);
+  const [isFileWarningVisible, setFileWarningVisible] = useState(false);
   const [isSidebarExpanded, setSidebarExpanded] = useState(true);
 
   const toggleMenu = (menu) => {
-    setMenuVisible(isMenuVisible === menu ? null : menu);
+    if (menu === 'mixerMenu' && !fileLoaded) {
+      // Show warning and prevent menu from opening
+      setFileWarningVisible(true);
+    } else {
+      // Open the menu if conditions are met
+      setMenuVisible(isMenuVisible === menu ? null : menu);
+      setFileWarningVisible(false);
+    }
   };
 
   const handleBack = () => {
     setMenuVisible(null);
+    setFileWarningVisible(false);
   };
 
   const toggleSidebar = () => {
@@ -105,9 +114,8 @@ function Sidebar({waveData}) {
       <button style={menubuttonStyle} onClick={() => toggleSidebar()}>
         <img src={menubutton} alt="Menu Button" style={{ width: '33px', height: 'auto' }} />
         <h1 style={headingStyle}>MELLOWDIES</h1>
-
       </button>
-      
+
       {isSidebarExpanded && (
         <>
           {isMenuVisible === null && (
@@ -125,6 +133,35 @@ function Sidebar({waveData}) {
             <AIMenu handleBack={handleBack} waveData={waveData} />
           )}
           {isMenuVisible === 'mixerMenu' && <Menu handleBack={handleBack} waveData={waveData} />}
+          {isFileWarningVisible && (
+            <div
+              style={{
+                color: 'red',
+                textAlign: 'center',
+                marginTop: '10px',
+                fontSize: '1rem',
+                backgroundColor: 'rgba(255, 0, 0, 0.1)',
+                padding: '10px',
+                borderRadius: '8px',
+              }}
+            >
+              <p>Warning: Please load a file before accessing the Mixer!</p>
+              <button
+                style={{
+                  marginTop: '5px',
+                  padding: '5px 10px',
+                  borderRadius: '4px',
+                  border: 'none',
+                  backgroundColor: 'red',
+                  color: 'white',
+                  cursor: 'pointer',
+                }}
+                onClick={() => setFileWarningVisible(false)}
+              >
+                Dismiss
+              </button>
+            </div>
+          )}
         </>
       )}
     </div>

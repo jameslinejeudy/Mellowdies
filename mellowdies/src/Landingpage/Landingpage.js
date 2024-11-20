@@ -15,6 +15,7 @@ const waveSurferData = [];
 const regions = RegionsPlugin.create();
 const audioContext = new AudioContext();
 const webAudioPlayer = new WebAudioPlayer(audioContext);
+let fileLoaded = false;
 const eqBands = [32, 64, 125, 250, 500, 1000, 2000, 4000, 8000, 16000]
 let filters = []
 
@@ -62,6 +63,8 @@ function Landingpage() {
                     console.error(`Container for index ${index} not found`);
                     return;
                 }
+
+                fileLoaded = true;
 
                 webAudioPlayer.src = file.url;
 
@@ -131,7 +134,6 @@ function Landingpage() {
     
                 wavesurferRefs.current[index] = waveSurfer;
                 waveSurferData.push({ waveSurfer, regions, filters, webAudioPlayer});
-                
             });
         }
     };
@@ -269,7 +271,7 @@ function Landingpage() {
                 ))}
             </div>
 
-            <Sidebar waveData={waveSurferData}/>
+            <Sidebar waveData={waveSurferData} fileLoaded={fileLoaded}/>
 
             {audioFiles && audioFiles.length > 0 ? (
                 <PlayButton 
