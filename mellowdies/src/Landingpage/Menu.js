@@ -87,53 +87,59 @@ function Menu({ handleBack, waveData}) {
   }
 
   const reverse = () => {
-    let buffer = waveData[0].waveSurfer.getDecodedData();
-    let clone = utils.clone(buffer)
-    storeBuffer(clone);
-    let region = (waveData[0].regions.getRegions())[0];
-    let sampleRate = buffer.sampleRate;
-    if (buffer) {
-      utils.reverse(buffer, buffer, region.start * sampleRate, region.end * sampleRate);
-      console.log("Reversed region.");
-      let blob = blobber(buffer);
-      waveData[0].waveSurfer.empty();
-      waveData[0].waveSurfer.loadBlob(blob).catch(error => console.log(error));
-    } else {
-      console.error('No audio buffer loaded');
+    if (buffers.length >= 1) {
+      let buffer = waveData[0].waveSurfer.getDecodedData();
+      let clone = utils.clone(buffer)
+      storeBuffer(clone);
+      let region = (waveData[0].regions.getRegions())[0];
+      let sampleRate = buffer.sampleRate;
+      if (buffer) {
+        utils.reverse(buffer, buffer, region.start * sampleRate, region.end * sampleRate);
+        console.log("Reversed region.");
+        let blob = blobber(buffer);
+        waveData[0].waveSurfer.empty();
+        waveData[0].waveSurfer.loadBlob(blob).catch(error => console.log(error));
+      } else {
+        console.error('No audio buffer loaded');
+      }
     }
   };
 
   const invert = () => {
-    let buffer = waveData[0].waveSurfer.getDecodedData();
-    let clone = utils.clone(buffer)
-    storeBuffer(clone);
-    let region = (waveData[0].regions.getRegions())[0];
-    let sampleRate = buffer.sampleRate;
-    if (buffer) {
-      utils.invert(buffer, buffer, region.start * sampleRate, region.end * sampleRate);
-      console.log("Inverted region.");
-      let blob = blobber(buffer);
-      waveData[0].waveSurfer.empty();
-      waveData[0].waveSurfer.loadBlob(blob).catch(error => console.log(error));
-    } else {
-      console.error('No audio buffer loaded');
+    if (buffers.length >= 1) {
+      let buffer = waveData[0].waveSurfer.getDecodedData();
+      let clone = utils.clone(buffer)
+      storeBuffer(clone);
+      let region = (waveData[0].regions.getRegions())[0];
+      let sampleRate = buffer.sampleRate;
+      if (buffer) {
+        utils.invert(buffer, buffer, region.start * sampleRate, region.end * sampleRate);
+        console.log("Inverted region.");
+        let blob = blobber(buffer);
+        waveData[0].waveSurfer.empty();
+        waveData[0].waveSurfer.loadBlob(blob).catch(error => console.log(error));
+      } else {
+        console.error('No audio buffer loaded');
+      }
     }
   };
 
   const normalize = () => {
-    let buffer = waveData[0].waveSurfer.getDecodedData();
-    let clone = utils.clone(buffer)
-    storeBuffer(clone);
-    let region = (waveData[0].regions.getRegions())[0];
-    let sampleRate = buffer.sampleRate;
-    if (buffer) {
-      utils.normalize(buffer, buffer, region.start * sampleRate, region.end * sampleRate);
-      console.log("Normalized region.");
-      let blob = blobber(buffer);
-      waveData[0].waveSurfer.empty();
-      waveData[0].waveSurfer.loadBlob(blob).catch(error => console.log(error));
-    } else {
-      console.error('No audio buffer loaded');
+    if (buffers.length >= 1) {
+      let buffer = waveData[0].waveSurfer.getDecodedData();
+      let clone = utils.clone(buffer)
+      storeBuffer(clone);
+      let region = (waveData[0].regions.getRegions())[0];
+      let sampleRate = buffer.sampleRate;
+      if (buffer) {
+        utils.normalize(buffer, buffer, region.start * sampleRate, region.end * sampleRate);
+        console.log("Normalized region.");
+        let blob = blobber(buffer);
+        waveData[0].waveSurfer.empty();
+        waveData[0].waveSurfer.loadBlob(blob).catch(error => console.log(error));
+      } else {
+        console.error('No audio buffer loaded');
+      }
     }
   };
 
@@ -141,85 +147,91 @@ function Menu({ handleBack, waveData}) {
   const closeGainModal = () => setGainModalOpen(false);
 
   const adjustGain = () => {
-    let buffer = waveData[0].waveSurfer.getDecodedData();
-    let clone = utils.clone(buffer)
-    storeBuffer(clone);
-    let region = (waveData[0].regions.getRegions())[0];
-    let sampleRate = buffer.sampleRate;
-    let gain = gainValue / 100;
-    let start = Math.floor(region.start * sampleRate);
-    let end = Math.ceil(region.end * sampleRate);
+    if (buffers.length >= 1) {
+      let buffer = waveData[0].waveSurfer.getDecodedData();
+      let clone = utils.clone(buffer)
+      storeBuffer(clone);
+      let region = (waveData[0].regions.getRegions())[0];
+      let sampleRate = buffer.sampleRate;
+      let gain = gainValue / 100;
+      let start = Math.floor(region.start * sampleRate);
+      let end = Math.ceil(region.end * sampleRate);
 
-    if (buffer) {
-      for (let channel = 0; channel < buffer.numberOfChannels; channel += 1) {
-        let channelData = buffer.getChannelData(channel);
-    
-        for (let sample = start; sample < end; sample += 1) {
-            channelData[sample] *= gain;
+      if (buffer) {
+        for (let channel = 0; channel < buffer.numberOfChannels; channel += 1) {
+          let channelData = buffer.getChannelData(channel);
+      
+          for (let sample = start; sample < end; sample += 1) {
+              channelData[sample] *= gain;
+          }
         }
+        console.log('Gain adjusted:', gain);
+        let blob = blobber(buffer);
+        waveData[0].waveSurfer.empty();
+        waveData[0].waveSurfer.loadBlob(blob).catch(error => console.log(error));
       }
-      console.log('Gain adjusted:', gain);
-      let blob = blobber(buffer);
-      waveData[0].waveSurfer.empty();
-      waveData[0].waveSurfer.loadBlob(blob).catch(error => console.log(error));
     }
   };
 
   const fadeIn = () => {
-    let buffer = waveData[0].waveSurfer.getDecodedData();
-    let clone = utils.clone(buffer)
-    storeBuffer(clone);
-    let region = (waveData[0].regions.getRegions())[0];
-    let sampleRate = buffer.sampleRate;
-    let start = Math.floor(region.start * sampleRate);
-    let end = Math.ceil(region.end * sampleRate);
-    let stepInc = 1 / (end-start);
-    let currGain = 0;
-    let steps = 0;
+    if (buffers.length >= 1) {
+      let buffer = waveData[0].waveSurfer.getDecodedData();
+      let clone = utils.clone(buffer)
+      storeBuffer(clone);
+      let region = (waveData[0].regions.getRegions())[0];
+      let sampleRate = buffer.sampleRate;
+      let start = Math.floor(region.start * sampleRate);
+      let end = Math.ceil(region.end * sampleRate);
+      let stepInc = 1 / (end-start);
+      let currGain = 0;
+      let steps = 0;
 
-    if (buffer) {
-      for (let channel = 0; channel < buffer.numberOfChannels; channel += 1) {
-        let channelData = buffer.getChannelData(channel);
-    
-        for (let sample = start; sample < end; sample += 1) {
-            channelData[sample] *= (currGain + (steps * stepInc));
-            steps += 1;
+      if (buffer) {
+        for (let channel = 0; channel < buffer.numberOfChannels; channel += 1) {
+          let channelData = buffer.getChannelData(channel);
+      
+          for (let sample = start; sample < end; sample += 1) {
+              channelData[sample] *= (currGain + (steps * stepInc));
+              steps += 1;
+          }
+          steps = 0;
         }
-        steps = 0;
+        console.log('Region Faded In');
+        let blob = blobber(buffer);
+        waveData[0].waveSurfer.empty();
+        waveData[0].waveSurfer.loadBlob(blob).catch(error => console.log(error));
       }
-      console.log('Region Faded In');
-      let blob = blobber(buffer);
-      waveData[0].waveSurfer.empty();
-      waveData[0].waveSurfer.loadBlob(blob).catch(error => console.log(error));
     }
   };
 
   const fadeOut = () => {
-    let buffer = waveData[0].waveSurfer.getDecodedData();
-    let clone = utils.clone(buffer)
-    storeBuffer(clone);
-    let region = (waveData[0].regions.getRegions())[0];
-    let sampleRate = buffer.sampleRate;
-    let start = Math.floor(region.start * sampleRate);
-    let end = Math.ceil(region.end * sampleRate);
-    let stepInc = 1 / (end-start);
-    let currGain = 1;
-    let steps = 0;
+    if (buffers.length >= 1) {
+      let buffer = waveData[0].waveSurfer.getDecodedData();
+      let clone = utils.clone(buffer)
+      storeBuffer(clone);
+      let region = (waveData[0].regions.getRegions())[0];
+      let sampleRate = buffer.sampleRate;
+      let start = Math.floor(region.start * sampleRate);
+      let end = Math.ceil(region.end * sampleRate);
+      let stepInc = 1 / (end-start);
+      let currGain = 1;
+      let steps = 0;
 
-    if (buffer) {
-      for (let channel = 0; channel < buffer.numberOfChannels; channel += 1) {
-        let channelData = buffer.getChannelData(channel);
-    
-        for (let sample = start; sample < end; sample += 1) {
-            channelData[sample] *= (currGain - (steps * stepInc));
-            steps += 1;
+      if (buffer) {
+        for (let channel = 0; channel < buffer.numberOfChannels; channel += 1) {
+          let channelData = buffer.getChannelData(channel);
+      
+          for (let sample = start; sample < end; sample += 1) {
+              channelData[sample] *= (currGain - (steps * stepInc));
+              steps += 1;
+          }
+          steps = 0;
         }
-        steps = 0;
+        console.log('Region Faded In');
+        let blob = blobber(buffer);
+        waveData[0].waveSurfer.empty();
+        waveData[0].waveSurfer.loadBlob(blob).catch(error => console.log(error));
       }
-      console.log('Region Faded In');
-      let blob = blobber(buffer);
-      waveData[0].waveSurfer.empty();
-      waveData[0].waveSurfer.loadBlob(blob).catch(error => console.log(error));
     }
   };
 
@@ -227,37 +239,39 @@ function Menu({ handleBack, waveData}) {
   const closeDistortionModal = () => setDistortionModalOpen(false);
 
   const distort = () => {
-    let buffer = waveData[0].waveSurfer.getDecodedData();
-    if (!buffer) return;
+    if (buffers.length >= 1) {
+      let buffer = waveData[0].waveSurfer.getDecodedData();
+      if (!buffer) return;
 
-    let clone = utils.clone(buffer);
-    storeBuffer(clone);
+      let clone = utils.clone(buffer);
+      storeBuffer(clone);
 
-    let region = waveData[0].regions.getRegions()[0];
-    let sampleRate = buffer.sampleRate;
+      let region = waveData[0].regions.getRegions()[0];
+      let sampleRate = buffer.sampleRate;
 
-    const gain = gainDistortValue / 100; 
-    const wet = 0.5;
-    const dry = 1 - wet; 
+      const gain = gainDistortValue / 100; 
+      const wet = 0.5;
+      const dry = 1 - wet; 
 
-    let start = Math.floor(region.start * sampleRate);
-    let end = Math.ceil(region.end * sampleRate);
+      let start = Math.floor(region.start * sampleRate);
+      let end = Math.ceil(region.end * sampleRate);
 
-    if (buffer) {
-        for (let channel = 0; channel < buffer.numberOfChannels; channel += 1) {
-            let channelData = buffer.getChannelData(channel);
+      if (buffer) {
+          for (let channel = 0; channel < buffer.numberOfChannels; channel += 1) {
+              let channelData = buffer.getChannelData(channel);
 
-            for (let sample = start; sample < end; sample += 1) {
-                const drySample = channelData[sample];
-                const wetSample = Math.atan(gain * drySample);
-                channelData[sample] = (dry * drySample) + (wet * wetSample);
-            }
-        }
+              for (let sample = start; sample < end; sample += 1) {
+                  const drySample = channelData[sample];
+                  const wetSample = Math.atan(gain * drySample);
+                  channelData[sample] = (dry * drySample) + (wet * wetSample);
+              }
+          }
 
-        console.log('Distorted Region Applied', { gain, wet });
-        let blob = blobber(buffer);
-        waveData[0].waveSurfer.empty();
-        waveData[0].waveSurfer.loadBlob(blob).catch(error => console.log(error));
+          console.log('Distorted Region Applied', { gain, wet });
+          let blob = blobber(buffer);
+          waveData[0].waveSurfer.empty();
+          waveData[0].waveSurfer.loadBlob(blob).catch(error => console.log(error));
+      }
     }
 };
 
@@ -266,53 +280,55 @@ function Menu({ handleBack, waveData}) {
   const closeDelayModal = () => setDelayModalOpen(false);
 
   const delay = () => {
-    let buffer = waveData[0].waveSurfer.getDecodedData();
-    if (!buffer) return;
+    if (buffers.length >= 1) {
+      let buffer = waveData[0].waveSurfer.getDecodedData();
+      if (!buffer) return;
 
-    let clone = utils.clone(buffer);
-    storeBuffer(clone);
+      let clone = utils.clone(buffer);
+      storeBuffer(clone);
 
-    let region = waveData[0].regions.getRegions()[0];
-    let sampleRate = buffer.sampleRate;
-    let start = Math.floor(region.start * sampleRate);
-    let end = Math.ceil(region.end * sampleRate);
-    let wet = wetness;
-    let dry = dryness;
-    let feeder = feedback;
+      let region = waveData[0].regions.getRegions()[0];
+      let sampleRate = buffer.sampleRate;
+      let start = Math.floor(region.start * sampleRate);
+      let end = Math.ceil(region.end * sampleRate);
+      let wet = wetness;
+      let dry = dryness;
+      let feeder = feedback;
 
-    let numChannels = buffer.numberOfChannels;
-    let delaySamples = Math.ceil(sampleRate * delayTime);
+      let numChannels = buffer.numberOfChannels;
+      let delaySamples = Math.ceil(sampleRate * delayTime);
 
-    if (numChannels === 1) {
-        let channelData = buffer.getChannelData(0);
-        let delayBuffer = new Float32Array(delaySamples).fill(0);
+      if (numChannels === 1) {
+          let channelData = buffer.getChannelData(0);
+          let delayBuffer = new Float32Array(delaySamples).fill(0);
 
-        for (let i = start; i < end; i++) {
-            let delayIndex = (i - start) % delaySamples;
-            let delayedSample = delayBuffer[delayIndex];
-            channelData[i] = (channelData[i] * dry) + (delayedSample * wet);
-            delayBuffer[delayIndex] = (feeder * delayedSample) + channelData[i];
-        }
-    } else if (numChannels === 2) {
-        let channelLeft = buffer.getChannelData(0);
-        let channelRight = buffer.getChannelData(1);
-        let delayBufferLeft = new Float32Array(delaySamples).fill(0);
-        let delayBufferRight = new Float32Array(delaySamples).fill(0);
+          for (let i = start; i < end; i++) {
+              let delayIndex = (i - start) % delaySamples;
+              let delayedSample = delayBuffer[delayIndex];
+              channelData[i] = (channelData[i] * dry) + (delayedSample * wet);
+              delayBuffer[delayIndex] = (feeder * delayedSample) + channelData[i];
+          }
+      } else if (numChannels === 2) {
+          let channelLeft = buffer.getChannelData(0);
+          let channelRight = buffer.getChannelData(1);
+          let delayBufferLeft = new Float32Array(delaySamples).fill(0);
+          let delayBufferRight = new Float32Array(delaySamples).fill(0);
 
-        for (let i = start; i < end; i++) {
-            let delayIndex = (i - start) % delaySamples;
-            let delayedLeft = delayBufferLeft[delayIndex];
-            channelLeft[i] = (channelLeft[i] * dry) + (delayedLeft * wet);
-            delayBufferLeft[delayIndex] = (feeder * delayedLeft) + channelLeft[i];
-            let delayedRight = delayBufferRight[delayIndex];
-            channelRight[i] = (channelRight[i] * dry) + (delayedRight * wet);
-            delayBufferRight[delayIndex] = (feeder * delayedRight) + channelRight[i];
-        }
+          for (let i = start; i < end; i++) {
+              let delayIndex = (i - start) % delaySamples;
+              let delayedLeft = delayBufferLeft[delayIndex];
+              channelLeft[i] = (channelLeft[i] * dry) + (delayedLeft * wet);
+              delayBufferLeft[delayIndex] = (feeder * delayedLeft) + channelLeft[i];
+              let delayedRight = delayBufferRight[delayIndex];
+              channelRight[i] = (channelRight[i] * dry) + (delayedRight * wet);
+              delayBufferRight[delayIndex] = (feeder * delayedRight) + channelRight[i];
+          }
+      }
+      console.log("Region Delayed");
+      let blob = blobber(buffer);
+      waveData[0].waveSurfer.empty();
+      waveData[0].waveSurfer.loadBlob(blob).catch(error => console.error(error));
     }
-    console.log("Region Delayed");
-    let blob = blobber(buffer);
-    waveData[0].waveSurfer.empty();
-    waveData[0].waveSurfer.loadBlob(blob).catch(error => console.error(error));
 };
 
 
@@ -320,79 +336,81 @@ function Menu({ handleBack, waveData}) {
   const closeReverbModal = () => setReverbModalOpen(false);
 
   const reverb = () => {
-    let buffer = waveData[0].waveSurfer.getDecodedData();
-    if (!buffer) return;
+    if (buffers.length >= 1) {
+      let buffer = waveData[0].waveSurfer.getDecodedData();
+      if (!buffer) return;
 
-    let clone = utils.clone(buffer);
-    storeBuffer(clone);
+      let clone = utils.clone(buffer);
+      storeBuffer(clone);
 
-    let region = waveData[0].regions.getRegions()[0];
-    let sampleRate = buffer.sampleRate;
-    let start = Math.floor(region.start * sampleRate);
-    let end = Math.ceil(region.end * sampleRate);
-    let bufferSize = end - start;
+      let region = waveData[0].regions.getRegions()[0];
+      let sampleRate = buffer.sampleRate;
+      let start = Math.floor(region.start * sampleRate);
+      let end = Math.ceil(region.end * sampleRate);
+      let bufferSize = end - start;
 
-    let channelLeft = buffer.getChannelData(0);
-    let channelRight = buffer.getChannelData(1);
-    let samplesLeft = new Float32Array(channelLeft.subarray(start, end));
-    let samplesRight = new Float32Array(channelRight.subarray(start, end));
+      let channelLeft = buffer.getChannelData(0);
+      let channelRight = buffer.getChannelData(1);
+      let samplesLeft = new Float32Array(channelLeft.subarray(start, end));
+      let samplesRight = new Float32Array(channelRight.subarray(start, end));
 
-    const combDelays = [0.0297, 0.0371, 0.0411, 0.0437].map(t => Math.floor(t * sampleRate));
-    const combGains = [0.773, 0.802, 0.753, 0.733];
-    const allPassDelays = [0.005, 0.0017].map(t => Math.floor(t * sampleRate));
-    const decayFactor = decay || 0.5;
-    const wetLevel = reverbWet || 0.5;
+      const combDelays = [0.0297, 0.0371, 0.0411, 0.0437].map(t => Math.floor(t * sampleRate));
+      const combGains = [0.773, 0.802, 0.753, 0.733];
+      const allPassDelays = [0.005, 0.0017].map(t => Math.floor(t * sampleRate));
+      const decayFactor = decay || 0.5;
+      const wetLevel = reverbWet || 0.5;
 
-    const processCombFilters = (samples) => {
-        const combBuffers = combDelays.map(delay => new Float32Array(delay).fill(0));
-        let output = new Float32Array(samples.length);
+      const processCombFilters = (samples) => {
+          const combBuffers = combDelays.map(delay => new Float32Array(delay).fill(0));
+          let output = new Float32Array(samples.length);
 
-        for (let i = 0; i < samples.length; i++) {
-            let wetSample = 0;
-            for (let c = 0; c < combBuffers.length; c++) {
-                const delay = combBuffers[c];
-                const delayIndex = i % delay.length;
-                const delayedSample = delay[delayIndex];
-                wetSample += delayedSample;
-                delay[delayIndex] = samples[i] + delayedSample * combGains[c] * decayFactor;
-            }
-            output[i] = wetSample;
-        }
-        return output;
-    };
+          for (let i = 0; i < samples.length; i++) {
+              let wetSample = 0;
+              for (let c = 0; c < combBuffers.length; c++) {
+                  const delay = combBuffers[c];
+                  const delayIndex = i % delay.length;
+                  const delayedSample = delay[delayIndex];
+                  wetSample += delayedSample;
+                  delay[delayIndex] = samples[i] + delayedSample * combGains[c] * decayFactor;
+              }
+              output[i] = wetSample;
+          }
+          return output;
+      };
 
-    let combOutputLeft = processCombFilters(samplesLeft);
-    let combOutputRight = processCombFilters(samplesRight);
+      let combOutputLeft = processCombFilters(samplesLeft);
+      let combOutputRight = processCombFilters(samplesRight);
 
-    const processAllPassFilters = (samples) => {
-        const allPassBuffers = allPassDelays.map(delay => new Float32Array(delay).fill(0));
+      const processAllPassFilters = (samples) => {
+          const allPassBuffers = allPassDelays.map(delay => new Float32Array(delay).fill(0));
 
-        for (let i = 0; i < samples.length; i++) {
-            for (let a = 0; a < allPassBuffers.length; a++) {
-                const delay = allPassBuffers[a];
-                const delayIndex = i % delay.length;
-                const delayedSample = delay[delayIndex];
+          for (let i = 0; i < samples.length; i++) {
+              for (let a = 0; a < allPassBuffers.length; a++) {
+                  const delay = allPassBuffers[a];
+                  const delayIndex = i % delay.length;
+                  const delayedSample = delay[delayIndex];
 
-                const allPassSample = -0.7 * samples[i] + delayedSample + 0.7 * samples[i];
-                delay[delayIndex] = samples[i] + delayedSample * 0.7;
-                samples[i] = allPassSample;
-            }
-        }
-        return samples;
-    };
+                  const allPassSample = -0.7 * samples[i] + delayedSample + 0.7 * samples[i];
+                  delay[delayIndex] = samples[i] + delayedSample * 0.7;
+                  samples[i] = allPassSample;
+              }
+          }
+          return samples;
+      };
 
-    let allPassOutputLeft = processAllPassFilters(combOutputLeft);
-    let allPassOutputRight = processAllPassFilters(combOutputRight);
+      let allPassOutputLeft = processAllPassFilters(combOutputLeft);
+      let allPassOutputRight = processAllPassFilters(combOutputRight);
 
-    for (let i = 0; i < bufferSize; i++) {
-        channelLeft[start + i] = ((1 - wetLevel) * samplesLeft[i]) + (wetLevel * allPassOutputLeft[i]);
-        channelRight[start + i] = ((1 - wetLevel) * samplesRight[i]) + (wetLevel * allPassOutputRight[i]);
+      for (let i = 0; i < bufferSize; i++) {
+          channelLeft[start + i] = ((1 - wetLevel) * samplesLeft[i]) + (wetLevel * allPassOutputLeft[i]);
+          channelRight[start + i] = ((1 - wetLevel) * samplesRight[i]) + (wetLevel * allPassOutputRight[i]);
+      }
+
+      console.log('Reverb Applied');
+      let blob = blobber(buffer);
+      waveData[0].waveSurfer.empty();
+      waveData[0].waveSurfer.loadBlob(blob).catch(error => console.log(error));
     }
-
-    console.log('Reverb Applied');
-    let blob = blobber(buffer);
-    waveData[0].waveSurfer.empty();
-    waveData[0].waveSurfer.loadBlob(blob).catch(error => console.log(error));
 };
 
 
