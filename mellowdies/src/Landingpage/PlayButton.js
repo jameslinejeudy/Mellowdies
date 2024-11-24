@@ -30,7 +30,7 @@ const iconStyle = {
     height: '30px',  // Adjust height of the icons
 };
 
-function PlayButton({ wavesurferRefs, setSpeed, isReady, speed, aContext }) {
+function PlayButton({ wavesurferRefs, isReady}) {
     const [isPlaying, setIsPlaying] = useState(false);
 
     const playAllTracks = () => {
@@ -43,13 +43,6 @@ function PlayButton({ wavesurferRefs, setSpeed, isReady, speed, aContext }) {
     const seekAllTracks = (seekTo) => {
         wavesurferRefs.current.forEach(waveSurfer => {
             waveSurfer.seekTo(seekTo);
-        });
-    };
-
-    const changeSpeedAllTracks = (newSpeed) => {
-        setSpeed(newSpeed);
-        wavesurferRefs.current.forEach(waveSurfer => {
-            waveSurfer.setPlaybackRate(newSpeed);
         });
     };
 
@@ -69,13 +62,6 @@ function PlayButton({ wavesurferRefs, setSpeed, isReady, speed, aContext }) {
             const duration = waveSurfer.getDuration();
             waveSurfer.seekTo(newTime / duration);  // `seekTo` expects a value between 0 and 1
         });
-    };
-
-    // Toggle play/pause
-    const handlePlayPause = () => {
-        if (isReady) {
-            playAllTracks();
-        }
     };
 
     return (

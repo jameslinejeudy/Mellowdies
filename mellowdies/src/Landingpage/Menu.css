@@ -56,6 +56,20 @@
     width: 100%;   /* Ensures full width within the parent container */
 }
 
+.bufferButtonStyle {
+    background: #800fcb;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    text-align: center;
+    display: block;
+    transition: background 0.3s ease;
+    width: 100%;   /* Ensures full width within the parent container */
+}
+
 .modalButtonStyle {
     background: #4caf50;
     color: #fff;
