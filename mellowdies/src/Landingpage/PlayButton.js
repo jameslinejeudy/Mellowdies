@@ -7,14 +7,17 @@ import backwards from '../images/icons/backwards.png';  // Backwards
 import endofmusic from '../images/icons/endofmusic.png';  // End of music
 
 const buttonContainerStyle = {
+    height: '20%',
+    width: '75%',
     display: 'flex',
     flexDirection: 'row',  // Arrange buttons horizontally
     position: 'fixed',
-    left: '65%',
-    bottom: '20px',  // Distance from the bottom of the screen
-    transform: 'translateX(-50%)',  // Center the container horizontally
+    right: '0px',
+    bottom: '0px',  // Distance from the bottom of the screen
     alignItems: 'center',  // Align buttons to the center within the container
-
+    boxShadow: '0px 0px 15px 5px rgba(255, 255, 255, 0.6)',
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    justifyContent: 'center', 
 };
 
 const buttonStyle = {
@@ -22,7 +25,6 @@ const buttonStyle = {
     border: 'none',  // Remove default button border
     padding: '10px',  // Add padding for clickable area
     cursor: 'pointer',  // Change cursor to pointer on hover
-    marginBottom: '10px',  // Space between buttons
 };
 
 const iconStyle = {
@@ -81,9 +83,6 @@ function PlayButton({ wavesurferRefs, isReady}) {
             <button onClick={() => seekAllTracks(1)} style={buttonStyle} disabled={!isReady}>
                 <img src={endofmusic} alt="Go to End" style={iconStyle} />
             </button>
-            <div style={{ marginBottom: '13px' }}>
-                
-            </div>
         </div>
     );
 }

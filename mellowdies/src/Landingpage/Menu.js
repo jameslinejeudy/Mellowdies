@@ -114,6 +114,17 @@ function Menu({ handleBack, waveData}) {
     }
   }
 
+  const redo = () => {
+    if (buffers.length >= 1) {
+      waveData[0].waveSurfer.loadBlob(blobber(buffers[0])).catch(error => console.log(error));
+      buffers = [];
+      success("All changes have been reset.");
+    } else {
+      error("Nothing to reset.");
+      return;
+    }
+  }
+
   const reverse = () => {
     console.log(buffers.length);
     if (waveData[0].regions.getRegions().length != 1) {
@@ -535,33 +546,47 @@ function Menu({ handleBack, waveData}) {
   return (
     <div className="menubackground">
       <ToastContainer position="bottom-right" autoClose={2000} />
-      <div className="contentStyle">
-        <div className='buttonContainer'>
-        <button className="navigationButtonStyle" onClick={handleBack}>Back</button>
 
-        <button  className="simpleButtonStyle" onClick={reverse}>
-          Reverse Selected Region
+      {/* Toolbar at the Top */}
+      <div className="topToolbar">
+        <button className="toolbarButtonStyle" onClick={undo}>
+          Undo
         </button>
-
-        <button  className="simpleButtonStyle" onClick={fadeIn}>
-          Fade In Region
+        <button className="toolbarButtonStyle" onClick={redo}>
+          Redo
         </button>
-
-        <button  className="simpleButtonStyle" onClick={fadeOut}>
-          Fade Out Region
+        <button className="toolbarButtonStyle" onClick={reset}>
+          Reset
         </button>
-
         <button  className="bufferButtonStyle" onClick={cut}>
-          Cut Region
+          Cut
         </button>
 
         <button  className="bufferButtonStyle" onClick={copy}>
-          Copy Region
+          Copy
         </button>
 
         <button  className="bufferButtonStyle" onClick={paste}>
-          Paste Region
+          Paste
         </button>
+      </div>
+
+      <div className="contentStyle">
+        <h3 className="sectionTitle">Selected Region</h3>
+        <div className="buttonGrid">
+          <button className="backButtonStyle" onClick={handleBack}>Back</button>
+          <button className="simpleButtonStyle" onClick={reverse}>Reverse</button>
+          <button className="simpleButtonStyle" onClick={fadeIn}>Fade In</button>
+          <button className="simpleButtonStyle" onClick={fadeOut}>Fade Out</button>
+          <button className="simpleButtonStyle" onClick={invert}>Invert</button>
+        </div>
+      </div>
+
+
+      <div className="contentStyle">
+        <div className='buttonContainer'>
+
+        <button className="backButtonStyle" onClick={handleBack}>Back</button>
 
         {isGainModalOpen && (
           <>
@@ -880,23 +905,13 @@ function Menu({ handleBack, waveData}) {
             </div>
           </>
         )}
-        <button  className="resetButtonStyle" onClick={undo}>
-          Undo
-        </button>
-
-        <button  className="resetButtonStyle" onClick={reset}>
-          Reset
-        </button>
-        <button className="navigationButtonStyle" onClick={toggleAdvancedOptions}>
-            {showAdvanced ? 'Hide Advanced' : 'Show Advanced'}
+        <button className="effectsButtonStyle" onClick={toggleAdvancedOptions}>
+            {showAdvanced ? 'Hide Audio Effects' : 'Audio Effects'}
           </button>
           {showAdvanced && (
             <div className="advancedOptions">
               <button className="modalButtonStyle" onClick={normalize}>
                 Normalize
-              </button>
-              <button  className="modalButtonStyle" onClick={invert}>
-                Invert Selected Region
               </button>
               <button  className="modalButtonStyle" onClick={openGainModal}>
                 Adjust Gain
@@ -908,11 +923,11 @@ function Menu({ handleBack, waveData}) {
                 Apply Distortion
               </button>
               <button  className="modalButtonStyle" onClick={openReverbModal}>
-          Apply Reverb
-        </button>
-        <button  className="modalButtonStyle" onClick={openEquaModal}>
-          10-Band Equalizer
-        </button>
+                Apply Reverb
+              </button>
+              <button  className="modalButtonStyle" onClick={openEquaModal}>
+                10-Band Equalizer
+              </button>
               {/* Add other advanced buttons here as needed */}
             </div>
           )}

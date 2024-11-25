@@ -19,11 +19,12 @@ const contentStyle = {
 
 const buttonBaseStyle = {
   padding: "10px 20px",
-  fontSize: "16px",
+  fontSize: "20px",
   borderRadius: "8px",
   border: "none",
   cursor: "pointer",
   transition: "all 0.3s ease",
+  fontFamily: "'Concert One', cursive",
 };
 
 const generateButtonStyle = {
@@ -80,6 +81,10 @@ const inputFileStyle = {
   transition: "all 0.3s ease",
   textAlign: "center"
 }
+
+const inputFileHoverStyle = {
+  backgroundColor: "#3f4349", // Darker color on hover
+};
 
 function getAudioSlice(buffer, region) {
   slicer(buffer, region.start * 1000, region.end * 1000, function(error, slicedBuffer) {
@@ -193,7 +198,7 @@ function AIMenu({ handleBack, waveData }) {
     <div style={menubackground}>
       <div style={contentStyle}>
         <h1>AI Music Generator</h1>
-        <label>Edit Imported Tracks</label>
+        <label>Edit Imported Track</label>
         {errorMessage && <div style={{ color: "red" }}>{errorMessage}</div>}
         {progressMessage && <div style={{ color: "blue" }}>{progressMessage}</div>}
 
@@ -228,7 +233,13 @@ function AIMenu({ handleBack, waveData }) {
             onChange={handleFileChange}
             accept="audio/*"
           />
-          <label htmlFor="file-input" style={inputFileStyle}>
+          <label htmlFor="file-input"
+            style={{
+              ...inputFileStyle,
+              ...(hover.inputFile ? inputFileHoverStyle : {}),
+            }}
+            onMouseEnter={() => handleMouseEnter("inputFile")}
+            onMouseLeave={() => handleMouseLeave("inputFile")}>
             Choose a file
           </label>
         </div>

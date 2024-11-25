@@ -11,7 +11,6 @@ const sidebarContainerStyle = {
     justifyContent: 'left',
     alignItems: 'center', 
     flexDirection: 'column',  
-    border: '2px solid #ffffff',
     backgroundColor: 'rgba(255, 255, 255, 0.3)',  
     fontFamily: "'Concert One', cursive",
     textAlign: 'left',
@@ -36,21 +35,24 @@ const collapsedSidebarStyle = {
 };
 
 const buttonStyle = {
-    padding: '8px 16px',  
-    borderRadius: '30px',  
-    border: '2px solid #ffffff',  
-    backgroundColor: 'rgba(255, 255, 255, 0.5)',  
-    color: '#000',  
-    fontFamily: "'Concert One', cursive",  
-    cursor: 'pointer',
-    width: '90%',  
-    marginBottom: '10px',  
-    textAlign: 'center',
-    fontSize: '1rem',  
-    boxShadow: '2px 2px 4px white, -2px -2px 4px white',  
-    alignSelf: 'center',  
-    flexDirection: 'row',  
+  padding: '12px 24px', 
+  borderRadius: '30px', 
+  border: '2px solid rgba(255, 255, 255, 0.7)', 
+  backgroundColor: 'rgba(255, 255, 255, 0.3)', 
+  color: '#000', 
+  fontFamily: "'Concert One', cursive", 
+  cursor: 'pointer',
+  width: '80%', 
+  marginBottom: '15px', 
+  textAlign: 'center',
+  fontSize: '1rem',
+  boxShadow: '0 4px 8px rgba(255, 255, 255, 0.45)', 
+  alignSelf: 'center',
+  display: 'flex', 
+  justifyContent: 'center', 
+  transition: 'all 0.3s ease', 
 };
+
 
 const menubuttonStyle = {
     display: 'flex',
@@ -71,17 +73,15 @@ const menubuttonStyle = {
 
 const headingStyle = {
   display: 'flex',
-  flexDirection: 'row',  
+  flexDirection: 'row',
   alignItems: 'center',
   justifyContent: 'center',
-    fontSize: '1.5rem',  
-    color: '#000000',  
-    margin: 0,  
-    padding: 0,  
-    fontFamily: 'Concert One',  
-    marginLeft: '10px',
-    marginTop: '-2px',
-    height: 'auto',
+  fontSize: '1.5rem',
+  color: '#000000',
+  fontFamily: 'Concert One',
+  margin: '0 0 0 10px',  // Combining margin properties for cleaner code
+  padding: 0,
+  height: 'auto',
 };
 
 function Sidebar({ waveData, fileLoaded }) {
