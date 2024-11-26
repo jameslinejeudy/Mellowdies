@@ -8,11 +8,13 @@ var blobber = require('audiobuffer-to-blob');
 var slicer = require('audiobuffer-slice');
 let sliceBuffer = null;
 
-let buffers = [];
+let undoBuf = [];
+let redoBuf = [];
 let copyBufs = [];
+let orig = null;
 
 function storeBuffer (buffer) {
-  buffers.push(buffer);
+  undoBuf.push(buffer);
 }
 
 function getAudioSlice(buffer, start, end) {
@@ -35,6 +37,7 @@ function Menu({ handleBack, waveData}) {
   const [isReverbModalOpen, setReverbModalOpen] = useState(false);
   const [isEquaModalOpen, setEquaModalOpen] = useState(false);
   const [isEquaInit, setEquaInit] = useState(false);
+  const [isBacked, setBacked] = useState(false);
   const [gainValue, setGainValue] = useState(100);
   const [delayTime, setDelayTime] = useState(0.00);
   const [feedback, setFeedback] = useState(0.00);
@@ -64,6 +67,11 @@ function Menu({ handleBack, waveData}) {
     setShowAdvanced((prev) => !prev);
   };
 
+  if (isBacked === false) {
+    orig = utils.clone(waveData[0].waveSurfer.getDecodedData());
+    setBacked(true);
+  }
+
   if (isEquaInit === false) {
     waveData[0].webAudioPlayer.gainNode.connect(filters[0])
     filters[0].connect(filters[1]);
@@ -79,22 +87,25 @@ function Menu({ handleBack, waveData}) {
   }
   
   const setFilter = () => {
-      filters[0].gain.value = filter0Val;
-      filters[1].gain.value = filter1Val;
-      filters[2].gain.value = filter2Val;
-      filters[3].gain.value = filter3Val;
-      filters[4].gain.value = filter4Val;
-      filters[5].gain.value = filter5Val;
-      filters[6].gain.value = filter6Val;
-      filters[7].gain.value = filter7Val;
-      filters[8].gain.value = filter8Val;
-      filters[9].gain.value = filter9Val;
-      success("EQ applied to current playback.");
+    filters[0].gain.value = filter0Val;
+    filters[1].gain.value = filter1Val;
+    filters[2].gain.value = filter2Val;
+    filters[3].gain.value = filter3Val;
+    filters[4].gain.value = filter4Val;
+    filters[5].gain.value = filter5Val;
+    filters[6].gain.value = filter6Val;
+    filters[7].gain.value = filter7Val;
+    filters[8].gain.value = filter8Val;
+    filters[9].gain.value = filter9Val;
+    success("EQ applied to current playback.");
   }
   
   const undo = () => {
-    if (buffers.length > 1) {
-      let blob = blobber(buffers.pop());
+    if (undoBuf.length >= 1) {
+      let buffer = undoBuf.pop();
+      let redoBuffer = waveData[0].waveSurfer.getDecodedData();
+      redoBuf.push(redoBuffer);
+      let blob = blobber(buffer);
       waveData[0].waveSurfer.loadBlob(blob).catch(error => console.log(error));
       success("Undid last action.");
     } else {
@@ -103,21 +114,25 @@ function Menu({ handleBack, waveData}) {
     }
   }
 
-  const reset = () => {
-    if (buffers.length >= 1) {
-      waveData[0].waveSurfer.loadBlob(blobber(buffers[0])).catch(error => console.log(error));
-      buffers = [];
-      success("All changes have been reset.");
+  const redo = () => {
+    if (redoBuf.length >= 1) {
+      let buffer = redoBuf.pop();
+      let undoBuffer = waveData[0].waveSurfer.getDecodedData();
+      undoBuf.push(undoBuffer);
+      let blob = blobber(buffer);
+      waveData[0].waveSurfer.loadBlob(blob).catch(error => console.log(error));
+      success("Redid last action.");
     } else {
-      error("Nothing to reset.");
+      error("Nothing to redo.");
       return;
     }
   }
 
-  const redo = () => {
-    if (buffers.length >= 1) {
-      waveData[0].waveSurfer.loadBlob(blobber(buffers[0])).catch(error => console.log(error));
-      buffers = [];
+  const reset = () => {
+    if (undoBuf.length >= 1) {
+      waveData[0].waveSurfer.loadBlob(blobber(orig)).catch(error => console.log(error));
+      undoBuf = [];
+      redoBuf = [];
       success("All changes have been reset.");
     } else {
       error("Nothing to reset.");
@@ -126,7 +141,6 @@ function Menu({ handleBack, waveData}) {
   }
 
   const reverse = () => {
-    console.log(buffers.length);
     if (waveData[0].regions.getRegions().length != 1) {
       error("Please select a region to apply the effect.");
       return;
@@ -407,7 +421,7 @@ function Menu({ handleBack, waveData}) {
     let sampleRate = buffer.sampleRate;
     let start = Math.floor(region.start * sampleRate);
     let end = Math.ceil(region.end * sampleRate);
-    let bufferSize = end - start;
+    let undoBufize = end - start;
 
     let channelLeft = buffer.getChannelData(0);
     let channelRight = buffer.getChannelData(1);
@@ -421,13 +435,13 @@ function Menu({ handleBack, waveData}) {
     const wetLevel = reverbWet || 0.5;
 
     const processCombFilters = (samples) => {
-        const combBuffers = combDelays.map(delay => new Float32Array(delay).fill(0));
+        const combundoBuf = combDelays.map(delay => new Float32Array(delay).fill(0));
         let output = new Float32Array(samples.length);
 
         for (let i = 0; i < samples.length; i++) {
             let wetSample = 0;
-            for (let c = 0; c < combBuffers.length; c++) {
-                const delay = combBuffers[c];
+            for (let c = 0; c < combundoBuf.length; c++) {
+                const delay = combundoBuf[c];
                 const delayIndex = i % delay.length;
                 const delayedSample = delay[delayIndex];
                 wetSample += delayedSample;
@@ -442,11 +456,11 @@ function Menu({ handleBack, waveData}) {
     let combOutputRight = processCombFilters(samplesRight);
 
     const processAllPassFilters = (samples) => {
-        const allPassBuffers = allPassDelays.map(delay => new Float32Array(delay).fill(0));
+        const allPassundoBuf = allPassDelays.map(delay => new Float32Array(delay).fill(0));
 
         for (let i = 0; i < samples.length; i++) {
-            for (let a = 0; a < allPassBuffers.length; a++) {
-                const delay = allPassBuffers[a];
+            for (let a = 0; a < allPassundoBuf.length; a++) {
+                const delay = allPassundoBuf[a];
                 const delayIndex = i % delay.length;
                 const delayedSample = delay[delayIndex];
 
@@ -461,7 +475,7 @@ function Menu({ handleBack, waveData}) {
     let allPassOutputLeft = processAllPassFilters(combOutputLeft);
     let allPassOutputRight = processAllPassFilters(combOutputRight);
 
-    for (let i = 0; i < bufferSize; i++) {
+    for (let i = 0; i < undoBufize; i++) {
         channelLeft[start + i] = ((1 - wetLevel) * samplesLeft[i]) + (wetLevel * allPassOutputLeft[i]);
         channelRight[start + i] = ((1 - wetLevel) * samplesRight[i]) + (wetLevel * allPassOutputRight[i]);
     }

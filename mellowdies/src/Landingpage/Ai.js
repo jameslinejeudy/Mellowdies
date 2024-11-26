@@ -166,6 +166,8 @@ function AIMenu({ handleBack, waveData }) {
       if (!response.ok) {
         throw new Error("Server failed to generate music.");
       }
+
+      console.log("Connected to server.");
   
       setProgressMessage("Generating music on server...");
   
