@@ -121,7 +121,7 @@ function Exportpage() {
             // Create a hidden anchor element and trigger download
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'downloaded_audio.mp3'; // Set the file name and extension
+            a.download = 'Audio.mp3'; // Set the file name and extension
             a.click();
 
             // Clean up the URL object after download
