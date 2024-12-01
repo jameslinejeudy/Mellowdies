@@ -74,7 +74,7 @@
 
 .play-button-container {
     position: absolute;
-    bottom: 25%; /* Move the play buttons below the timeline */
+    bottom: 34%; /* Move the play buttons below the timeline */
     left: 50%;
     transform: translateX(-50%);
     display: flex;
@@ -82,7 +82,7 @@
 }
 
 .play-button-container button {
-    margin: 0 10px;
+    margin: 10px;
 }
 
 .buttons {
@@ -101,7 +101,6 @@
     font-family: inherit;
     outline: none;
     position: fixed;
-    bottom: 20%;  /* Distance from the bottom of the screen */
     right: center;   /* Distance from the right of the screen */
     width: 25%; /* Set desired width here */
     height: 37px;

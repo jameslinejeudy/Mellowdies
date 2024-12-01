@@ -17,6 +17,8 @@ function App() {
         <Route path="/Menu" element={<Menu />} />
         <Route path="/AIMenu" element={<AIMenu />} />
         <Route path="/Exportpage" element={<Exportpage />} />
+        <Route path="/Homepage" element={<Homepage />} />
+
       </Routes>
     </Router> 
  );

@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import WaveSurfer from 'wavesurfer.js';
 import PlayButton from '../Landingpage/PlayButton.js'; // Import the PlayButton component
 import './Exportpage.css';
@@ -18,6 +19,7 @@ function Exportpage() {
     const [duration, setDuration] = useState(0);
     const [isReady, setIsReady] = useState(false);
     const [speed, setSpeed] = useState(1); // Default speed
+    const navigate = useNavigate();
     const waveformRef = useRef(null);
     const wavesurfer = useRef(null);
     const wavesurferRefs = useRef([]);
@@ -81,7 +83,6 @@ function Exportpage() {
             <div className="circle-shape"></div>
             <div style={{ marginBottom: '20px' }}> </div>
             <div id="waveform" ref={waveformRef} className="waveform"></div>
-            <div style={{ marginBottom: '10px' }}> </div>
             <div className="timeline-container">
                 <input
                     type="range"
@@ -98,7 +99,6 @@ function Exportpage() {
                     <span>{formatTime(duration)}</span>
                 </div>
             </div>
-            <div style={{ marginBottom: '10px' }}> </div>
 
             {/* Play buttons from PlayButton.js */}
             <div className="play-button-container">
@@ -111,6 +111,7 @@ function Exportpage() {
             </div>
            <button
     className="buttons"
+    style={{ marginBottom: '-23%'}}
     onClick={async () => {
         if (mergedAudio) {
             const response = await fetch(mergedAudio); // Fetch the audio file
@@ -131,8 +132,28 @@ function Exportpage() {
     }}
 >
     Download
-</button>
+    </button>
 
+    <button
+      className="buttons"
+      style={{ marginBottom: '-29%' }}
+      onClick={() => {
+        navigate(-1);
+      }}
+    >
+      Go Back
+    </button>
+
+
+    <button
+      className="buttons"
+      style={{ marginBottom: '-35%' }}
+      onClick={() => {
+        navigate('/Homepage');
+      }}
+    >
+      Homepage
+    </button>
         </div>
     );
 }
