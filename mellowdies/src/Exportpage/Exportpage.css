@@ -101,7 +101,7 @@
     font-family: inherit;
     outline: none;
     position: fixed;
-    bottom: 20%;  /* Distance from the bottom of the screen */
+    bottom: 10%;  /* Distance from the bottom of the screen */
     right: center;   /* Distance from the right of the screen */
     width: 25%; /* Set desired width here */
     height: 37px;
