@@ -14,6 +14,6 @@ Members and Roles:
 - Victoria App (Frontend Developer/UX Designer)
 - Kevin Yue (Project Manager/Backend Developer)
 
-Advisor: Emmanuel Dorley
+Advisor: Emmanuel Dorley  
 Advisor Email: edorley@ufl.edu
 
