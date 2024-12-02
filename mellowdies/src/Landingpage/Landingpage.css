@@ -1,4 +1,4 @@
-/* Landingpage.css */
+
 
 .pagebackground {
     background-size: cover;
@@ -9,7 +9,7 @@
     display: flex;
     flex-direction: column;
     font-family: 'Concert One', sans-serif;
-    background-image: url('../images/backgrounds/cloud.png'); /* Adjust path based on your project structure */
+    background-image: url('../images/backgrounds/cloud.png'); 
 }
 
 .musicbackground {
@@ -26,7 +26,7 @@
     box-shadow: 0px 0px 15px 5px rgba(255, 255, 255, 0.6);
     overflow-y: auto;
     padding: 10px;
-    white-space: nowrap;  /* Prevent wrapping so tracks stay in one line */
+    white-space: nowrap;  
 }
 
 .waveformStyle {
@@ -46,32 +46,32 @@
 }
 
 .timelineStyle {
-    width: 100%;  /* Set the timeline width to 75% */
-    margin-bottom: 10px;  /* Add some space between the timeline and waveforms */
+    width: 100%;  
+    margin-bottom: 10px;  
     font-size: 12px;
     position: relative;
 }
 
 .exportButton {
-    text-align: center; /* Center text horizontally */
-    display: flex; /* Use flex to center */
-    justify-content: center; /* Center horizontally */
-    align-items: center; /* Center vertically */
+    text-align: center; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
     background: none;
     border: 2px solid black;
     border-radius: 20px;
     padding: 10px;
     margin-left: 10px;
     font-size: 20px;
-    font-weight: 0; /* Set to a lighter weight for thinner text */
+    font-weight: 0; 
     color: black;
     cursor: pointer;
     font-family: inherit;
     outline: none;
     position: fixed;
-    bottom: 50px;  /* Distance from the bottom of the screen */
-    right: 5%;   /* Distance from the right of the screen */
-    width: 100px; /* Set desired width here */
+    bottom: 50px;  
+    right: 5%;   
+    width: 100px; 
 }
 
 .dropdownButton {

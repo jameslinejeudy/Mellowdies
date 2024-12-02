@@ -100,7 +100,6 @@ function Exportpage() {
                 </div>
             </div>
 
-            {/* Play buttons from PlayButton.js */}
             <div className="play-button-container">
                 <PlayButton
                     wavesurferRefs={wavesurferRefs}

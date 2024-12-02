@@ -1,9 +1,9 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';  // Import useNavigate at the top
+import { useNavigate } from 'react-router-dom';  
 import WaveSurfer from 'wavesurfer.js';
 import WebAudioPlayer from 'wavesurfer.js/dist/webaudio.js';
 import RegionsPlugin from "wavesurfer.js/dist/plugins/regions.js";
-import TimelinePlugin from 'wavesurfer.js/dist/plugins/timeline';  // Import the timeline plugin
+import TimelinePlugin from 'wavesurfer.js/dist/plugins/timeline';  
 import { useLocation } from 'react-router-dom';
 import Sidebar from './Sidebar.js';
 import PlayButton from './PlayButton.js';
@@ -23,8 +23,8 @@ function createFilters (audioCtx, band) {
     const filter = audioCtx.createBiquadFilter()
     filter.type = band <= 32 ? 'lowshelf' : band >= 16000 ? 'highshelf' : 'peaking'
     filter.gain.value = 0
-    filter.Q.value = 1 // resonance
-    filter.frequency.value = band // the cut-off frequency
+    filter.Q.value = 1 
+    filter.frequency.value = band 
     return filter
   }
 
@@ -34,18 +34,18 @@ for (let i = 0; i < 10; i++) {
 }
 
 function Landingpage() {
-    const navigate = useNavigate();  // Define navigate using the useNavigate hook
+    const navigate = useNavigate(); 
     const wavesurferRefs = useRef([]);
     const containerRefs = useRef([]);
-    const musicbackgroundRef = useRef(null);  // Ref for the music background container
+    const musicbackgroundRef = useRef(null);  
     const location = useLocation();
 
     const [audioFiles, setAudioFiles] = useState(location.state?.audioFiles || []);
     const [isReady, setIsReady] = useState(false);
     const [speed, setSpeed] = useState(1);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const fileInputRef = useRef(null); // Create a ref for the file input
-    let longestDuration = 0;  // Variable to track the longest track duration
+    const fileInputRef = useRef(null); 
+    let longestDuration = 0;  
 
     useEffect(() => {
         if (location.state?.audioFiles) {
@@ -69,7 +69,7 @@ function Landingpage() {
                 webAudioPlayer.src = file.url;
 
                 const waveSurfer = WaveSurfer.create({
-                    container: container, // Safely use the container
+                    container: container, 
                     waveColor: 'blue',
                     progressColor: '#00FFFF',
                     height: 75,
@@ -94,10 +94,9 @@ function Landingpage() {
                     const duration = waveSurfer.getDuration();
 
                     if (duration > longestDuration) {
-                        longestDuration = duration;  // Track the longest duration
+                        longestDuration = duration;  
                     }
 
-                    // Add the timeline plugin only for the first track
                     if (index === 0) {
                         const timeline = TimelinePlugin.create({
                             insertPosition: 'beforebegin',
@@ -139,7 +138,7 @@ function Landingpage() {
     };
 
     const scheduleWaveSurferInitialization = () => {
-        setTimeout(() => initializeWaveSurfer(), 100); // Small delay
+        setTimeout(() => initializeWaveSurfer(), 100); 
     };
 
     if (audioFiles && audioFiles.length > 0 && wavesurferRefs.current.length === 0) {
@@ -154,31 +153,26 @@ function Landingpage() {
             return await audioContext.decodeAudioData(arrayBuffer);
         }));
     
-        // Find the longest buffer to create an output buffer with enough space for mixing
         const maxLength = Math.max(...buffers.map(buffer => buffer.length));
     
-        // Create an output buffer with the longest length
         const outputBuffer = audioContext.createBuffer(
             buffers[0].numberOfChannels,
             maxLength,
             audioContext.sampleRate
         );
     
-        // Mix the buffers together
         buffers.forEach((buffer) => {
             for (let channel = 0; channel < buffer.numberOfChannels; channel++) {
                 const outputData = outputBuffer.getChannelData(channel);
                 const inputData = buffer.getChannelData(channel);
                 for (let i = 0; i < inputData.length; i++) {
-                    outputData[i] += inputData[i];  // Add the audio data to mix
+                    outputData[i] += inputData[i];  
                 }
             }
         });
     
-        // Convert the mixed output buffer to a WAV file blob
         const mergedBlob = await bufferToWaveBlob(outputBuffer, audioContext.sampleRate);
     
-        // Navigate to the export page with the merged audio
         navigate('/Exportpage', { state: { mergedAudio: URL.createObjectURL(mergedBlob) } });
     };
     
@@ -195,26 +189,22 @@ function Landingpage() {
     
         let offset = 0;
     
-        // RIFF chunk descriptor
         writeString(result, offset, 'RIFF'); offset += 4;
         result.setUint32(offset, 36 + buffer.length * numOfChannels * 2, true); offset += 4;
         writeString(result, offset, 'WAVE'); offset += 4;
-    
-        // FMT sub-chunk
         writeString(result, offset, 'fmt '); offset += 4;
-        result.setUint32(offset, 16, true); offset += 4;  // Subchunk1Size (16 for PCM)
-        result.setUint16(offset, 1, true); offset += 2;   // AudioFormat (1 for PCM)
-        result.setUint16(offset, numOfChannels, true); offset += 2; // NumChannels
-        result.setUint32(offset, sampleRate, true); offset += 4;    // SampleRate
-        result.setUint32(offset, sampleRate * 2 * numOfChannels, true); offset += 4; // ByteRate
-        result.setUint16(offset, numOfChannels * 2, true); offset += 2; // BlockAlign
-        result.setUint16(offset, 16, true); offset += 2; // BitsPerSample
+        result.setUint32(offset, 16, true); offset += 4;  
+        result.setUint16(offset, 1, true); offset += 2;   
+        result.setUint16(offset, numOfChannels, true); offset += 2; 
+        result.setUint32(offset, sampleRate, true); offset += 4;    
+        result.setUint32(offset, sampleRate * 2 * numOfChannels, true); offset += 4; 
+        result.setUint16(offset, numOfChannels * 2, true); offset += 2; 
+        result.setUint16(offset, 16, true); offset += 2; 
     
-        // data sub-chunk
+        
         writeString(result, offset, 'data'); offset += 4;
         result.setUint32(offset, buffer.length * numOfChannels * 2, true); offset += 4;
     
-        // Write interleaved PCM samples
         for (let i = 0; i < buffer.length; i++) {
             for (let channel = 0; channel < numOfChannels; channel++) {
                 const sample = buffer.getChannelData(channel)[i];
@@ -224,7 +214,6 @@ function Landingpage() {
             }
         }
     
-        // Return the blob
         return new Blob([result], { type: 'audio/wav' });
     };
 
@@ -233,7 +222,6 @@ function Landingpage() {
         setIsDropdownOpen(false);
     };
 
-    // adding new files
     const handleAddFiles = (event) => {
         const newFiles = Array.from(event.target.files).map(file => ({
             name: file.name,
@@ -241,15 +229,13 @@ function Landingpage() {
             mimeType: file.type
         }));
 
-    // Check if newFiles is not empty before updating state
     if (newFiles.length > 0) {
-        setAudioFiles((prevAudioFiles) => [...prevAudioFiles, ...newFiles]);  // Update state with new files
+        setAudioFiles((prevAudioFiles) => [...prevAudioFiles, ...newFiles]);  
     } else {
         alert('Please select audio files.');
     }
 };
 
-    // dropdown menu
     const toggleDropdown = () => {
         setIsDropdownOpen(!isDropdownOpen);
     };
@@ -276,7 +262,7 @@ function Landingpage() {
             {audioFiles && audioFiles.length > 0 ? (
                 <PlayButton 
                     wavesurferRefs={wavesurferRefs}
-                    setSpeed={setSpeed}  // Pass the setSpeed function
+                    setSpeed={setSpeed}  
                     isReady={isReady}
                     speed={speed}
                     aContext={audioContext}
@@ -286,7 +272,7 @@ function Landingpage() {
             )}
 
             <button className="exportButton" onClick={async () => {
-            await mergeAudioFiles();  // Wait for the audio merging to complete
+            await mergeAudioFiles();  
             }}>
             Export
             </button>

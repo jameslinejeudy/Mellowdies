@@ -79,7 +79,7 @@ const headingStyle = {
   fontSize: '1.5rem',
   color: '#000000',
   fontFamily: 'Concert One',
-  margin: '0 0 0 10px',  // Combining margin properties for cleaner code
+  margin: '0 0 0 10px',  
   padding: 0,
   height: 'auto',
 };
@@ -91,10 +91,10 @@ function Sidebar({ waveData, fileLoaded }) {
 
   const toggleMenu = (menu) => {
     if (menu === 'mixerMenu' && !fileLoaded) {
-      // Show warning and prevent menu from opening
+      
       setFileWarningVisible(true);
     } else {
-      // Open the menu if conditions are met
+      
       setMenuVisible(isMenuVisible === menu ? null : menu);
       setFileWarningVisible(false);
     }
