@@ -25,10 +25,6 @@ function Exportpage() {
     const wavesurferRefs = useRef([]);
     const progressBarRef = useRef(null);
 
-     
-     const audioContext = useRef(new (window.AudioContext || window.webkitAudioContext)());
-     const analyser = useRef(audioContext.current.createAnalyser());
-
     
     useEffect(() => {
         if (mergedAudio && waveformRef.current) {
@@ -133,11 +129,15 @@ function Exportpage() {
     Download
     </button>
 
+    {/*
     <button
       className="buttons"
       style={{ marginBottom: '-29%' }}
-      onClick={() => {
-        navigate(-1);
+      onClick={async () => {
+        const response = await fetch(mergedAudio); 
+        const blob = await response.blob(); 
+        const url = URL.createObjectURL(blob); 
+        navigate(-1,{newFile:url});
       }}
     >
       Go Back
@@ -153,6 +153,7 @@ function Exportpage() {
     >
       Homepage
     </button>
+    */}
         </div>
     );
 }
