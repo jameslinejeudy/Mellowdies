@@ -7,17 +7,17 @@ import TimelinePlugin from 'wavesurfer.js/dist/plugins/timeline';
 import { useLocation } from 'react-router-dom';
 import Sidebar from './Sidebar.js';
 import PlayButton from './PlayButton.js';
-import PlusIcon from '../images/icons/plus.png';
+//import PlusIcon from '../images/icons/plus.png';
 import './Landingpage.css';  
 
-
+var blobber = require('audiobuffer-to-blob');
 const waveSurferData = [];
 const regions = RegionsPlugin.create();
 const audioContext = new AudioContext();
 const webAudioPlayer = new WebAudioPlayer(audioContext);
 let fileLoaded = false;
-const eqBands = [32, 64, 125, 250, 500, 1000, 2000, 4000, 8000, 16000]
-let filters = []
+const eqBands = [32, 64, 125, 250, 500, 1000, 2000, 4000, 8000, 16000];
+let filters = [];
 
 function createFilters (audioCtx, band) {
     const filter = audioCtx.createBiquadFilter()
@@ -63,11 +63,17 @@ function Landingpage() {
                     console.error(`Container for index ${index} not found`);
                     return;
                 }
+                
+                if (file.url) {  
+                    webAudioPlayer.src = file.url;
+                } else {
+                    let buffer = waveData[0].waveSurfer.getDecodedData();
+                    let blob = blobber(buffer);
+                    waveData[0].waveSurfer.loadBlob(blob).catch(error => console.log(error));
+                }
 
                 fileLoaded = true;
-
-                webAudioPlayer.src = file.url;
-
+                
                 const waveSurfer = WaveSurfer.create({
                     container: container, 
                     waveColor: 'blue',
@@ -146,34 +152,11 @@ function Landingpage() {
     }
 
     const mergeAudioFiles = async () => {
-        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        const buffers = await Promise.all(audioFiles.map(async (file) => {
-            const response = await fetch(file.url);
-            const arrayBuffer = await response.arrayBuffer();
-            return await audioContext.decodeAudioData(arrayBuffer);
-        }));
+        const buffer = waveSurferData[0].waveSurfer.getDecodedData();
     
-        const maxLength = Math.max(...buffers.map(buffer => buffer.length));
+        const finalBlob = bufferToWaveBlob(buffer, buffer.sampleRate);
     
-        const outputBuffer = audioContext.createBuffer(
-            buffers[0].numberOfChannels,
-            maxLength,
-            audioContext.sampleRate
-        );
-    
-        buffers.forEach((buffer) => {
-            for (let channel = 0; channel < buffer.numberOfChannels; channel++) {
-                const outputData = outputBuffer.getChannelData(channel);
-                const inputData = buffer.getChannelData(channel);
-                for (let i = 0; i < inputData.length; i++) {
-                    outputData[i] += inputData[i];  
-                }
-            }
-        });
-    
-        const mergedBlob = await bufferToWaveBlob(outputBuffer, audioContext.sampleRate);
-    
-        navigate('/Exportpage', { state: { mergedAudio: URL.createObjectURL(mergedBlob) } });
+        navigate('/Exportpage', { state: { mergedAudio: URL.createObjectURL(finalBlob) } });
     };
     
     const bufferToWaveBlob = (buffer, sampleRate) => {
@@ -277,7 +260,7 @@ function Landingpage() {
             Export
             </button>
             
-          
+            {/*
             <button className="dropdownButton" onClick={toggleDropdown}>
                 <img src={PlusIcon} alt="Add Tracks" style={{ width: '22px', height: '22px' }} />
             </button>
@@ -297,6 +280,7 @@ function Landingpage() {
                 style={{ display: 'none' }}
                 onChange={handleAddFiles} 
             />
+            */}
 
         </div>
     );
