@@ -67,19 +67,42 @@ function HomePage() {
     const fileInputRef = useRef(null);
 
     const handleFileUpload = (event) => {
-        const files = event.target.files;
-        const audioFiles = Array.from(files).map(file => ({
-            name: file.name,
-            url: URL.createObjectURL(file), 
-            mimeType: file.type
-        }));
-
-        if (audioFiles.length > 0) {
-            navigate('/Landingpage', { state: { audioFiles } });  
-        } else {
-            alert('Please select audio files.');
-        }
-    };
+      const files = event.target.files;
+  
+      if (!files || files.length === 0) {
+          alert('No files selected. Please choose audio files to proceed.');
+          return;
+      }
+  
+      const audioFiles = Array.from(files).reduce((accumulator, file) => {
+          if (file.type.startsWith('audio/')) {
+              accumulator.push({
+                  name: file.name,
+                  url: URL.createObjectURL(file),
+                  mimeType: file.type,
+                  size: `${(file.size / 1024 / 1024).toFixed(2)} MB`, 
+                  lastModified: new Date(file.lastModified).toLocaleString(), 
+              });
+          } else {
+              console.warn(`Skipped non-audio file: ${file.name}`);
+          }
+          return accumulator;
+      }, []);
+  
+      if (audioFiles.length > 0) {
+          console.log('Audio files prepared for navigation:', audioFiles);
+              navigate('/Landingpage', { 
+                  state: { 
+                      audioFiles,
+                      uploadTime: new Date().toISOString() 
+                  } 
+              });
+          }
+      else {
+          alert('No valid audio files found. Please ensure the files are audio.');
+      }
+  };
+  
     
     
       
