@@ -5,10 +5,20 @@ import WaveSurfer from 'wavesurfer.js';
 import PlayButton from '../Landingpage/PlayButton.js'; 
 import './Exportpage.css';
 
-const formatTime = (timeInSeconds) => {
+const formatTime = (timeInSeconds) => { // ***
+    if (typeof timeInSeconds !== 'number' || timeInSeconds < 0) {
+        console.warn('Invalid input: timeInSeconds must be a non-negative number.');
+        return '0:00';
+    }
+
     const minutes = Math.floor(timeInSeconds / 60);
     const seconds = Math.floor(timeInSeconds % 60);
-    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`; 
+    const hours = Math.floor(minutes / 60);
+
+    const formattedMinutes = hours > 0 ? minutes % 60 : minutes;
+    const formattedTime = `${hours > 0 ? hours + ':' : ''}${formattedMinutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+    
+    return formattedTime;
 };
 
 
@@ -59,20 +69,44 @@ function Exportpage() {
     }, [mergedAudio]);
 
     
-    useEffect(() => {
-        if (location.state && location.state.mergedAudio) {
+    useEffect(() => { //*** 
+        if (location.state?.mergedAudio) {
+            console.log('Merged audio found in location state:', location.state.mergedAudio);
+    
             setMergedAudio(location.state.mergedAudio);
+    
+            const audioPreload = new Audio(location.state.mergedAudio);
+            audioPreload.load();
+            console.log('Audio has been preloaded for playback.');
+        } else {
+            console.warn('No merged audio found in location state.');
         }
     }, [location.state]);
+    
 
     
-    const handleTimelineChange = (e) => {
-        const newTime = e.target.value;
+    const handleTimelineChange = (event) => { //***
+        const newTime = parseFloat(event.target.value);
+    
+        if (isNaN(newTime) || newTime < 0) {
+            console.warn('Invalid time input. Please provide a valid number.');
+            return;
+        }
+    
         setCurrentTime(newTime);
+    
         if (wavesurfer.current) {
-            wavesurfer.current.setCurrentTime(newTime);
+            try {
+                wavesurfer.current.setCurrentTime(newTime);
+                console.log(`Timeline updated to: ${newTime} seconds.`);
+            } catch (error) {
+                console.error('Failed to set the current time on WaveSurfer:', error);
+            }
+        } else {
+            console.warn('WaveSurfer instance is not available.');
         }
     };
+    
 
     return (
         <div className="pagebackground">
@@ -109,21 +143,35 @@ function Exportpage() {
     style={{ marginBottom: '-23%'}}
     onClick={async () => {
         if (mergedAudio) {
-            const response = await fetch(mergedAudio); 
-            const blob = await response.blob(); 
-            const url = URL.createObjectURL(blob); 
-
-            
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'Audio.mp3'; 
-            a.click();
-
-            
-            URL.revokeObjectURL(url);
+            try {
+                const response = await fetch(mergedAudio);
+                
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch audio. Status: ${response.status}`);
+                }
+        
+                const blob = await response.blob();
+                const url = URL.createObjectURL(blob);
+        
+                const downloadLink = document.createElement('a');
+                downloadLink.href = url;
+                downloadLink.download = `Downloaded_Audio_${Date.now()}.mp3`; 
+                downloadLink.style.display = 'none';
+                document.body.appendChild(downloadLink);
+        
+                downloadLink.click();
+                console.log('Download initiated successfully.');
+        
+                document.body.removeChild(downloadLink);
+                URL.revokeObjectURL(url);
+            } catch (error) {
+                console.error('Error occurred during audio download:', error);
+                alert('An error occurred while trying to download the audio file. Please try again.');
+            }
         } else {
             alert("Audio file is not available for download.");
         }
+        
     }}
 >
     Download
