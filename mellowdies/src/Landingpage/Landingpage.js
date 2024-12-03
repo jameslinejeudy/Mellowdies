@@ -200,29 +200,7 @@ function Landingpage() {
         return new Blob([result], { type: 'audio/wav' });
     };
 
-    const handleFilesButtonClick = () => {
-        fileInputRef.current.click(); 
-        setIsDropdownOpen(false);
-    };
-
-    const handleAddFiles = (event) => {
-        const newFiles = Array.from(event.target.files).map(file => ({
-            name: file.name,
-            url: URL.createObjectURL(file),
-            mimeType: file.type
-        }));
-
-    if (newFiles.length > 0) {
-        setAudioFiles((prevAudioFiles) => [...prevAudioFiles, ...newFiles]);  
-    } else {
-        alert('Please select audio files.');
-    }
-};
-
-    const toggleDropdown = () => {
-        setIsDropdownOpen(!isDropdownOpen);
-    };
-
+   
     return (
         <div className="pagebackground">
             <div
