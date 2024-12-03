@@ -66,7 +66,7 @@ function HomePage() {
 
     const fileInputRef = useRef(null);
 
-    const handleFileUpload = (event) => {
+    const handleFileUpload = (event) => { //***/
       const files = event.target.files;
   
       if (!files || files.length === 0) {

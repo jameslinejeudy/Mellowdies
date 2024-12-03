@@ -6,83 +6,78 @@ import rewindstart from '../images/icons/startofmusic.png';
 import backwards from '../images/icons/backwards.png';  
 import endofmusic from '../images/icons/endofmusic.png';  
 
-const buttonContainerStyle = {
-    height: '20%',
-    width: '75%',
-    display: 'flex',
-    flexDirection: 'row',  
-    position: 'fixed',
-    right: '0px',
-    bottom: '0px',  
-    alignItems: 'center',  
-    boxShadow: '0px 0px 15px 5px rgba(255, 255, 255, 0.6)',
-    backgroundColor: 'rgba(255, 255, 255, 0.15)',
-    justifyContent: 'center', 
+const styles = {
+    container: {
+        height: '20%',
+        width: '75%',
+        display: 'flex',
+        flexDirection: 'row',
+        position: 'fixed',
+        right: '0px',
+        bottom: '0px',
+        alignItems: 'center',
+        boxShadow: '0px 0px 15px 5px rgba(255, 255, 255, 0.6)',
+        backgroundColor: 'rgba(255, 255, 255, 0.15)',
+        justifyContent: 'center',
+    },
+    button: {
+        background: 'none',
+        border: 'none',
+        padding: '10px',
+        cursor: 'pointer',
+    },
+    icon: {
+        width: '30px',
+        height: '30px',
+    },
 };
 
-const buttonStyle = {
-    background: 'none',  
-    border: 'none',  
-    padding: '10px',  
-    cursor: 'pointer',  
-};
-
-const iconStyle = {
-    width: '30px',  
-    height: '30px',  
-};
-
-function PlayButton({ wavesurferRefs, isReady}) {
+function PlayButton({ wavesurferRefs, isReady }) {
     const [isPlaying, setIsPlaying] = useState(false);
 
-    const playAllTracks = () => {
-        wavesurferRefs.current.forEach(waveSurfer => {
-            waveSurfer.playPause();
-        });
-        setIsPlaying(!isPlaying);
+    const applyToAllTracks = (callback) => {
+        wavesurferRefs.current.forEach((waveSurfer) => callback(waveSurfer));
     };
 
-    const seekAllTracks = (seekTo) => {
-        wavesurferRefs.current.forEach(waveSurfer => {
-            waveSurfer.seekTo(seekTo);
-        });
+    const togglePlayPause = () => {
+        applyToAllTracks((waveSurfer) => waveSurfer.playPause());
+        setIsPlaying((prev) => !prev);
     };
 
-    const forwardAllTracks = () => {
-        wavesurferRefs.current.forEach(waveSurfer => {
+    const seekToPosition = (position) => {
+        applyToAllTracks((waveSurfer) => waveSurfer.seekTo(position));
+    };
+
+    const skipTime = (seconds) => {
+        applyToAllTracks((waveSurfer) => {
             const currentTime = waveSurfer.getCurrentTime();
             const duration = waveSurfer.getDuration();
-            const newTime = Math.min(currentTime + 5, duration);  
-            waveSurfer.seekTo(newTime / duration);  
+            const targetTime = Math.min(Math.max(currentTime + seconds, 0), duration);
+            waveSurfer.seekTo(targetTime / duration);
         });
     };
 
-    const backwardAllTracks = () => {
-        wavesurferRefs.current.forEach(waveSurfer => {
-            const currentTime = waveSurfer.getCurrentTime();
-            const newTime = Math.max(currentTime - 5, 0);  
-            const duration = waveSurfer.getDuration();
-            waveSurfer.seekTo(newTime / duration);  
-        });
-    };
+    const buttonConfig = [
+        { action: () => seekToPosition(0), icon: rewindstart, alt: 'Rewind to Start' },
+        { action: () => skipTime(-5), icon: backwards, alt: 'Skip Backward 5 Seconds' },
+        { action: togglePlayPause, icon: isPlaying ? pause : play, alt: 'Play/Pause' },
+        { action: () => skipTime(5), icon: fastforward, alt: 'Skip Forward 5 Seconds' },
+        { action: () => seekToPosition(1), icon: endofmusic, alt: 'Fast Forward to End' },
+    ];
 
     return (
-        <div style={buttonContainerStyle}>
-            <button onClick={() => seekAllTracks(0)} style={buttonStyle} disabled={!isReady}>
-                <img src={rewindstart} alt="Go to Start" style={iconStyle} />
-            </button>
-            <button onClick={backwardAllTracks} style={buttonStyle} disabled={!isReady}>
-                <img src={backwards} alt="Backward 5s" style={iconStyle} />
-            </button>
-            <button id="playbutton" onClick={playAllTracks} style={buttonStyle} disabled={!isReady}>
-                <img src={isPlaying ? pause : play} alt="Play/Pause" style={iconStyle} />
-            </button>
-            <button onClick={forwardAllTracks} style={buttonStyle} disabled={!isReady}>
-                <img src={fastforward} alt="Forward 5s" style={iconStyle} />
-            </button>
-            <button onClick={() => seekAllTracks(1)} style={buttonStyle} disabled={!isReady}>
-                <img src={endofmusic} alt="Go to End" style={iconStyle} />
-            </button>
+        <div style={styles.container}>
+            {buttonConfig.map(({ action, icon, alt }, index) => (
+                <button
+                    key={index}
+                    onClick={action}
+                    style={styles.button}
+                    disabled={!isReady}
+                    aria-label={alt}
+                >
+                    <img src={icon} alt={alt} style={styles.icon} />
+                </button>
+            ))}
         </div>
     );
 }
